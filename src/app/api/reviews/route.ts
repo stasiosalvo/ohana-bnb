@@ -7,7 +7,7 @@ import {
 
 export async function GET() {
   try {
-    const reviews = getApprovedReviews();
+    const reviews = await getApprovedReviews();
     return NextResponse.json(reviews);
   } catch (e) {
     console.error("GET /api/reviews", e);
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const review = addReview({
+    const review = await addReview({
       name: name.trim(),
       text: text.trim(),
       rating: typeof rating === "number" ? rating : 5,

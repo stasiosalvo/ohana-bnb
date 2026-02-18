@@ -61,7 +61,10 @@ Gli ospiti possono lasciare recensioni dalla sezione **Recensioni** in homepage.
 
 - **Pannello moderazione:** apri **/admin/reviews** e inserisci la password admin.
 - **Variabile d'ambiente:** in `.env.local` (e in produzione) imposta `REVIEW_ADMIN_SECRET` con una password sicura. Senza questa variabile il pannello admin non è accessibile.
-- Le recensioni sono salvate in memoria: restano fino al riavvio del server. Su Vercel si resettano a ogni redeploy; per persistenza permanente si può aggiungere in seguito un database (es. Upstash Redis).
+- **Recensioni persistenti (consigliato in produzione):** senza Redis le recensioni restano in memoria e si perdono a ogni redeploy. Per conservarle:
+  1. Su **Vercel**: vai in Storage → Create Database → **Redis** (Upstash). Vercel aggiungerà automaticamente `KV_REST_API_URL` e `KV_REST_API_TOKEN` (il codice supporta anche questi nomi).
+  2. Oppure crea un database su [Upstash](https://upstash.com) e imposta in ambiente: `UPSTASH_REDIS_REST_URL` e `UPSTASH_REDIS_REST_TOKEN`.
+  In locale puoi lasciare Redis disattivato: le recensioni saranno solo in memoria.
 
 ## Learn More
 

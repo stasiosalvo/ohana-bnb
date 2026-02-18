@@ -18,7 +18,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Non autorizzato." }, { status: 401 });
   }
   try {
-    const reviews = getAllReviews();
+    const reviews = await getAllReviews();
     return NextResponse.json(reviews);
   } catch (e) {
     console.error("GET /api/admin/reviews", e);
@@ -42,7 +42,7 @@ export async function PATCH(request: Request) {
         { status: 400 }
       );
     }
-    const updated = updateReviewStatus(id, status);
+    const updated = await updateReviewStatus(id, status);
     if (!updated) {
       return NextResponse.json({ error: "Recensione non trovata." }, { status: 404 });
     }
@@ -69,7 +69,7 @@ export async function DELETE(request: Request) {
         { status: 400 }
       );
     }
-    const deleted = deleteReview(id);
+    const deleted = await deleteReview(id);
     if (!deleted) {
       return NextResponse.json({ error: "Recensione non trovata." }, { status: 404 });
     }
