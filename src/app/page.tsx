@@ -272,7 +272,7 @@ export default function Home() {
                   <div style={{ fontSize: 12, opacity: 0.8 }}>
                     {lang === "it"
                       ? "3 camere, massimo 6 ospiti."
-                      : "3 rooms, up to 7 guests. Relaxed check-in, no rush."}
+                      : "3 rooms, up to 6 guests."}
                   </div>
                 </div>
               </div>
