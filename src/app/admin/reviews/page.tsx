@@ -166,13 +166,18 @@ export default function AdminReviewsPage() {
               unoptimized
             />
           </Link>
-          <button
-            type="button"
-            className="btn-ghost"
-            onClick={() => setToken(null)}
-          >
-            Esci
-          </button>
+          <div className="topbar-right">
+            <Link href="/admin/blocked" className="chip">
+              Blocca date
+            </Link>
+            <button
+              type="button"
+              className="btn-ghost"
+              onClick={() => setToken(null)}
+            >
+              Esci
+            </button>
+          </div>
         </header>
         <main className="legal-main">
           <Link href="/" className="legal-back">

@@ -69,6 +69,8 @@ export default function PrenotaRoomPage({ params }: Props) {
   } | null>(null);
   const [applyingCode, setApplyingCode] = useState(false);
   const [discountError, setDiscountError] = useState<string | null>(null);
+  const [availabilityOk, setAvailabilityOk] = useState<boolean | null>(null);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
 
   useEffect(() => {
     const current = Number(guests) || room.minGuests;
@@ -94,6 +96,32 @@ export default function PrenotaRoomPage({ params }: Props) {
     setAppliedDiscount(null);
     setDiscountError(null);
   }, [total]);
+
+  useEffect(() => {
+    if (!checkIn || !checkOut || nights <= 0) {
+      setAvailabilityOk(null);
+      return;
+    }
+    let cancelled = false;
+    setCheckingAvailability(true);
+    setAvailabilityOk(null);
+    fetch(
+      `/api/availability/check?roomId=${encodeURIComponent(roomKey)}&checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}`
+    )
+      .then((r) => r.json())
+      .then((data: { available?: boolean }) => {
+        if (!cancelled) setAvailabilityOk(data.available ?? true);
+      })
+      .catch(() => {
+        if (!cancelled) setAvailabilityOk(true);
+      })
+      .finally(() => {
+        if (!cancelled) setCheckingAvailability(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [roomKey, checkIn, checkOut, nights]);
 
   const displayTotal = appliedDiscount ? appliedDiscount.discountedTotal : total;
 
@@ -140,6 +168,13 @@ export default function PrenotaRoomPage({ params }: Props) {
 
     if (nights <= 0) {
       setError("La data di partenza deve essere successiva alla data di arrivo.");
+      return;
+    }
+
+    if (availabilityOk === false) {
+      setError(
+        "Queste date non sono disponibili per questa camera. Scegli altre date o un'altra camera."
+      );
       return;
     }
 
@@ -260,6 +295,21 @@ export default function PrenotaRoomPage({ params }: Props) {
                     required
                   />
                 </div>
+
+                {checkIn && checkOut && nights > 0 && (
+                  <div className="field" style={{ gridColumn: "1 / -1" }}>
+                    {checkingAvailability && (
+                      <span style={{ fontSize: 12, color: "var(--color-muted)" }}>
+                        Verifica disponibilità...
+                      </span>
+                    )}
+                    {!checkingAvailability && availabilityOk === false && (
+                      <span style={{ fontSize: 12, color: "#a43131" }}>
+                        Queste date non sono disponibili per questa camera. Scegli altre date o un&apos;altra camera.
+                      </span>
+                    )}
+                  </div>
+                )}
 
                 <div className="field">
                   <label className="field-label" htmlFor="guests">
@@ -386,11 +436,15 @@ export default function PrenotaRoomPage({ params }: Props) {
                   <button
                     type="submit"
                     className="btn-primary"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || checkingAvailability || availabilityOk === false}
                   >
                     {isSubmitting
                       ? "Reindirizzamento in corso..."
-                      : "Procedi al pagamento"}
+                      : checkingAvailability
+                        ? "Verifica disponibilità..."
+                        : availabilityOk === false
+                          ? "Date non disponibili"
+                          : "Procedi al pagamento"}
                   </button>
                   <span className="text-muted">
                     La prenotazione è confermata solo dopo l&apos;email di

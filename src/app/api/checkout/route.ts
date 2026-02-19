@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { applyDiscount } from "@/lib/discount";
+import { isPeriodBlocked, type RoomId } from "@/lib/blocked";
 
 export const runtime = "nodejs";
 
@@ -69,6 +70,21 @@ export async function POST(request: Request) {
     if (!roomId || !checkIn || !checkOut || !name || !email || nights == null) {
       return NextResponse.json(
         { error: "Dati prenotazione mancanti o non validi." },
+        { status: 400 }
+      );
+    }
+
+    const blocked = await isPeriodBlocked(
+      roomId as RoomId,
+      checkIn,
+      checkOut
+    );
+    if (blocked) {
+      return NextResponse.json(
+        {
+          error:
+            "Queste date non sono più disponibili per questa camera. Scegli altre date o un'altra camera.",
+        },
         { status: 400 }
       );
     }
