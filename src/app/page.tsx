@@ -364,7 +364,36 @@ export default function Home() {
 
             <div className="rooms-grid">
               <article className="room-card">
-                <div className="room-photo room-photo--sun" />
+                <div className="room-photo room-photo--sun">
+                  <svg className="room-scene" viewBox="0 0 320 120" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden>
+                    <defs>
+                      <radialGradient id="sunCore" cx="85%" cy="15%" r="50%">
+                        <stop offset="0%" stopColor="#fffef0" />
+                        <stop offset="40%" stopColor="#ffe066" />
+                        <stop offset="85%" stopColor="#f0a040" />
+                        <stop offset="100%" stopColor="rgba(240,160,64,0)" />
+                      </radialGradient>
+                      <linearGradient id="rayGrad" x1="85%" y1="15%" x2="0%" y2="85%">
+                        <stop offset="0%" stopColor="rgba(255,230,150,0.85)" />
+                        <stop offset="100%" stopColor="rgba(255,200,100,0.15)" />
+                      </linearGradient>
+                    </defs>
+                    {/* Raggi che illuminano tutto il riquadro */}
+                    {[...Array(32)].map((_, i) => {
+                      const a = (i / 32) * Math.PI * 1.8 - 0.1;
+                      const x1 = 265; const y1 = 22;
+                      const len = 380;
+                      const x2 = x1 + len * Math.cos(a);
+                      const y2 = y1 + len * Math.sin(a);
+                      return (
+                        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="url(#rayGrad)" strokeWidth="5" strokeLinecap="round" opacity={0.5 + 0.25 * (1 - Math.abs(i - 16) / 16)} />
+                      );
+                    })}
+                    <circle cx="270" cy="25" r="38" fill="url(#sunCore)" />
+                    <circle cx="270" cy="25" r="32" fill="#fff8dc" />
+                    <ellipse cx="270" cy="25" rx="28" ry="28" fill="url(#sunCore)" />
+                  </svg>
+                </div>
                 <div className="room-body">
                   <h3 className="room-name">{t.roomSunName}</h3>
                   <p className="room-meta">{t.roomSunDesc}</p>
@@ -396,7 +425,36 @@ export default function Home() {
               </article>
 
               <article className="room-card">
-                <div className="room-photo room-photo--moon" />
+                <div className="room-photo room-photo--moon">
+                  <svg className="room-scene" viewBox="0 0 320 120" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden>
+                    <defs>
+                      <linearGradient id="nightSky" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#2a3040" />
+                        <stop offset="50%" stopColor="#1e2433" />
+                        <stop offset="100%" stopColor="#151a28" />
+                      </linearGradient>
+                      <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
+                        <stop offset="0%" stopColor="#f5f8fc" />
+                        <stop offset="60%" stopColor="#d0dce8" />
+                        <stop offset="100%" stopColor="#9ba8b5" />
+                      </radialGradient>
+                      <filter id="starGlow" x="-50%" y="-50%" width="200%" height="200%">
+                        <feGaussianBlur stdDeviation="0.8" result="blur" />
+                        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+                      </filter>
+                    </defs>
+                    <rect width="320" height="120" fill="url(#nightSky)" />
+                    {/* Stelle sparse che danno vita al cielo */}
+                    {[[18,24,1.2],[48,18,0.8],[92,42,1],[130,28,1.4],[165,55,0.7],[200,22,1.1],[245,48,0.9],[280,35,1.3],[55,65,0.8],[115,75,1],[185,82,0.7],[255,70,1],[22,88,1],[95,95,0.6],[160,100,1],[230,88,0.9]].map(([x, y, r], i) => (
+                      <circle key={i} cx={x} cy={y} r={r} fill="#fff" opacity={0.75 + (i % 3) * 0.1} filter="url(#starGlow)" />
+                    ))}
+                    <circle cx="260" cy="55" r="28" fill="rgba(220,230,240,0.25)" />
+                    <circle cx="260" cy="55" r="24" fill="url(#moonGlow)" />
+                    <circle cx="252" cy="48" r="2.5" fill="rgba(180,195,210,0.6)" />
+                    <circle cx="266" cy="52" r="2" fill="rgba(175,190,205,0.6)" />
+                    <circle cx="258" cy="60" r="1.8" fill="rgba(170,185,200,0.6)" />
+                  </svg>
+                </div>
                 <div className="room-body">
                   <h3 className="room-name">{t.roomMoonName}</h3>
                   <p className="room-meta">{t.roomMoonDesc}</p>
@@ -428,7 +486,46 @@ export default function Home() {
               </article>
 
               <article className="room-card">
-                <div className="room-photo room-photo--earth" />
+                <div className="room-photo room-photo--earth">
+                  <svg className="room-scene" viewBox="0 0 320 120" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden>
+                    <defs>
+                      <linearGradient id="vineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#6b8e6b" />
+                        <stop offset="100%" stopColor="#4a6b4a" />
+                      </linearGradient>
+                      <linearGradient id="leafGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#8fbc8f" />
+                        <stop offset="100%" stopColor="#5a8a5a" />
+                      </linearGradient>
+                      <linearGradient id="leafGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#7cb87c" />
+                        <stop offset="100%" stopColor="#4d7a4d" />
+                      </linearGradient>
+                    </defs>
+                    {/* Vigna bordo sinistro – sale e avvolge */}
+                    <path d="M0 120 Q8 90 12 70 Q18 45 20 25 Q22 8 28 0" stroke="url(#vineGrad)" strokeWidth="5" fill="none" strokeLinecap="round" />
+                    <path d="M5 115 Q15 75 18 50 Q22 22 30 5" stroke="url(#vineGrad)" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8" />
+                    <path d="M0 95 Q10 55 16 30 Q20 10 32 0" stroke="url(#vineGrad)" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.6" />
+                    {/* Foglie lungo il bordo sinistro */}
+                    <path d="M12 75 L22 68 L18 82 L12 75" fill="url(#leafGrad1)" opacity="0.95" />
+                    <path d="M16 45 L26 40 L22 54 L16 45" fill="url(#leafGrad2)" opacity="0.9" />
+                    <path d="M18 22 L26 18 L24 30 L18 22" fill="url(#leafGrad1)" opacity="0.9" />
+                    {/* Vigna bordo superiore – attraversa */}
+                    <path d="M0 12 Q80 0 160 8 Q240 4 320 14" stroke="url(#vineGrad)" strokeWidth="4" fill="none" strokeLinecap="round" />
+                    <path d="M20 8 Q100 0 180 6 Q260 2 320 10" stroke="url(#vineGrad)" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.75" />
+                    <path d="M60 6 L68 0 L72 12 L60 6" fill="url(#leafGrad1)" opacity="0.9" />
+                    <path d="M140 4 L148 0 L152 10 L140 4" fill="url(#leafGrad2)" opacity="0.9" />
+                    <path d="M220 8 L228 2 L232 14 L220 8" fill="url(#leafGrad1)" opacity="0.9" />
+                    {/* Vigna bordo destro – scende */}
+                    <path d="M320 0 Q312 35 308 58 Q302 85 298 120" stroke="url(#vineGrad)" strokeWidth="5" fill="none" strokeLinecap="round" />
+                    <path d="M315 8 Q306 50 302 75 Q298 100 295 120" stroke="url(#vineGrad)" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8" />
+                    <path d="M308 25 L298 22 L302 36 L308 25" fill="url(#leafGrad2)" opacity="0.9" />
+                    <path d="M306 70 L296 66 L300 80 L306 70" fill="url(#leafGrad1)" opacity="0.9" />
+                    {/* Rami che invadono delicatamente il centro */}
+                    <path d="M0 60 Q90 50 150 65" stroke="url(#vineGrad)" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.5" />
+                    <path d="M320 45 Q230 55 170 48" stroke="url(#vineGrad)" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.5" />
+                  </svg>
+                </div>
                 <div className="room-body">
                   <h3 className="room-name">{t.roomEarthName}</h3>
                   <p className="room-meta">{t.roomEarthDesc}</p>
