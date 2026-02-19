@@ -18,7 +18,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const siteUrl =
+  process.env.NEXT_PUBLIC_BASE_URL ||
+  (typeof process !== "undefined" && process.env.NODE_ENV === "production"
+    ? "https://www.ohana-bnb.it"
+    : "http://localhost:3000");
 const ogImageUrl = `${siteUrl.replace(/\/$/, "")}/ohana-logo.png`;
 
 export const metadata: Metadata = {
@@ -26,6 +30,10 @@ export const metadata: Metadata = {
   description:
     "Ohana. Il cuore di Napoli, il calore di casa.",
   metadataBase: new URL(siteUrl),
+  icons: {
+    icon: "/ohana-logo.png",
+    apple: "/ohana-logo.png",
+  },
   openGraph: {
     title: "Ohana B&B | Bed & Breakfast",
     description:
