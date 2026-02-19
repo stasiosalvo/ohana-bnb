@@ -8,7 +8,8 @@ const notifyEmail =
   process.env.BOOKING_NOTIFY_EMAIL?.trim() ||
   process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() ||
   "ohanab.and.b@gmail.com";
-const adminSecret = process.env.REVIEW_ADMIN_SECRET?.trim();
+const adminSecret = process.env.REVIEW_ADMIN_SECRET?.replace(/\s+/g, "").trim();
+const testEmailSecret = process.env.TEST_EMAIL_SECRET?.replace(/\s+/g, "").trim();
 
 function escapeHtml(s: string): string {
   return s
@@ -28,9 +29,12 @@ function escapeHtml(s: string): string {
  */
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const secret = searchParams.get("secret");
+  const secret = (searchParams.get("secret") ?? "").replace(/\s+/g, "").trim();
+  const authHeader = (request.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "").trim();
   const isDev = process.env.NODE_ENV === "development";
-  const allowed = isDev || (adminSecret && (secret === adminSecret || request.headers.get("authorization") === `Bearer ${adminSecret}`));
+  const allowed =
+    isDev ||
+    (secret && (secret === adminSecret || secret === testEmailSecret || authHeader === adminSecret || authHeader === testEmailSecret));
 
   if (!allowed) {
     return NextResponse.json({ error: "Non autorizzato. In produzione usa ?secret=REVIEW_ADMIN_SECRET o Authorization: Bearer REVIEW_ADMIN_SECRET." }, { status: 401 });
@@ -98,9 +102,10 @@ export async function POST(request: Request) {
   } catch {
     // ignore
   }
-  const secret = body.secret ?? request.headers.get("authorization")?.replace(/^Bearer\s+/i, "");
+  const secret = (body.secret ?? request.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "").replace(/\s+/g, "").trim();
   const isDev = process.env.NODE_ENV === "development";
-  const allowed = isDev || (adminSecret && secret === adminSecret);
+  const allowed =
+    isDev || (secret && (secret === adminSecret || secret === testEmailSecret));
 
   if (!allowed) {
     return NextResponse.json({ error: "Non autorizzato." }, { status: 401 });
