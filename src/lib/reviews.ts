@@ -34,16 +34,26 @@ function getRedis(): Redis | null {
   return new Redis({ url: url.trim(), token: token.trim() });
 }
 
+function normalizeStore(raw: unknown): Review[] {
+  if (raw == null) return [];
+  if (Array.isArray(raw)) return raw as Review[];
+  if (typeof raw === "string") {
+    try {
+      const parsed = JSON.parse(raw) as Review[];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
 async function getStore(): Promise<Review[]> {
   const redis = getRedis();
   if (redis) {
     try {
-      const raw = await redis.get<string>(STORAGE_KEY);
-      if (typeof raw === "string") {
-        const parsed = JSON.parse(raw) as Review[];
-        return Array.isArray(parsed) ? parsed : [];
-      }
-      return [];
+      const raw = await redis.get(STORAGE_KEY);
+      return normalizeStore(raw);
     } catch {
       return memoryStore;
     }
