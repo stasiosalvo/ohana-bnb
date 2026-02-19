@@ -5,8 +5,8 @@ import { isPeriodBlocked, type RoomId } from "@/lib/blocked";
 
 export const runtime = "nodejs";
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY?.trim();
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY?.replace(/\s+/g, "").trim() || undefined;
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL?.trim();
 
 function getStripe(): Stripe | null {
   if (!stripeSecretKey) return null;
@@ -146,15 +146,15 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error("Stripe checkout error", error);
-    const message =
-      error instanceof Error ? error.message : "Errore durante la creazione del pagamento.";
+    const err = error as { message?: string; type?: string; code?: string };
+    const message = err?.message ?? "Errore durante la creazione del pagamento.";
+    const type = err?.type;
+    console.error("Stripe checkout error", { message, type, code: err?.code }, error);
+    // Mostra sempre l'errore reale così puoi capire la causa (es. Invalid API Key)
     return NextResponse.json(
       {
-        error:
-          process.env.NODE_ENV === "development"
-            ? message
-            : "Errore durante la creazione del pagamento. Riprova o contattaci.",
+        error: message,
+        ...(type ? { errorType: type } : {}),
       },
       { status: 500 }
     );
