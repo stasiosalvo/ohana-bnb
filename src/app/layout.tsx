@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -8,15 +7,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const fontFamilySans =
+  'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 
 const siteUrl =
   process.env.NEXT_PUBLIC_BASE_URL ||
@@ -67,10 +59,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable}`}
-        style={{ fontFamily: "var(--font-geist-sans), system-ui, sans-serif" }}
-      >
+      <body style={{ fontFamily: fontFamilySans }}>
         {children}
       </body>
     </html>
