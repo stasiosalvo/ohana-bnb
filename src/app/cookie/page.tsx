@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
 type Lang = "it" | "en";
 
@@ -31,7 +32,7 @@ const content = {
       },
       {
         title: "Contatti",
-        body: "Per domande su cookie e privacy puoi scriverci a info@ohana-bnb.it o contattarci al +39 376 297 9866.",
+        body: `Per domande su cookie e privacy puoi scriverci a ${CONTACT_EMAIL} o contattarci al ${CONTACT_PHONE}.`,
       },
     ],
   },
@@ -59,7 +60,7 @@ const content = {
       },
       {
         title: "Contact",
-        body: "For questions about cookies and privacy you can email info@ohana-bnb.it or call +39 376 297 9866.",
+        body: `For questions about cookies and privacy you can email ${CONTACT_EMAIL} or call ${CONTACT_PHONE}.`,
       },
     ],
   },

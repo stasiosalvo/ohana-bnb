@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
 type Lang = "it" | "en";
 
@@ -35,9 +36,9 @@ const copy = {
     contactPhoneLabel: "Telefono",
     contactEmailLabel: "Email",
     contactWhatsappLabel: "Whatsapp",
-    contactPhoneValue: "+39 376 297 9866",
-    contactEmailValue: "info@ohana-bnb.it",
-    contactWhatsappValue: "+39 376 297 9866",
+    contactPhoneValue: CONTACT_PHONE,
+    contactEmailValue: CONTACT_EMAIL,
+    contactWhatsappValue: CONTACT_PHONE,
     contactActionCall: "Chiama ora",
     contactActionMail: "Scrivi una mail",
     contactActionWhatsapp: "Apri WhatsApp",
@@ -87,9 +88,9 @@ const copy = {
     contactPhoneLabel: "Phone",
     contactEmailLabel: "Email",
     contactWhatsappLabel: "Whatsapp",
-    contactPhoneValue: "+39 376 297 9866",
-    contactEmailValue: "info@ohana-bnb.it",
-    contactWhatsappValue: "+39 376 297 9866",
+    contactPhoneValue: CONTACT_PHONE,
+    contactEmailValue: CONTACT_EMAIL,
+    contactWhatsappValue: CONTACT_PHONE,
     contactActionCall: "Call now",
     contactActionMail: "Send an email",
     contactActionWhatsapp: "Open WhatsApp",
@@ -674,7 +675,7 @@ export default function Home() {
                   <div>
                     <div className="contact-label">{t.contactEmailLabel}</div>
                     <div className="contact-value">
-                      <a href="mailto:info@ohana-bnb.it">
+                      <a href={`mailto:${CONTACT_EMAIL}`}>
                         {t.contactEmailValue}
                       </a>
                     </div>
@@ -698,7 +699,7 @@ export default function Home() {
                   <a href="tel:+393762979866" className="chip">
                     {t.contactActionCall}
                   </a>
-                  <a href="mailto:info@ohana-bnb.it" className="chip">
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="chip">
                     {t.contactActionMail}
                   </a>
                   <a

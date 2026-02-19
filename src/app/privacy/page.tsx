@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
 type Lang = "it" | "en";
 
@@ -15,7 +16,7 @@ const content = {
     sections: [
       {
         title: "Titolare del trattamento",
-        body: "Il titolare del trattamento è Ohana B&B, con sede in Via Lavinaio 19, 80142 Napoli (NA). Puoi contattarci all'indirizzo info@ohana-bnb.it o al numero +39 376 297 9866.",
+        body: `Il titolare del trattamento è Ohana B&B, con sede in Via Lavinaio 19, 80142 Napoli (NA). Puoi contattarci all'indirizzo ${CONTACT_EMAIL} o al numero ${CONTACT_PHONE}.`,
       },
       {
         title: "Dati raccolti",
@@ -31,7 +32,7 @@ const content = {
       },
       {
         title: "Diritti dell'interessato",
-        body: "Hai diritto ad accesso, rettifica, cancellazione, limitazione del trattamento, portabilità dei dati e opposizione, nonché a proporre reclamo all'Autorità Garante per la Protezione dei Dati Personali (garanteprivacy.it). Per esercitare i tuoi diritti scrivi a info@ohana-bnb.it.",
+        body: `Hai diritto ad accesso, rettifica, cancellazione, limitazione del trattamento, portabilità dei dati e opposizione, nonché a proporre reclamo all'Autorità Garante per la Protezione dei Dati Personali (garanteprivacy.it). Per esercitare i tuoi diritti scrivi a ${CONTACT_EMAIL}.`,
       },
       {
         title: "Comunicazione e diffusione",
@@ -47,7 +48,7 @@ const content = {
     sections: [
       {
         title: "Data controller",
-        body: "The data controller is Ohana B&B, located at Via Lavinaio 19, 80142 Naples (NA), Italy. You can contact us at info@ohana-bnb.it or +39 376 297 9866.",
+        body: `The data controller is Ohana B&B, located at Via Lavinaio 19, 80142 Naples (NA), Italy. You can contact us at ${CONTACT_EMAIL} or ${CONTACT_PHONE}.`,
       },
       {
         title: "Data collected",
@@ -63,7 +64,7 @@ const content = {
       },
       {
         title: "Your rights",
-        body: "You have the right to access, rectify, erase, restrict processing, data portability and to object, as well as to lodge a complaint with the supervisory authority (Garante per la Protezione dei Dati Personali – garanteprivacy.it). To exercise your rights, contact info@ohana-bnb.it.",
+        body: `You have the right to access, rectify, erase, restrict processing, data portability and to object, as well as to lodge a complaint with the supervisory authority (Garante per la Protezione dei Dati Personali – garanteprivacy.it). To exercise your rights, contact ${CONTACT_EMAIL}.`,
       },
       {
         title: "Disclosure",

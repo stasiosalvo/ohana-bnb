@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
 type Lang = "it" | "en";
 
@@ -28,7 +29,7 @@ const content = {
     petsBody: "Accettiamo i cani con piacere. È previsto un supplemento di 5 € a notte per soggiorno. Va comunicato in fase di prenotazione; in camera e negli spazi comuni chiediamo di avere cura dell'animale e di rispettare gli altri ospiti (guinzaglio negli spazi comuni quando indicato).",
     petsWelcome: "Per rendere il soggiorno comodo anche al tuo amico a quattro zampe, mettiamo a disposizione cuccia, ciotole per acqua e cibo e un piccolo treat di benvenuto. Un gesto per farvi sentire a casa.",
     contactTitle: "Contatti",
-    contactText: "Per domande o richieste: info@ohana-bnb.it o +39 376 297 9866 (anche WhatsApp).",
+    contactText: `Per domande o richieste: ${CONTACT_EMAIL} o ${CONTACT_PHONE} (anche WhatsApp).`,
   },
   en: {
     title: "Terms of stay",
@@ -51,7 +52,7 @@ const content = {
     petsBody: "We welcome dogs. A supplement of €5 per night applies. Please let us know at booking; we ask that you take care of your pet and respect other guests (leash in common areas when required).",
     petsWelcome: "To make your four-legged friend's stay comfortable too, we provide a dog bed, bowls for water and food, and a small welcome treat. A little touch to make you feel at home.",
     contactTitle: "Contact",
-    contactText: "For questions or requests: info@ohana-bnb.it or +39 376 297 9866 (WhatsApp too).",
+    contactText: `For questions or requests: ${CONTACT_EMAIL} or ${CONTACT_PHONE} (WhatsApp too).`,
   },
 };
 
