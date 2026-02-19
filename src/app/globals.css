@@ -18,9 +18,14 @@
   color-scheme: light;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   background: radial-gradient(circle at top left, #f9f4ec 0%, var(--color-bg) 55%, #e9e1d6 100%);
   color: var(--color-text);
 }
@@ -41,10 +46,17 @@ a {
   min-height: 100vh;
   justify-content: center;
   padding: 40px 20px;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+main {
+  min-width: 0;
 }
 
 .page-inner {
   width: 100%;
+  min-width: 0;
   max-width: 1120px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(250, 244, 235, 0.98));
   border-radius: 32px;
@@ -60,11 +72,11 @@ a {
 
 @media (max-width: 720px) {
   .page-shell {
-    padding: 20px 14px;
+    padding: 12px 10px;
   }
 
   .page-inner {
-    padding: 20px 18px 22px;
+    padding: 16px 14px 20px;
     border-radius: 24px;
   }
 }
@@ -74,6 +86,8 @@ a {
   align-items: center;
   justify-content: space-between;
   gap: 18px;
+  flex-wrap: wrap;
+  min-width: 0;
 }
 
 .brand {
@@ -82,13 +96,17 @@ a {
   gap: 10px;
   text-decoration: none;
   color: inherit;
+  min-width: 0;
+  flex-shrink: 0;
 }
 
 .brand-logo {
   height: 48px;
   width: auto;
+  max-width: 140px;
   object-fit: contain;
   display: block;
+  flex-shrink: 0;
 }
 
 .brand-mark {
@@ -122,6 +140,52 @@ a {
   color: var(--color-muted);
   letter-spacing: 0.2em;
   text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    gap: 12px;
+  }
+
+  .brand-sub {
+    display: none;
+  }
+
+  .brand-logo {
+    height: 42px;
+    max-width: 120px;
+  }
+
+  .topbar-right {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .nav-links {
+    gap: 10px;
+    font-size: 12px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .nav-links a {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links {
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .lang-pill {
+    padding: 3px 8px;
+    font-size: 10px;
+  }
 }
 
 .topbar-right {
@@ -218,15 +282,24 @@ a {
 }
 
 .hero-title {
-  font-size: clamp(32px, 4vw, 42px);
-  line-height: 1.12;
+  font-size: clamp(26px, 5vw, 42px);
+  line-height: 1.2;
   margin: 10px 0 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .hero-subtitle {
   font-size: 15px;
   color: var(--color-muted);
   max-width: 440px;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 720px) {
+  .hero-subtitle {
+    max-width: 100%;
+  }
 }
 
 .hero-badges {
