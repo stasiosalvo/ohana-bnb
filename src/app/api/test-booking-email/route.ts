@@ -47,6 +47,19 @@ export async function GET(request: Request) {
     );
   }
 
+  const fromEmailRaw = process.env.RESEND_FROM_EMAIL?.trim();
+  if (!fromEmailRaw || !fromEmailRaw.includes("ohana-bnb.it")) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "Per inviare a ohanab.and.b@gmail.com imposta RESEND_FROM_EMAIL su Vercel (es. prenotazioni@ohana-bnb.it), poi Redeploy.",
+      },
+      { status: 500 }
+    );
+  }
+  const fromEmail = fromEmailRaw.includes("<") ? fromEmailRaw : `Ohana B&B Prenotazioni <${fromEmailRaw}>`;
+
   const name = "Test Ospite";
   const customerEmail = "test@example.com";
   const phone = "+39 333 1234567";
@@ -75,7 +88,7 @@ export async function GET(request: Request) {
     `;
 
     const { data, error } = await resend.emails.send({
-      from: "Ohana B&B Prenotazioni <onboarding@resend.dev>",
+      from: fromEmail,
       to: notifyEmail,
       subject,
       html,
@@ -118,6 +131,15 @@ export async function POST(request: Request) {
     );
   }
 
+  const fromEmailRawPost = process.env.RESEND_FROM_EMAIL?.trim();
+  if (!fromEmailRawPost || !fromEmailRawPost.includes("ohana-bnb.it")) {
+    return NextResponse.json(
+      { ok: false, error: "Imposta RESEND_FROM_EMAIL (es. prenotazioni@ohana-bnb.it) su Vercel e Redeploy." },
+      { status: 500 }
+    );
+  }
+  const fromEmailPost = fromEmailRawPost.includes("<") ? fromEmailRawPost : `Ohana B&B Prenotazioni <${fromEmailRawPost}>`;
+
   const name = "Test Ospite";
   const customerEmail = "test@example.com";
   const phone = "+39 333 1234567";
@@ -146,7 +168,7 @@ export async function POST(request: Request) {
     `;
 
     const { data, error } = await resend.emails.send({
-      from: "Ohana B&B Prenotazioni <onboarding@resend.dev>",
+      from: fromEmailPost,
       to: notifyEmail,
       subject,
       html,
