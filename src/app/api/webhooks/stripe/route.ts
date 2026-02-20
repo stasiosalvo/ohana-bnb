@@ -106,7 +106,43 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error("Resend error:", error);
+      console.error("Resend error (notifica a te):", error);
+    }
+
+    // Email di conferma all'ospite
+    if (customerEmail?.trim()) {
+      const contactEmail =
+        process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "ohanab.and.b@gmail.com";
+      const contactPhone =
+        process.env.NEXT_PUBLIC_CONTACT_PHONE?.trim() || "+39 376 297 9866";
+      const guestSubject = `Conferma prenotazione – Ohana B&B`;
+      const guestHtml = `
+        <h2>Grazie per la tua prenotazione!</h2>
+        <p>Ciao ${escapeHtml(name)},</p>
+        <p>La tua prenotazione è stata confermata. Ecco il riepilogo:</p>
+        <ul>
+          <li><strong>Camera:</strong> ${escapeHtml(roomId.toUpperCase())}</li>
+          <li><strong>Check-in:</strong> ${escapeHtml(checkIn)}</li>
+          <li><strong>Check-out:</strong> ${escapeHtml(checkOut)}</li>
+          <li><strong>Notti:</strong> ${escapeHtml(nights)}</li>
+          <li><strong>Ospiti:</strong> ${escapeHtml(guests)}</li>
+          <li><strong>Importo pagato:</strong> € ${amountTotal.toFixed(2)}</li>
+        </ul>
+        <p>Per modifiche o informazioni puoi contattarci:</p>
+        <p>Email: <a href="mailto:${escapeHtml(contactEmail)}">${escapeHtml(contactEmail)}</a><br>
+        Telefono: ${escapeHtml(contactPhone)}</p>
+        <p>A presto,<br><strong>Ohana B&B</strong></p>
+      `;
+      const fromAddr = fromEmail.includes("<") ? fromEmail : `Ohana B&B Prenotazioni <${fromEmail}>`;
+      const { error: guestError } = await resend.emails.send({
+        from: fromAddr,
+        to: customerEmail.trim(),
+        subject: guestSubject,
+        html: guestHtml,
+      });
+      if (guestError) {
+        console.error("Resend error (conferma ospite):", guestError);
+      }
     }
   } catch (err) {
     console.error("Errore invio email notifica prenotazione:", err);
