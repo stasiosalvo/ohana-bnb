@@ -36,7 +36,7 @@ const ROOMS: Record<
   earth: {
     name: "Earth",
     short: "Spaziosa e naturale, ideale per soggiorni lunghi.",
-    pricePerNight: 80,
+    pricePerNight: 70,
     sizeM2: 20,
     minGuests: 2,
     maxGuests: 2,
@@ -253,7 +253,43 @@ export default function PrenotaRoomPage({ params }: Props) {
               </h1>
               <p className="hero-subtitle">{room.short}</p>
 
-              <div style={{ marginTop: 10, fontSize: 13, color: "#7d7166" }}>
+              <div className="booking-room-selector">
+                <span className="booking-room-selector-label">Clicca per cambiare camera</span>
+                <div className="booking-room-cards" role="group" aria-label="Selezione camera">
+                  <Link
+                    href="/prenota/sun"
+                    className={`booking-room-card ${roomKey === "sun" ? "booking-room-card--active" : ""}`}
+                    aria-pressed={roomKey === "sun"}
+                    aria-label="Seleziona camera Sun, €80 a notte"
+                  >
+                    <span className="booking-room-card-check">{roomKey === "sun" ? "✓" : ""}</span>
+                    <span className="booking-room-card-name">Sun</span>
+                    <span className="booking-room-card-price">€80/notte</span>
+                  </Link>
+                  <Link
+                    href="/prenota/moon"
+                    className={`booking-room-card ${roomKey === "moon" ? "booking-room-card--active" : ""}`}
+                    aria-pressed={roomKey === "moon"}
+                    aria-label="Seleziona camera Moon, €80 a notte"
+                  >
+                    <span className="booking-room-card-check">{roomKey === "moon" ? "✓" : ""}</span>
+                    <span className="booking-room-card-name">Moon</span>
+                    <span className="booking-room-card-price">€80/notte</span>
+                  </Link>
+                  <Link
+                    href="/prenota/earth"
+                    className={`booking-room-card ${roomKey === "earth" ? "booking-room-card--active" : ""}`}
+                    aria-pressed={roomKey === "earth"}
+                    aria-label="Seleziona camera Earth, €70 a notte"
+                  >
+                    <span className="booking-room-card-check">{roomKey === "earth" ? "✓" : ""}</span>
+                    <span className="booking-room-card-name">Earth</span>
+                    <span className="booking-room-card-price">€70/notte</span>
+                  </Link>
+                </div>
+              </div>
+
+              <div style={{ marginTop: 14, fontSize: 13, color: "#7d7166" }}>
                 <span className="booking-room-pill">
                   <span>
                     {room.minGuests === room.maxGuests
@@ -263,7 +299,7 @@ export default function PrenotaRoomPage({ params }: Props) {
                   </span>
                 </span>{" "}
                 <span style={{ marginLeft: 6 }}>
-                  Da €{room.pricePerNight} / notte, coupon bar incluso.
+                  Camera {room.name}: Da €{room.pricePerNight} / notte, coupon bar incluso.
                 </span>
               </div>
 

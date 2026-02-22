@@ -55,6 +55,25 @@ Riavvia il server dopo le modifiche. In produzione imposta le stesse variabili n
 
 In locale tieni `.env.local` con `NEXT_PUBLIC_BASE_URL=http://localhost:3000` e `STRIPE_SECRET_KEY=sk_test_...`.
 
+### Ricevere un'email quando qualcuno prenota online
+
+Quando un ospite paga con Stripe, puoi ricevere un'email con nome, date, camera e importo.
+
+1. **Stripe – Webhook**
+   - Vai su [Stripe Dashboard](https://dashboard.stripe.com) → **Sviluppatori** → **Webhook** → **Aggiungi endpoint**.
+   - URL endpoint: `https://www.ohana-bnb.it/api/webhooks/stripe`
+   - Eventi da ascoltare: seleziona **checkout.session.completed**.
+   - Clicca **Aggiungi endpoint**, poi apri l’endpoint e copia il **Secret** (inizia con `whsec_...`).
+   - Su Vercel (e in `.env.local` se testi in locale) aggiungi: `STRIPE_WEBHOOK_SECRET=whsec_...`
+
+2. **Resend – Invio email**
+   - Iscriviti su [resend.com](https://resend.com) (piano gratuito).
+   - Crea una **API Key** (API Keys → Create API Key) e copiala.
+   - Su Vercel aggiungi: `RESEND_API_KEY=re_...`
+   - Opzionale: `BOOKING_NOTIFY_EMAIL=la_tua_email@gmail.com` (altrimenti si usa l’email contatto del sito).
+
+Dopo il prossimo deploy, a ogni prenotazione pagata riceverai un’email con i dettagli.
+
 ## Recensioni e moderazione
 
 Gli ospiti possono lasciare recensioni dalla sezione **Recensioni** in homepage. Le recensioni restano in stato "in attesa" finché non le approvi o rifiuti.

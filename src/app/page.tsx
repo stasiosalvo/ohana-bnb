@@ -1,10 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
 type Lang = "it" | "en";
+
+const CAROUSEL_PHOTOS = [
+  "/galleria/sun-1.jpg",
+  "/galleria/sun-2.jpg",
+  "/galleria/sun-3.jpg",
+  "/galleria/moon-1.jpg",
+  "/galleria/moon-2.jpg",
+  "/galleria/moon-3.jpg",
+  "/galleria/moon-4.jpg",
+  "/galleria/earth-1.jpg",
+  "/galleria/earth-2.jpg",
+  "/galleria/earth-3.jpg",
+  "/galleria/earth-4.jpg",
+];
 
 const copy = {
   it: {
@@ -17,12 +32,12 @@ const copy = {
     roomsTitle: "Le nostre camere",
     roomsSubtitle: "Tre atmosfere diverse, stessa cura.",
     roomSunName: "Sun",
-    roomSunDesc: "Calda, luminosa, con dettagli dorati e vista soleggiata.",
+    roomSunDesc: "Calda, luminosa, con dettagli dorati e vista soleggiata. Con balcone.",
     roomMoonName: "Moon",
-    roomMoonDesc: "Silenziosa, morbida, pensata per chi ama rallentare.",
+    roomMoonDesc: "Silenziosa, morbida, pensata per chi ama rallentare. Con balcone.",
     roomEarthName: "Earth",
     roomEarthDesc:
-      "Spaziosa e naturale, ideale per soggiorni lunghi e famiglie.",
+      "Spaziosa e naturale, ideale per soggiorni lunghi e famiglie. Con finestra.",
     fromNight: "da",
     perNight: "/notte",
     inclBreakfast: "Coupon bar incluso",
@@ -43,6 +58,35 @@ const copy = {
     contactActionMail: "Scrivi una mail",
     contactActionWhatsapp: "Apri WhatsApp",
     contactFollowUs: "Seguiteci anche qui",
+    locationTransportation: "Trasporti",
+    locationAirports: "Aeroporti",
+    locationTrainStations: "Stazioni ferroviarie",
+    locationAttractions: "Punti di interesse nelle vicinanze",
+    locationCapodichino: "Capodichino",
+    locationNapoliCentrale: "Napoli Centrale",
+    locationMetro: "Metropolitana",
+    locationMetroPiazzaGaribaldi: "Piazza Garibaldi, Napoli",
+    locationPortaNolana: "Napoli Porta Nolana (Circumvesuviana)",
+    locationGalleriaPrincipe: "Galleria Principe di Napoli",
+    locationBasilicaPaolo: "Basilica di San Paolo Maggiore",
+    locationCentroStorico: "Centro Storico",
+    locationViaTribunali: "Via dei Tribunali",
+    locationSanLorenzo: "Scavi San Lorenzo Maggiore",
+    locationAquedotto: "Acquedotto Romano",
+    locationSanGregorio: "Via San Gregorio Armeno",
+    locationTesoroSanGennaro: "Museo del Tesoro di San Gennaro",
+    locationMuseoDonnaregina: "Museo Diocesano Donnaregina",
+    locationCappellaSansevero: "Museo Cappella Sansevero (Cristo Velato)",
+    locationDuomo: "Duomo di Napoli - Cattedrale di San Gennaro",
+    locationGalleriaUmberto: "Galleria Umberto I",
+    locationPiazzaSanGaetano: "Piazza San Gaetano - Scavi greco-romani",
+    locationAttractionsTitle: "Attrazioni e musei nelle vicinanze",
+    locationRestaurantsTitle: "Pizzerie e ristoranti rinomati",
+    locationDaMichele: "L'Antica Pizzeria Da Michele",
+    locationSorbillo: "Pizzeria Sorbillo",
+    locationDiMatteo: "Pizzeria Di Matteo",
+    locationStarita: "Pizzeria Starita a Materdei",
+    locationIlPresidente: "Il Figlio del Presidente",
     footerMadeBy: "Sito Ohana B&B",
     footerPrivacy: "Privacy",
     footerCookie: "Cookie",
@@ -68,13 +112,13 @@ const copy = {
     roomsSubtitle: "Three different moods, the same attention to detail.",
     roomSunName: "Sun",
     roomSunDesc:
-      "Warm, bright and golden, with a sun-kissed feeling all day long.",
+      "Warm, bright and golden, with a sun-kissed feeling all day long. With balcony.",
     roomMoonName: "Moon",
     roomMoonDesc:
-      "Quiet and cocooning, designed for those who love to slow down.",
+      "Quiet and cocooning, designed for those who love to slow down. With balcony.",
     roomEarthName: "Earth",
     roomEarthDesc:
-      "Spacious and natural, ideal for longer stays and families.",
+      "Spacious and natural, ideal for longer stays and families. With window.",
     fromNight: "from",
     perNight: "/night",
     inclBreakfast: "Coupon bar included",
@@ -95,6 +139,35 @@ const copy = {
     contactActionMail: "Send an email",
     contactActionWhatsapp: "Open WhatsApp",
     contactFollowUs: "Follow us here",
+    locationTransportation: "Transportation",
+    locationAirports: "Airports",
+    locationTrainStations: "Train stations",
+    locationAttractions: "Attractions nearby",
+    locationCapodichino: "Capodichino",
+    locationNapoliCentrale: "Naples central station",
+    locationMetro: "Metro",
+    locationMetroPiazzaGaribaldi: "Piazza Garibaldi, Naples",
+    locationPortaNolana: "Napoli Porta Nolana (Circumvesuviana)",
+    locationGalleriaPrincipe: "Galleria Principe di Napoli",
+    locationBasilicaPaolo: "Basilica di San Paolo Maggiore",
+    locationCentroStorico: "Historic Centre",
+    locationViaTribunali: "Via dei Tribunali",
+    locationSanLorenzo: "San Lorenzo Maggiore excavations",
+    locationAquedotto: "Roman Aqueduct",
+    locationSanGregorio: "Via San Gregorio Armeno",
+    locationTesoroSanGennaro: "Museo del Tesoro di San Gennaro",
+    locationMuseoDonnaregina: "Museo Diocesano Donnaregina",
+    locationCappellaSansevero: "Museo Cappella Sansevero (Veiled Christ)",
+    locationDuomo: "Naples Cathedral - Duomo di San Gennaro",
+    locationGalleriaUmberto: "Galleria Umberto I",
+    locationPiazzaSanGaetano: "Piazza San Gaetano - Greek-Roman excavations",
+    locationAttractionsTitle: "Attractions & museums nearby",
+    locationRestaurantsTitle: "Renowned pizzerias & restaurants",
+    locationDaMichele: "L'Antica Pizzeria Da Michele",
+    locationSorbillo: "Pizzeria Sorbillo",
+    locationDiMatteo: "Pizzeria Di Matteo",
+    locationStarita: "Pizzeria Starita a Materdei",
+    locationIlPresidente: "Il Figlio del Presidente",
     footerMadeBy: "Ohana B&B website",
     footerPrivacy: "Privacy",
     footerCookie: "Cookies",
@@ -123,6 +196,14 @@ export default function Home() {
   const [reviewSent, setReviewSent] = useState(false);
   const [reviewSending, setReviewSending] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCarouselIndex((i) => (i + 1) % CAROUSEL_PHOTOS.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     fetch("/api/reviews")
@@ -166,21 +247,7 @@ export default function Home() {
     <div className="page-shell">
       <div className="page-inner">
         <header className="topbar">
-          <Link href="/" className="brand">
-            <img
-              src="/ohana-logo.png"
-              alt="Ohana Bed & Breakfast"
-              width={180}
-              height={56}
-              className="brand-logo"
-            />
-            <span className="brand-sub" style={{ marginLeft: 4 }}>
-              {lang === "it" ? "Camere, luce, colori" : "Rooms, light, colours"}
-            </span>
-          </Link>
-
-          <div className="topbar-right">
-            <nav className="nav-links">
+          <nav className="nav-links nav-links--left">
               <Link href="/galleria">{lang === "it" ? "Camere" : "Rooms"}</Link>
               <a href="#recensioni">
                 {lang === "it" ? "Recensioni" : "Reviews"}
@@ -195,6 +262,18 @@ export default function Home() {
                 {lang === "it" ? "Come arrivare" : "How to reach us"}
               </a>
             </nav>
+
+          <Link href="/" className="brand brand--centered">
+            <img
+              src="/ohana-logo.png"
+              alt="Ohana Bed & Breakfast"
+              width={260}
+              height={84}
+              className="brand-logo"
+            />
+          </Link>
+
+          <div className="topbar-right">
             <div className="lang-switch" aria-label="Seleziona lingua">
               <button
                 type="button"
@@ -217,6 +296,38 @@ export default function Home() {
             </div>
           </div>
         </header>
+
+        <section className="hero-carousel" aria-label="Foto delle camere">
+          <div className="hero-carousel-inner">
+            {CAROUSEL_PHOTOS.map((src, i) => (
+              <div
+                key={src}
+                className={`hero-carousel-slide ${i === carouselIndex ? "hero-carousel-slide--active" : ""}`}
+                aria-hidden={i !== carouselIndex}
+              >
+                <Image
+                  src={src}
+                  alt=""
+                  fill
+                  sizes="100vw"
+                  priority={i === 0}
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="hero-carousel-dots" aria-hidden>
+            {CAROUSEL_PHOTOS.map((_, i) => (
+              <button
+                key={i}
+                type="button"
+                className={`hero-carousel-dot ${i === carouselIndex ? "hero-carousel-dot--active" : ""}`}
+                aria-label={`Foto ${i + 1} di ${CAROUSEL_PHOTOS.length}`}
+                onClick={() => setCarouselIndex(i)}
+              />
+            ))}
+          </div>
+        </section>
 
         <main>
           <section className="hero-grid" aria-labelledby="hero-title">
@@ -327,7 +438,7 @@ export default function Home() {
                     {lang === "it" ? "Stanze a partire da" : "Rooms from"}
                   </div>
                   <div style={{ fontSize: 16, fontWeight: 600 }}>
-                    €80{" "}
+                    €70{" "}
                     <span style={{ fontSize: 11, fontWeight: 400 }}>
                       {lang === "it" ? "/notte" : "/night"}
                     </span>
@@ -365,34 +476,13 @@ export default function Home() {
             <div className="rooms-grid">
               <article className="room-card">
                 <div className="room-photo room-photo--sun">
-                  <svg className="room-scene" viewBox="0 0 320 120" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden>
-                    <defs>
-                      <radialGradient id="sunCore" cx="85%" cy="15%" r="50%">
-                        <stop offset="0%" stopColor="#fffef0" />
-                        <stop offset="40%" stopColor="#ffe066" />
-                        <stop offset="85%" stopColor="#f0a040" />
-                        <stop offset="100%" stopColor="rgba(240,160,64,0)" />
-                      </radialGradient>
-                      <linearGradient id="rayGrad" x1="85%" y1="15%" x2="0%" y2="85%">
-                        <stop offset="0%" stopColor="rgba(255,230,150,0.85)" />
-                        <stop offset="100%" stopColor="rgba(255,200,100,0.15)" />
-                      </linearGradient>
-                    </defs>
-                    {/* Raggi che illuminano tutto il riquadro */}
-                    {[...Array(32)].map((_, i) => {
-                      const a = (i / 32) * Math.PI * 1.8 - 0.1;
-                      const x1 = 265; const y1 = 22;
-                      const len = 380;
-                      const x2 = x1 + len * Math.cos(a);
-                      const y2 = y1 + len * Math.sin(a);
-                      return (
-                        <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="url(#rayGrad)" strokeWidth="5" strokeLinecap="round" opacity={0.5 + 0.25 * (1 - Math.abs(i - 16) / 16)} />
-                      );
-                    })}
-                    <circle cx="270" cy="25" r="38" fill="url(#sunCore)" />
-                    <circle cx="270" cy="25" r="32" fill="#fff8dc" />
-                    <ellipse cx="270" cy="25" rx="28" ry="28" fill="url(#sunCore)" />
-                  </svg>
+                  <Image
+                    src="/galleria/sun-1.jpg"
+                    alt="Camera Sun"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
                 </div>
                 <div className="room-body">
                   <h3 className="room-name">{t.roomSunName}</h3>
@@ -426,34 +516,13 @@ export default function Home() {
 
               <article className="room-card">
                 <div className="room-photo room-photo--moon">
-                  <svg className="room-scene" viewBox="0 0 320 120" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden>
-                    <defs>
-                      <linearGradient id="nightSky" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#2a3040" />
-                        <stop offset="50%" stopColor="#1e2433" />
-                        <stop offset="100%" stopColor="#151a28" />
-                      </linearGradient>
-                      <radialGradient id="moonGlow" cx="50%" cy="50%" r="50%">
-                        <stop offset="0%" stopColor="#f5f8fc" />
-                        <stop offset="60%" stopColor="#d0dce8" />
-                        <stop offset="100%" stopColor="#9ba8b5" />
-                      </radialGradient>
-                      <filter id="starGlow" x="-50%" y="-50%" width="200%" height="200%">
-                        <feGaussianBlur stdDeviation="0.8" result="blur" />
-                        <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-                      </filter>
-                    </defs>
-                    <rect width="320" height="120" fill="url(#nightSky)" />
-                    {/* Stelle sparse che danno vita al cielo */}
-                    {[[18,24,1.2],[48,18,0.8],[92,42,1],[130,28,1.4],[165,55,0.7],[200,22,1.1],[245,48,0.9],[280,35,1.3],[55,65,0.8],[115,75,1],[185,82,0.7],[255,70,1],[22,88,1],[95,95,0.6],[160,100,1],[230,88,0.9]].map(([x, y, r], i) => (
-                      <circle key={i} cx={x} cy={y} r={r} fill="#fff" opacity={0.75 + (i % 3) * 0.1} filter="url(#starGlow)" />
-                    ))}
-                    <circle cx="260" cy="55" r="28" fill="rgba(220,230,240,0.25)" />
-                    <circle cx="260" cy="55" r="24" fill="url(#moonGlow)" />
-                    <circle cx="252" cy="48" r="2.5" fill="rgba(180,195,210,0.6)" />
-                    <circle cx="266" cy="52" r="2" fill="rgba(175,190,205,0.6)" />
-                    <circle cx="258" cy="60" r="1.8" fill="rgba(170,185,200,0.6)" />
-                  </svg>
+                  <Image
+                    src="/galleria/moon-1.jpg"
+                    alt="Camera Moon"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
                 </div>
                 <div className="room-body">
                   <h3 className="room-name">{t.roomMoonName}</h3>
@@ -487,44 +556,13 @@ export default function Home() {
 
               <article className="room-card">
                 <div className="room-photo room-photo--earth">
-                  <svg className="room-scene" viewBox="0 0 320 120" fill="none" preserveAspectRatio="xMidYMid slice" aria-hidden>
-                    <defs>
-                      <linearGradient id="vineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#6b8e6b" />
-                        <stop offset="100%" stopColor="#4a6b4a" />
-                      </linearGradient>
-                      <linearGradient id="leafGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#8fbc8f" />
-                        <stop offset="100%" stopColor="#5a8a5a" />
-                      </linearGradient>
-                      <linearGradient id="leafGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor="#7cb87c" />
-                        <stop offset="100%" stopColor="#4d7a4d" />
-                      </linearGradient>
-                    </defs>
-                    {/* Vigna bordo sinistro – sale e avvolge */}
-                    <path d="M0 120 Q8 90 12 70 Q18 45 20 25 Q22 8 28 0" stroke="url(#vineGrad)" strokeWidth="5" fill="none" strokeLinecap="round" />
-                    <path d="M5 115 Q15 75 18 50 Q22 22 30 5" stroke="url(#vineGrad)" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8" />
-                    <path d="M0 95 Q10 55 16 30 Q20 10 32 0" stroke="url(#vineGrad)" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.6" />
-                    {/* Foglie lungo il bordo sinistro */}
-                    <path d="M12 75 L22 68 L18 82 L12 75" fill="url(#leafGrad1)" opacity="0.95" />
-                    <path d="M16 45 L26 40 L22 54 L16 45" fill="url(#leafGrad2)" opacity="0.9" />
-                    <path d="M18 22 L26 18 L24 30 L18 22" fill="url(#leafGrad1)" opacity="0.9" />
-                    {/* Vigna bordo superiore – attraversa */}
-                    <path d="M0 12 Q80 0 160 8 Q240 4 320 14" stroke="url(#vineGrad)" strokeWidth="4" fill="none" strokeLinecap="round" />
-                    <path d="M20 8 Q100 0 180 6 Q260 2 320 10" stroke="url(#vineGrad)" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.75" />
-                    <path d="M60 6 L68 0 L72 12 L60 6" fill="url(#leafGrad1)" opacity="0.9" />
-                    <path d="M140 4 L148 0 L152 10 L140 4" fill="url(#leafGrad2)" opacity="0.9" />
-                    <path d="M220 8 L228 2 L232 14 L220 8" fill="url(#leafGrad1)" opacity="0.9" />
-                    {/* Vigna bordo destro – scende */}
-                    <path d="M320 0 Q312 35 308 58 Q302 85 298 120" stroke="url(#vineGrad)" strokeWidth="5" fill="none" strokeLinecap="round" />
-                    <path d="M315 8 Q306 50 302 75 Q298 100 295 120" stroke="url(#vineGrad)" strokeWidth="4" fill="none" strokeLinecap="round" opacity="0.8" />
-                    <path d="M308 25 L298 22 L302 36 L308 25" fill="url(#leafGrad2)" opacity="0.9" />
-                    <path d="M306 70 L296 66 L300 80 L306 70" fill="url(#leafGrad1)" opacity="0.9" />
-                    {/* Rami che invadono delicatamente il centro */}
-                    <path d="M0 60 Q90 50 150 65" stroke="url(#vineGrad)" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.5" />
-                    <path d="M320 45 Q230 55 170 48" stroke="url(#vineGrad)" strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.5" />
-                  </svg>
+                  <Image
+                    src="/galleria/earth-1.jpg"
+                    alt="Camera Earth"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
                 </div>
                 <div className="room-body">
                   <h3 className="room-name">{t.roomEarthName}</h3>
@@ -536,7 +574,7 @@ export default function Home() {
                     </span>
                     <div>
                       <span className="price">
-                        {t.fromNight} €80{" "}
+                        {t.fromNight} €70{" "}
                         <span style={{ fontWeight: 400 }}>{t.perNight}</span>
                       </span>
                       <div style={{ fontSize: 11 }}>{t.inclBreakfast}</div>
@@ -572,44 +610,90 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="section-columns">
-              <ul className="list-soft">
-                <li>
+            <div className="services-grid">
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>☕</span>
+                <span className="service-text">
                   {lang === "it"
                     ? "Coupon colazione da spendere al bar"
                     : "Breakfast coupon to spend at the bar"}
-                </li>
-                <li>
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>📶</span>
+                <span className="service-text">
                   {lang === "it"
                     ? "Wi-Fi veloce in tutte le camere"
                     : "Fast Wi‑Fi in every room"}
-                </li>
-                <li>
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>🛏️</span>
+                <span className="service-text">
                   {lang === "it"
                     ? "La biancheria e gli asciugamani vengono forniti puliti all'arrivo e sono inclusi per tutta la durata del soggiorno."
                     : "Linen and towels are provided clean on arrival and included for the whole stay."}
-                </li>
-                <li>
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>🧹</span>
+                <span className="service-text">
                   {lang === "it"
                     ? "Pulizia quotidiana disponibile su richiesta, con supplemento."
                     : "Daily cleaning available on request, with extra charge."}
-                </li>
-                <li>
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>🛋️</span>
+                <span className="service-text">
                   {lang === "it"
                     ? "Letto king size con materassi e cuscini di qualità"
                     : "King size bed with quality mattress and pillows"}
-                </li>
-                <li>
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>🕐</span>
+                <span className="service-text">
                   {lang === "it"
                     ? "Check-in anticipato o check-out posticipato di 30 minuti disponibili su richiesta, con eventuale supplemento."
                     : "Early check-in or late check-out (30 min) available on request, with possible extra charge."}
-                </li>
-                <li>
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>❄️</span>
+                <span className="service-text">
                   {lang === "it"
                     ? "Aria condizionata e televisore in tutte le camere"
                     : "Air conditioning and TV in all rooms"}
-                </li>
-                <li className="list-soft-pet">
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>☕</span>
+                <span className="service-text">
+                  {lang === "it"
+                    ? "Macchina del caffè in tutte le stanze"
+                    : "Coffee machine in all rooms"}
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>🧊</span>
+                <span className="service-text">
+                  {lang === "it"
+                    ? "Frigobar in tutte le camere"
+                    : "Fridge/minibar in all rooms"}
+                </span>
+              </div>
+              <div className="service-card">
+                <span className="service-icon" aria-hidden>🍳</span>
+                <span className="service-text">
+                  {lang === "it"
+                    ? "Nel B&B è disponibile una piccola cucina utilizzabile dagli ospiti"
+                    : "A small kitchen is available in the B&B for guests to use"}
+                </span>
+              </div>
+              <div className="service-card service-card--pet">
+                <span className="service-icon" aria-hidden>🐕</span>
+                <span className="service-text">
                   {lang === "it" ? (
                     <>
                       Accettiamo i cani con piacere. Per condizioni e supplemento vedi{" "}
@@ -621,8 +705,8 @@ export default function Home() {
                       <Link href="/condizioni#animali">Terms of stay</Link>.
                     </>
                   )}
-                </li>
-              </ul>
+                </span>
+              </div>
             </div>
           </section>
 
@@ -748,7 +832,83 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="section-columns">
+            <div className="location-layout">
+              <div className="map-shell" aria-label="Mappa indicativa">
+                <iframe
+                  title={
+                    lang === "it"
+                      ? "Mappa posizione Ohana B&B"
+                      : "Ohana B&B location map"
+                  }
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3019.123!2d14.2622!3d40.8519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133b0866e1c3e8a5%3A0x9e8a7c8b8b8b8b8b!2sVia%20Lavinaio%2C%2019%2C%2080142%20Napoli%20NA!5e0!3m2!1sit!2sit!4v1700000000000"
+                />
+              </div>
+              <div className="location-sidebar">
+                <div className="location-block">
+                  <h3 className="location-block-title">{t.locationTransportation}</h3>
+                  <ul className="location-list">
+                    <li className="location-item location-item--transport">
+                      <span className="location-icon" aria-hidden>✈️</span>
+                      <div>
+                        <span className="location-label">{t.locationAirports}</span>
+                        <span className="location-detail">{t.locationCapodichino} — 4.4 km</span>
+                      </div>
+                    </li>
+                    <li className="location-item location-item--transport">
+                      <span className="location-icon" aria-hidden>🚂</span>
+                      <div>
+                        <span className="location-label">{t.locationTrainStations}</span>
+                        <span className="location-detail">{t.locationNapoliCentrale} — 650 m</span>
+                      </div>
+                    </li>
+                    <li className="location-item location-item--transport">
+                      <span className="location-icon" aria-hidden>🚇</span>
+                      <div>
+                        <span className="location-label">{t.locationMetro}</span>
+                        <span className="location-detail">{t.locationMetroPiazzaGaribaldi} — 600 m</span>
+                      </div>
+                    </li>
+                    <li className="location-item location-item--transport">
+                      <span className="location-icon" aria-hidden>🚂</span>
+                      <div>
+                        <span className="location-label">{t.locationTrainStations}</span>
+                        <span className="location-detail">{t.locationPortaNolana} — 400 m</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div className="location-block">
+                  <h3 className="location-block-title">{t.locationAttractionsTitle}</h3>
+                  <ul className="location-attractions">
+                    <li>{t.locationCappellaSansevero} — 450 m</li>
+                    <li>{t.locationDuomo} — 300 m</li>
+                    <li>{t.locationTesoroSanGennaro} — 200 m</li>
+                    <li>{t.locationMuseoDonnaregina} — 300 m</li>
+                    <li>{t.locationSanGregorio} — 400 m</li>
+                    <li>{t.locationPiazzaSanGaetano} — 350 m</li>
+                    <li>{t.locationSanLorenzo} — 400 m</li>
+                    <li>{t.locationBasilicaPaolo} — 400 m</li>
+                    <li>{t.locationViaTribunali} — 350 m</li>
+                    <li>{t.locationGalleriaUmberto} — 2 km</li>
+                    <li>{t.locationGalleriaPrincipe} — 1000 m</li>
+                  </ul>
+                </div>
+                <div className="location-block">
+                  <h3 className="location-block-title">{t.locationRestaurantsTitle}</h3>
+                  <ul className="location-attractions">
+                    <li>{t.locationDaMichele} — 350 m</li>
+                    <li>{t.locationSorbillo} — 450 m</li>
+                    <li>{t.locationDiMatteo} — 550 m</li>
+                    <li>{t.locationIlPresidente} — 200 m</li>
+                    <li>{t.locationStarita} — 1.2 km</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="contact-row-wrap">
               <div className="contact-card">
                 <div className="contact-row">
                   <div>
@@ -830,19 +990,6 @@ export default function Home() {
                     </a>
                   </div>
                 </div>
-              </div>
-
-              <div className="map-shell" aria-label="Mappa indicativa">
-                <iframe
-                  title={
-                    lang === "it"
-                      ? "Mappa posizione Ohana B&B"
-                      : "Ohana B&B location map"
-                  }
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3019.123!2d14.2622!3d40.8519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133b0866e1c3e8a5%3A0x9e8a7c8b8b8b8b8b!2sVia%20Lavinaio%2C%2019%2C%2080142%20Napoli%20NA!5e0!3m2!1sit!2sit!4v1700000000000"
-                />
               </div>
             </div>
           </section>
