@@ -10,18 +10,19 @@ export const viewport: Viewport = {
 const fontFamilySans =
   'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 
+// URL del sito: in produzione usa NEXT_PUBLIC_BASE_URL o il dominio reale
 const siteUrl =
-  process.env.NEXT_PUBLIC_BASE_URL ||
+  (typeof process !== "undefined" && process.env.NEXT_PUBLIC_BASE_URL?.trim()) ||
   (typeof process !== "undefined" && process.env.NODE_ENV === "production"
     ? "https://www.ohana-bnb.it"
     : "http://localhost:3000");
-const ogImageUrl = `${siteUrl.replace(/\/$/, "")}/ohana-logo.png`;
+const siteUrlClean = siteUrl.replace(/\/$/, "");
 
 export const metadata: Metadata = {
   title: "Ohana B&B | Bed & Breakfast",
   description:
     "Ohana. Il cuore di Napoli, il calore di casa.",
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(siteUrlClean),
   icons: {
     icon: "/ohana-logo.png",
     apple: "/ohana-logo.png",
@@ -30,14 +31,15 @@ export const metadata: Metadata = {
     title: "Ohana B&B | Bed & Breakfast",
     description:
       "Ohana. Il cuore di Napoli, il calore di casa.",
-    url: siteUrl,
+    url: siteUrlClean,
     siteName: "Ohana B&B",
     images: [
       {
-        url: ogImageUrl,
-        width: 1200,
-        height: 630,
-        alt: "Ohana B&B",
+        url: `${siteUrlClean}/ohana-logo.png`,
+        width: 1024,
+        height: 1024,
+        alt: "Ohana B&B - Bed & Breakfast Napoli",
+        type: "image/png",
       },
     ],
     locale: "it_IT",
@@ -48,7 +50,7 @@ export const metadata: Metadata = {
     title: "Ohana B&B | Bed & Breakfast",
     description:
       "Ohana. Il cuore di Napoli, il calore di casa.",
-    images: [ogImageUrl],
+    images: [`${siteUrlClean}/ohana-logo.png`],
   },
 };
 
