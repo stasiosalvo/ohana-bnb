@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
 type Lang = "it" | "en";
@@ -197,6 +197,9 @@ export default function Home() {
   const [reviewSending, setReviewSending] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
   const [carouselIndex, setCarouselIndex] = useState(0);
+  const videoSunRef = useRef<HTMLVideoElement>(null);
+  const videoMoonRef = useRef<HTMLVideoElement>(null);
+  const videoEarthRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -210,6 +213,38 @@ export default function Home() {
       .then((res) => res.ok ? res.json() : [])
       .then((data) => setReviews(Array.isArray(data) ? data : []))
       .catch(() => setReviews([]));
+  }, []);
+
+  // Partenza sincronizzata e play/pause insieme; niente correzioni durante la riproduzione = movimento fluido (niente seek a scatti)
+  useEffect(() => {
+    const sun = videoSunRef.current;
+    const moon = videoMoonRef.current;
+    const earth = videoEarthRef.current;
+    if (!sun || !moon || !earth) return;
+
+    const onPlay = () => {
+      moon.currentTime = sun.currentTime;
+      earth.currentTime = sun.currentTime;
+      moon.play().catch(() => {});
+      earth.play().catch(() => {});
+    };
+    const onPause = () => {
+      moon.pause();
+      earth.pause();
+    };
+
+    sun.addEventListener("play", onPlay);
+    sun.addEventListener("pause", onPause);
+
+    sun.currentTime = 0;
+    moon.currentTime = 0;
+    earth.currentTime = 0;
+    sun.play().catch(() => {});
+
+    return () => {
+      sun.removeEventListener("play", onPlay);
+      sun.removeEventListener("pause", onPause);
+    };
   }, []);
 
   const handleReviewSubmit = (e: React.FormEvent) => {
@@ -476,12 +511,15 @@ export default function Home() {
             <div className="rooms-grid">
               <article className="room-card">
                 <div className="room-photo room-photo--sun">
-                  <Image
-                    src="/galleria/sun-1.jpg"
-                    alt="Camera Sun"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, 33vw"
-                    style={{ objectFit: "cover" }}
+                  <video
+                    ref={videoSunRef}
+                    src="/IMG_1869.MOV"
+                    className="room-photo-video"
+                    muted
+                    loop
+                    playsInline
+                    autoPlay
+                    aria-label="Camera Sun"
                   />
                 </div>
                 <div className="room-body">
@@ -516,12 +554,15 @@ export default function Home() {
 
               <article className="room-card">
                 <div className="room-photo room-photo--moon">
-                  <Image
-                    src="/galleria/moon-1.jpg"
-                    alt="Camera Moon"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, 33vw"
-                    style={{ objectFit: "cover" }}
+                  <video
+                    ref={videoMoonRef}
+                    src="/IMG_1865.MOV"
+                    className="room-photo-video"
+                    muted
+                    loop
+                    playsInline
+                    autoPlay
+                    aria-label="Camera Moon"
                   />
                 </div>
                 <div className="room-body">
@@ -556,12 +597,15 @@ export default function Home() {
 
               <article className="room-card">
                 <div className="room-photo room-photo--earth">
-                  <Image
-                    src="/galleria/earth-1.jpg"
-                    alt="Camera Earth"
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 900px) 50vw, 33vw"
-                    style={{ objectFit: "cover" }}
+                  <video
+                    ref={videoEarthRef}
+                    src="/DB1BB8BA-621D-4D40-8EB8-F0BE9F012757%202.MOV"
+                    className="room-photo-video"
+                    muted
+                    loop
+                    playsInline
+                    autoPlay
+                    aria-label="Camera Earth"
                   />
                 </div>
                 <div className="room-body">
@@ -909,48 +953,36 @@ export default function Home() {
             </div>
 
             <div className="contact-row-wrap">
-              <div className="contact-card">
-                <div className="contact-row">
-                  <div>
-                    <div className="contact-label">{t.contactAddressLabel}</div>
-                    <div className="contact-value">
-                      {t.contactAddressValue}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="contact-row">
-                  <div>
-                    <div className="contact-label">{t.contactPhoneLabel}</div>
-                    <div className="contact-value">
-                      <a href="tel:+393762979866">{t.contactPhoneValue}</a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="contact-row">
-                  <div>
-                    <div className="contact-label">{t.contactEmailLabel}</div>
-                    <div className="contact-value">
-                      <a href={`mailto:${CONTACT_EMAIL}`}>
-                        {t.contactEmailValue}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="contact-row">
-                  <div>
-                    <div className="contact-label">
-                      {t.contactWhatsappLabel}
-                    </div>
-                    <div className="contact-value">
-                      <a href="https://wa.me/393762979866" target="_blank">
-                        {t.contactWhatsappValue}
-                      </a>
-                    </div>
-                  </div>
-                </div>
+              <div className="contact-card location-block">
+                <h3 className="location-block-title">{lang === "it" ? "Contatti" : "Contact"}</h3>
+                <ul className="contact-list">
+                <li className="contact-row">
+                  <span className="contact-label">{t.contactAddressLabel}</span>
+                  <span className="contact-sep" aria-hidden> — </span>
+                  <span className="contact-value">{t.contactAddressValue}</span>
+                </li>
+                <li className="contact-row">
+                  <span className="contact-label">{t.contactPhoneLabel}</span>
+                  <span className="contact-sep" aria-hidden> — </span>
+                  <span className="contact-value">
+                    <a href="tel:+393762979866">{t.contactPhoneValue}</a>
+                  </span>
+                </li>
+                <li className="contact-row">
+                  <span className="contact-label">{t.contactEmailLabel}</span>
+                  <span className="contact-sep" aria-hidden> — </span>
+                  <span className="contact-value">
+                    <a href={`mailto:${CONTACT_EMAIL}`}>{t.contactEmailValue}</a>
+                  </span>
+                </li>
+                <li className="contact-row">
+                  <span className="contact-label">{t.contactWhatsappLabel}</span>
+                  <span className="contact-sep" aria-hidden> — </span>
+                  <span className="contact-value">
+                    <a href="https://wa.me/393762979866" target="_blank" rel="noopener noreferrer">{t.contactWhatsappValue}</a>
+                  </span>
+                </li>
+                </ul>
 
                 <div className="contact-actions">
                   <a href="tel:+393762979866" className="chip">
@@ -970,7 +1002,7 @@ export default function Home() {
                 </div>
 
                 <div className="contact-social">
-                  <div className="contact-label">{t.contactFollowUs}</div>
+                  <h3 className="location-block-title">{t.contactFollowUs}</h3>
                   <div className="contact-actions">
                     <a
                       href="https://www.instagram.com/ohana.bnb?igsh=NXBrc3Ztc2FqYWJ3"

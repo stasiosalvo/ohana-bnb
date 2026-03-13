@@ -14,7 +14,18 @@ const ROOMS = [
     metaIt: "2 ospiti · 20 m² · bagno privato · da €80/notte",
     metaEn: "2 guests · 20 m² · private bathroom · from €80/night",
     photoClass: "gallery-room-photo--sun",
-    photos: ["/galleria/sun-1.jpg", "/galleria/sun-2.jpg", "/galleria/sun-3.jpg"],
+    photos: [
+      "/galleria/sun-1.jpg",
+      "/galleria/sun-2.jpg",
+      "/galleria/sun-3.jpg",
+      "/galleria/sun-4.png",
+      "/galleria/sun-5.png",
+      "/galleria/sun-6.png",
+      "/galleria/sun-7.png",
+      "/galleria/sun-8.png",
+      "/galleria/sun-9.png",
+    ],
+    videoSrc: "/IMG_1869.MOV",
   },
   {
     id: "moon",
@@ -24,7 +35,20 @@ const ROOMS = [
     metaIt: "2 ospiti · 20 m² · bagno privato · da €80/notte",
     metaEn: "2 guests · 20 m² · private bathroom · from €80/night",
     photoClass: "gallery-room-photo--moon",
-    photos: ["/galleria/moon-1.jpg", "/galleria/moon-2.jpg", "/galleria/moon-3.jpg", "/galleria/moon-4.jpg"],
+    photos: [
+      "/galleria/moon-1.jpg",
+      "/galleria/moon-2.jpg",
+      "/galleria/moon-3.jpg",
+      "/galleria/moon-4.jpg",
+      "/galleria/moon-5.png",
+      "/galleria/moon-6.png",
+      "/galleria/moon-7.png",
+      "/galleria/moon-8.png",
+      "/galleria/moon-9.png",
+      "/galleria/moon-10.png",
+      "/galleria/moon-11.png",
+    ],
+    videoSrc: "/IMG_1865.MOV",
   },
   {
     id: "earth",
@@ -34,15 +58,28 @@ const ROOMS = [
     metaIt: "2 ospiti · 20 m² · bagno privato · da €70/notte",
     metaEn: "2 guests · 20 m² · private bathroom · from €70/night",
     photoClass: "gallery-room-photo--earth",
-    photos: ["/galleria/earth-1.jpg", "/galleria/earth-2.jpg", "/galleria/earth-3.jpg", "/galleria/earth-4.jpg"],
+    photos: [
+      "/galleria/earth-1.jpg",
+      "/galleria/earth-2.jpg",
+      "/galleria/earth-3.jpg",
+      "/galleria/earth-4.jpg",
+      "/galleria/earth-5.png",
+      "/galleria/earth-6.png",
+      "/galleria/earth-7.png",
+      "/galleria/earth-8.png",
+      "/galleria/earth-9.png",
+    ],
+    videoSrc: "/DB1BB8BA-621D-4D40-8EB8-F0BE9F012757%202.MOV",
   },
 ];
 
-// Sezione "I nostri spazi" (logo + foto struttura)
+// Sezione "I nostri spazi" (video/logo + foto struttura)
+// Per il video: metti il file .MOV/.mp4 in public/ (es. public/spazi.MOV) e indica il percorso qui sotto
 const SPAZI = {
   id: "spazi",
   name: "I nostri spazi",
   descriptionIt: "Gli spazi comuni, gli amenity e i dettagli che rendono Ohana un luogo speciale.",
+  videoSrc: ["/IMG_1856.MOV", "/IMG_1875.MOV"], // uno o più video; vuoto "" = solo logo
   photos: [
     "/galleria/spazio-1.jpg",
     "/galleria/spazio-2.jpg",
@@ -52,6 +89,11 @@ const SPAZI = {
     "/galleria/spazio-6.jpg",
     "/galleria/spazio-7.jpg",
     "/galleria/spazio-8.jpg",
+    "/galleria/spazio-9.png",
+    "/galleria/spazio-10.png",
+    "/galleria/spazio-11.png",
+    "/galleria/spazio-12.png",
+    "/galleria/spazio-13.png",
   ],
 };
 
@@ -59,6 +101,9 @@ type LightboxItem = { name: string; photos: string[] };
 
 export default function GalleriaPage() {
   const [lightboxItem, setLightboxItem] = useState<LightboxItem | null>(null);
+  const [spaziVideoIndex, setSpaziVideoIndex] = useState(0);
+  const spaziVideos = Array.isArray(SPAZI.videoSrc) ? SPAZI.videoSrc : SPAZI.videoSrc ? [SPAZI.videoSrc] : [];
+  const hasSpaziVideo = spaziVideos.length > 0;
 
   return (
     <div className="page-shell">
@@ -108,7 +153,19 @@ export default function GalleriaPage() {
                     className={`gallery-room-photo ${room.photoClass}`}
                     role="img"
                     aria-label={`Camera ${room.name}`}
-                  />
+                  >
+                    {room.videoSrc && (
+                      <video
+                        src={room.videoSrc}
+                        className="gallery-room-photo-video"
+                        muted
+                        loop
+                        playsInline
+                        autoPlay
+                        aria-hidden
+                      />
+                    )}
+                  </div>
                   <button
                     type="button"
                     className="gallery-room-photo-btn"
@@ -136,21 +193,35 @@ export default function GalleriaPage() {
               </article>
             ))}
 
-            {/* Sezione I nostri spazi (logo + foto) */}
+            {/* Sezione I nostri spazi (video o logo + foto) */}
             <article
               className="gallery-room"
               aria-labelledby="room-spazi"
             >
               <div className="gallery-room-photo-wrap">
-                <div className="gallery-room-photo gallery-room-photo--logo">
-                  <Image
-                    src="/ohana-logo.png"
-                    alt="Ohana B&B"
-                    fill
-                    className="object-contain"
-                    sizes="(max-width: 720px) 100vw, 40vw"
-                    unoptimized
-                  />
+                <div className={`gallery-room-photo ${hasSpaziVideo ? "gallery-room-photo--spazi" : "gallery-room-photo--logo"}`}>
+                  {hasSpaziVideo ? (
+                    <video
+                      key={spaziVideoIndex}
+                      src={spaziVideos[spaziVideoIndex]}
+                      className="gallery-room-photo-video"
+                      muted
+                      loop={spaziVideos.length === 1}
+                      playsInline
+                      autoPlay
+                      aria-hidden
+                      onEnded={() => spaziVideos.length > 1 && setSpaziVideoIndex((i) => (i + 1) % spaziVideos.length)}
+                    />
+                  ) : (
+                    <Image
+                      src="/ohana-logo.png"
+                      alt="Ohana B&B"
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 720px) 100vw, 40vw"
+                      unoptimized
+                    />
+                  )}
                 </div>
                 <button
                   type="button"

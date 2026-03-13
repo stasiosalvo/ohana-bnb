@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { applyDiscount } from "@/lib/discount";
+import { applyDiscount, canUseDiscountCode } from "@/lib/discount";
 import { isPeriodBlocked, type RoomId } from "@/lib/blocked";
 
 export const runtime = "nodejs";
@@ -99,11 +99,19 @@ export async function POST(request: Request) {
     }
 
     let totalToCharge = totalNum;
-    if (discountCode?.trim()) {
-      const discount = applyDiscount(discountCode.trim(), totalNum);
+    const codeUsed = discountCode?.trim();
+    if (codeUsed) {
+      const discount = applyDiscount(codeUsed, totalNum);
       if (!discount.valid) {
         return NextResponse.json(
           { error: "Codice sconto non valido o scaduto." },
+          { status: 400 }
+        );
+      }
+      const allowed = await canUseDiscountCode(codeUsed);
+      if (!allowed) {
+        return NextResponse.json(
+          { error: "Questo codice sconto ha raggiunto il numero massimo di utilizzi." },
           { status: 400 }
         );
       }
@@ -124,6 +132,7 @@ export async function POST(request: Request) {
         name,
         phone: phone ?? "",
         nights: String(nightsNum),
+        ...(codeUsed ? { discountCode: codeUsed.toUpperCase() } : {}),
       },
       line_items: [
         {

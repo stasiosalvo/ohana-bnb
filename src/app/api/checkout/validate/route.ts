@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { applyDiscount } from "@/lib/discount";
+import { applyDiscount, canUseDiscountCode } from "@/lib/discount";
 
 export const runtime = "nodejs";
 
@@ -17,6 +17,12 @@ export async function GET(request: Request) {
   if (!result.valid) {
     return NextResponse.json({ valid: false });
   }
+
+  const allowed = await canUseDiscountCode(code);
+  if (!allowed) {
+    return NextResponse.json({ valid: false });
+  }
+
   return NextResponse.json({
     valid: true,
     discountedTotal: result.discountedTotal,

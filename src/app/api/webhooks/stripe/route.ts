@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
 import { addBlocked, type RoomId } from "@/lib/blocked";
+import { incrementDiscountUsage } from "@/lib/discount";
 
 export const runtime = "nodejs";
 
@@ -64,8 +65,18 @@ export async function POST(request: Request) {
   const name = session.metadata?.name ?? "";
   const phone = session.metadata?.phone ?? "";
   const nights = session.metadata?.nights ?? "0";
+  const discountCode = session.metadata?.discountCode as string | undefined;
   const customerEmail = session.customer_email ?? session.customer_details?.email ?? "";
   const amountTotal = session.amount_total != null ? session.amount_total / 100 : 0;
+
+  // Incrementa utilizzo codice sconto (per limiti tipo "primi 10 clienti")
+  if (discountCode?.trim()) {
+    try {
+      await incrementDiscountUsage(discountCode.trim());
+    } catch (e) {
+      console.error("Webhook: incremento utilizzo codice sconto fallito", e);
+    }
+  }
 
   // Blocca automaticamente le date della camera prenotata
   if (roomId && checkIn && checkOut && ["sun", "moon", "earth"].includes(roomId)) {
