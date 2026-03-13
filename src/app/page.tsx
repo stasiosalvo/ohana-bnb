@@ -768,7 +768,8 @@ export default function Home() {
               </div>
             </div>
             <div className="reviews-layout">
-              <div className="reviews-list">
+              <div className="reviews-list-scroll" aria-label={lang === "it" ? "Elenco recensioni" : "Reviews list"}>
+                <div className="reviews-list">
                 {reviews.length === 0 ? (
                   <p className="reviews-empty">
                     {lang === "it"
@@ -794,6 +795,7 @@ export default function Home() {
                     </article>
                   ))
                 )}
+                </div>
               </div>
               <div className="reviews-form-wrap">
                 <h3 className="reviews-form-title">
