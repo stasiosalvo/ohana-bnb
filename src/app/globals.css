@@ -995,27 +995,46 @@ main {
   margin-bottom: 10px;
 }
 
-/* Chip: pulsanti bianchi con bordo grigio chiaro e testo nero (Chiama ora, Instagram, TikTok, ecc.) */
+/* Chip: stesso stile dorato dei pulsanti principali (Chiama ora, Instagram, TikTok, ecc.) */
 .chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 12px;
   font-weight: 500;
-  padding: 8px 14px;
+  padding: 9px 16px;
   border-radius: 999px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: none;
   cursor: pointer;
   text-decoration: none;
-  color: #1a1a1a;
-  background: #fff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-  transition: background 0.2s ease, border-color 0.2s ease;
+  color: #3d342a;
+  background: radial-gradient(circle at 20% 0%, #fffaf0 0%, #f0e1c3 40%, #c9a668 100%);
+  box-shadow:
+    0 4px 14px rgba(101, 80, 45, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+  transition: filter 0.2s ease, transform 0.2s ease;
 }
 
 .chip:hover {
-  background: #f8f8f8;
-  border-color: rgba(0, 0, 0, 0.12);
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
+
+/* Pulsanti contatti e social: forzati dorati (stesso stile btn-primary) */
+.contact-actions .chip,
+.contact-social .chip {
+  color: #3d342a;
+  background: radial-gradient(circle at 20% 0%, #fffaf0 0%, #f0e1c3 40%, #c9a668 100%);
+  box-shadow:
+    0 4px 14px rgba(101, 80, 45, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+  border: none;
+}
+
+.contact-actions .chip:hover,
+.contact-social .chip:hover {
+  filter: brightness(1.03);
+  transform: translateY(-1px);
 }
 
 .map-shell {
