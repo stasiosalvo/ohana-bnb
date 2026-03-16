@@ -52,6 +52,7 @@ export default function PrenotaRoomPage({ params }: Props) {
   const roomKey = (resolvedParams.roomId || "sun") as RoomId;
   const room = ROOMS[roomKey] ?? ROOMS.sun;
 
+  const [selectedRooms, setSelectedRooms] = useState<RoomId[]>([roomKey]);
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState("2");
@@ -72,14 +73,28 @@ export default function PrenotaRoomPage({ params }: Props) {
   const [availabilityOk, setAvailabilityOk] = useState<boolean | null>(null);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
 
+  const toggleRoom = (id: RoomId) => {
+    setSelectedRooms((prev) => {
+      if (prev.includes(id)) {
+        if (prev.length <= 1) return prev;
+        return prev.filter((r) => r !== id);
+      }
+      return [...prev, id];
+    });
+  };
+
   useEffect(() => {
-    const current = Number(guests) || room.minGuests;
-    const clamped = Math.min(
-      room.maxGuests,
-      Math.max(room.minGuests, current)
-    );
-    if (current !== clamped) setGuests(String(clamped));
+    if (!selectedRooms.includes(roomKey)) setSelectedRooms((prev) => [...prev, roomKey]);
   }, [roomKey]);
+
+  const maxGuests = Math.max(...selectedRooms.map((id) => ROOMS[id].maxGuests), 2);
+  const minGuests = Math.min(...selectedRooms.map((id) => ROOMS[id].minGuests), 1);
+
+  useEffect(() => {
+    const current = Number(guests) || minGuests;
+    const clamped = Math.min(maxGuests, Math.max(minGuests, current));
+    if (current !== clamped) setGuests(String(clamped));
+  }, [selectedRooms, minGuests, maxGuests]);
 
   const nights = useMemo(() => {
     if (!checkIn || !checkOut) return 0;
@@ -90,7 +105,10 @@ export default function PrenotaRoomPage({ params }: Props) {
     return diffDays > 0 ? diffDays : 0;
   }, [checkIn, checkOut]);
 
-  const total = nights * room.pricePerNight;
+  const total = useMemo(
+    () => selectedRooms.reduce((sum, id) => sum + ROOMS[id].pricePerNight * nights, 0),
+    [selectedRooms, nights]
+  );
 
   useEffect(() => {
     setAppliedDiscount(null);
@@ -98,19 +116,24 @@ export default function PrenotaRoomPage({ params }: Props) {
   }, [total]);
 
   useEffect(() => {
-    if (!checkIn || !checkOut || nights <= 0) {
+    if (!checkIn || !checkOut || nights <= 0 || selectedRooms.length === 0) {
       setAvailabilityOk(null);
       return;
     }
     let cancelled = false;
     setCheckingAvailability(true);
     setAvailabilityOk(null);
-    fetch(
-      `/api/availability/check?roomId=${encodeURIComponent(roomKey)}&checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}`
+    Promise.all(
+      selectedRooms.map((roomId) =>
+        fetch(
+          `/api/availability/check?roomId=${encodeURIComponent(roomId)}&checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}`
+        ).then((r) => r.json())
+      )
     )
-      .then((r) => r.json())
-      .then((data: { available?: boolean }) => {
-        if (!cancelled) setAvailabilityOk(data.available ?? true);
+      .then((results: { available?: boolean }[]) => {
+        if (cancelled) return;
+        const allOk = results.every((data) => data.available !== false);
+        setAvailabilityOk(allOk);
       })
       .catch(() => {
         if (!cancelled) setAvailabilityOk(true);
@@ -121,7 +144,7 @@ export default function PrenotaRoomPage({ params }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [roomKey, checkIn, checkOut, nights]);
+  }, [selectedRooms, checkIn, checkOut, nights]);
 
   const displayTotal = appliedDiscount ? appliedDiscount.discountedTotal : total;
 
@@ -173,31 +196,53 @@ export default function PrenotaRoomPage({ params }: Props) {
 
     if (availabilityOk === false) {
       setError(
-        "Queste date non sono disponibili per questa camera. Scegli altre date o un'altra camera."
+        selectedRooms.length > 1
+          ? "Per una o più camere le date non sono disponibili. Scegli altre date o rimuovi una camera."
+          : "Queste date non sono disponibili per questa camera. Scegli altre date o un'altra camera."
       );
       return;
     }
 
     try {
       setIsSubmitting(true);
+      const payload =
+        selectedRooms.length > 1
+          ? {
+              rooms: selectedRooms.map((id) => ({
+                roomId: id,
+                pricePerNight: ROOMS[id].pricePerNight,
+                nights,
+              })),
+              checkIn,
+              checkOut,
+              guests: Number(guests),
+              name,
+              email,
+              phone,
+              notes,
+              nights,
+              total,
+              discountCode: appliedDiscount ? discountCode.trim() : undefined,
+            }
+          : {
+              roomId: selectedRooms[0],
+              checkIn,
+              checkOut,
+              guests: Number(guests),
+              name,
+              email,
+              phone,
+              notes,
+              nights,
+              total,
+              discountCode: appliedDiscount ? discountCode.trim() : undefined,
+            };
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          roomId: roomKey,
-          checkIn,
-          checkOut,
-          guests: Number(guests),
-          name,
-          email,
-          phone,
-          notes,
-          nights,
-          total,
-          discountCode: appliedDiscount ? discountCode.trim() : undefined,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = (await res.json()) as { url?: string; error?: string };
@@ -249,57 +294,70 @@ export default function PrenotaRoomPage({ params }: Props) {
                 <span>Prenotazione camera</span>
               </div>
               <h1 className="booking-header-title">
-                Camera {room.name}
+                {selectedRooms.length > 1
+                  ? `Prenota ${selectedRooms.length} camere`
+                  : `Camera ${room.name}`}
               </h1>
-              <p className="hero-subtitle">{room.short}</p>
+              <p className="hero-subtitle">
+                {selectedRooms.length > 1
+                  ? "Stesse date per tutte le camere. Aggiungi o rimuovi camere qui sotto."
+                  : room.short}
+              </p>
 
               <div className="booking-room-selector">
-                <span className="booking-room-selector-label">Clicca per cambiare camera</span>
-                <div className="booking-room-cards" role="group" aria-label="Selezione camera">
-                  <Link
-                    href="/prenota/sun"
-                    className={`booking-room-card ${roomKey === "sun" ? "booking-room-card--active" : ""}`}
-                    aria-pressed={roomKey === "sun"}
-                    aria-label="Seleziona camera Sun, €80 a notte"
+                <span className="booking-room-selector-label">
+                  Seleziona una o più camere (stesse date)
+                </span>
+                <div className="booking-room-cards" role="group" aria-label="Selezione camere">
+                  <button
+                    type="button"
+                    onClick={() => toggleRoom("sun")}
+                    className={`booking-room-card ${selectedRooms.includes("sun") ? "booking-room-card--active" : ""}`}
+                    aria-pressed={selectedRooms.includes("sun")}
+                    aria-label="Sun €80/notte"
                   >
-                    <span className="booking-room-card-check">{roomKey === "sun" ? "✓" : ""}</span>
+                    <span className="booking-room-card-check">{selectedRooms.includes("sun") ? "✓" : ""}</span>
                     <span className="booking-room-card-name">Sun</span>
                     <span className="booking-room-card-price">€80/notte</span>
-                  </Link>
-                  <Link
-                    href="/prenota/moon"
-                    className={`booking-room-card ${roomKey === "moon" ? "booking-room-card--active" : ""}`}
-                    aria-pressed={roomKey === "moon"}
-                    aria-label="Seleziona camera Moon, €80 a notte"
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleRoom("moon")}
+                    className={`booking-room-card ${selectedRooms.includes("moon") ? "booking-room-card--active" : ""}`}
+                    aria-pressed={selectedRooms.includes("moon")}
+                    aria-label="Moon €80/notte"
                   >
-                    <span className="booking-room-card-check">{roomKey === "moon" ? "✓" : ""}</span>
+                    <span className="booking-room-card-check">{selectedRooms.includes("moon") ? "✓" : ""}</span>
                     <span className="booking-room-card-name">Moon</span>
                     <span className="booking-room-card-price">€80/notte</span>
-                  </Link>
-                  <Link
-                    href="/prenota/earth"
-                    className={`booking-room-card ${roomKey === "earth" ? "booking-room-card--active" : ""}`}
-                    aria-pressed={roomKey === "earth"}
-                    aria-label="Seleziona camera Earth, €70 a notte"
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleRoom("earth")}
+                    className={`booking-room-card ${selectedRooms.includes("earth") ? "booking-room-card--active" : ""}`}
+                    aria-pressed={selectedRooms.includes("earth")}
+                    aria-label="Earth €70/notte"
                   >
-                    <span className="booking-room-card-check">{roomKey === "earth" ? "✓" : ""}</span>
+                    <span className="booking-room-card-check">{selectedRooms.includes("earth") ? "✓" : ""}</span>
                     <span className="booking-room-card-name">Earth</span>
                     <span className="booking-room-card-price">€70/notte</span>
-                  </Link>
+                  </button>
                 </div>
               </div>
 
               <div style={{ marginTop: 14, fontSize: 13, color: "#7d7166" }}>
                 <span className="booking-room-pill">
                   <span>
-                    {room.minGuests === room.maxGuests
-                      ? room.maxGuests
-                      : `${room.minGuests}-${room.maxGuests}`}{" "}
-                    ospiti · {room.sizeM2} m² · bagno privato
+                    {minGuests === maxGuests ? maxGuests : `${minGuests}-${maxGuests}`} ospiti
+                    {selectedRooms.length > 1
+                      ? ` · ${selectedRooms.length} camere`
+                      : ` · ${room.sizeM2} m² · bagno privato`}
                   </span>
                 </span>{" "}
                 <span style={{ marginLeft: 6 }}>
-                  Camera {room.name}: Da €{room.pricePerNight} / notte, coupon bar incluso.
+                  {selectedRooms.length > 1
+                    ? `${selectedRooms.map((id) => ROOMS[id].name).join(" + ")}: totale €${total} (${nights} notte/i)`
+                    : `Camera ${room.name}: Da €${room.pricePerNight} / notte, coupon bar incluso.`}
                 </span>
               </div>
 

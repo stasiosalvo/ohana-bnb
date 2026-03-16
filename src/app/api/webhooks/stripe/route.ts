@@ -58,7 +58,8 @@ export async function POST(request: Request) {
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
-  const roomId = session.metadata?.roomId ?? "";
+  const roomIdsRaw = session.metadata?.roomIds ?? session.metadata?.roomId ?? "";
+  const roomIds = roomIdsRaw.split(",").map((id) => id.trim()).filter((id) => ["sun", "moon", "earth"].includes(id));
   const checkIn = session.metadata?.checkIn ?? "";
   const checkOut = session.metadata?.checkOut ?? "";
   const guests = session.metadata?.guests ?? "1";
@@ -78,12 +79,14 @@ export async function POST(request: Request) {
     }
   }
 
-  // Blocca automaticamente le date della camera prenotata
-  if (roomId && checkIn && checkOut && ["sun", "moon", "earth"].includes(roomId)) {
-    try {
-      await addBlocked(roomId as RoomId, checkIn, checkOut, "Prenotazione online");
-    } catch (e) {
-      console.error("Webhook: blocco date fallito", e);
+  // Blocca le date per ogni camera prenotata (ordine singolo o multiplo)
+  if (checkIn && checkOut && roomIds.length > 0) {
+    for (const roomId of roomIds) {
+      try {
+        await addBlocked(roomId as RoomId, checkIn, checkOut, "Prenotazione online");
+      } catch (e) {
+        console.error("Webhook: blocco date fallito per", roomId, e);
+      }
     }
   }
 
@@ -94,13 +97,14 @@ export async function POST(request: Request) {
 
   try {
     const resend = new Resend(resendKey);
-    const subject = `Nuova prenotazione online – ${name} – Camera ${roomId.toUpperCase()}`;
+    const roomsLabel = roomIds.length > 0 ? roomIds.map((id) => id.toUpperCase()).join(", ") : "—";
+    const subject = `Nuova prenotazione online – ${name} – ${roomsLabel}`;
     const html = `
       <h2>Nuova prenotazione ricevuta dal sito</h2>
       <p><strong>Ospite:</strong> ${escapeHtml(name)}</p>
       <p><strong>Email:</strong> ${escapeHtml(customerEmail)}</p>
       <p><strong>Telefono:</strong> ${escapeHtml(phone) || "—"}</p>
-      <p><strong>Camera:</strong> ${escapeHtml(roomId.toUpperCase())}</p>
+      <p><strong>Camera/e:</strong> ${escapeHtml(roomsLabel)}</p>
       <p><strong>Arrivo:</strong> ${escapeHtml(checkIn)}</p>
       <p><strong>Partenza:</strong> ${escapeHtml(checkOut)}</p>
       <p><strong>Notti:</strong> ${escapeHtml(nights)}</p>
@@ -132,7 +136,7 @@ export async function POST(request: Request) {
         <p>Ciao ${escapeHtml(name)},</p>
         <p>La tua prenotazione è stata confermata. Ecco il riepilogo:</p>
         <ul>
-          <li><strong>Camera:</strong> ${escapeHtml(roomId.toUpperCase())}</li>
+          <li><strong>Camera/e:</strong> ${escapeHtml(roomsLabel)}</li>
           <li><strong>Check-in:</strong> ${escapeHtml(checkIn)}</li>
           <li><strong>Check-out:</strong> ${escapeHtml(checkOut)}</li>
           <li><strong>Notti:</strong> ${escapeHtml(nights)}</li>

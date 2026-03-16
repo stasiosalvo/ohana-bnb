@@ -43,19 +43,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const {
-      roomId,
-      checkIn,
-      checkOut,
-      guests,
-      name,
-      email,
-      phone,
-      nights,
-      total,
-      discountCode,
-    } = body as {
+    const bodyTyped = body as {
       roomId?: string;
+      rooms?: Array<{ roomId: string; pricePerNight: number; nights: number }>;
       checkIn?: string;
       checkOut?: string;
       guests?: number;
@@ -67,33 +57,60 @@ export async function POST(request: Request) {
       discountCode?: string;
     };
 
-    if (!roomId || !checkIn || !checkOut || !name || !email || nights == null) {
+    const {
+      roomId: singleRoomId,
+      rooms: roomsPayload,
+      checkIn,
+      checkOut,
+      guests,
+      name,
+      email,
+      phone,
+      nights,
+      total,
+      discountCode,
+    } = bodyTyped;
+
+    // Supporto prenotazione singola (roomId) o multipla (rooms)
+    const rooms: Array<{ roomId: RoomId; pricePerNight: number; nights: number }> = roomsPayload?.length
+      ? roomsPayload
+          .filter((r) => r.roomId && ["sun", "moon", "earth"].includes(r.roomId))
+          .map((r) => ({ roomId: r.roomId as RoomId, pricePerNight: Number(r.pricePerNight) || 0, nights: Number(r.nights) || 0 }))
+          .filter((r) => r.nights >= 1 && r.pricePerNight > 0)
+      : singleRoomId && ["sun", "moon", "earth"].includes(singleRoomId)
+        ? [{ roomId: singleRoomId as RoomId, pricePerNight: 0, nights: Number(nights) || 0 }];
+
+    if (!rooms.length || !checkIn || !checkOut || !name || !email) {
       return NextResponse.json(
-        { error: "Dati prenotazione mancanti o non validi." },
+        { error: "Dati prenotazione mancanti. Seleziona almeno una camera, date, nome e email." },
         { status: 400 }
       );
     }
 
-    const blocked = await isPeriodBlocked(
-      roomId as RoomId,
-      checkIn,
-      checkOut
-    );
-    if (blocked) {
+    const nightsNum = rooms[0].nights;
+    if (nightsNum < 1) {
       return NextResponse.json(
-        {
-          error:
-            "Queste date non sono più disponibili per questa camera. Scegli altre date o un'altra camera.",
-        },
+        { error: "Numero di notti non valido." },
         { status: 400 }
       );
+    }
+
+    for (const r of rooms) {
+      const blocked = await isPeriodBlocked(r.roomId, checkIn, checkOut);
+      if (blocked) {
+        return NextResponse.json(
+          {
+            error: `Le date scelte non sono disponibili per la camera ${r.roomId.toUpperCase()}. Scegli altre date o rimuovi la camera.`,
+          },
+          { status: 400 }
+        );
+      }
     }
 
     const totalNum = Number(total);
-    const nightsNum = Number(nights);
-    if (!Number.isFinite(totalNum) || totalNum < 0 || !Number.isFinite(nightsNum) || nightsNum < 1) {
+    if (!Number.isFinite(totalNum) || totalNum < 0) {
       return NextResponse.json(
-        { error: "Importo o numero di notti non validi." },
+        { error: "Importo non valido." },
         { status: 400 }
       );
     }
@@ -118,14 +135,63 @@ export async function POST(request: Request) {
       totalToCharge = discount.discountedTotal;
     }
 
-    const amount = Math.max(1, Math.round(totalToCharge * 100));
+    const roomIds = rooms.map((r) => r.roomId).join(",");
+    const cancelUrl = rooms.length === 1 ? `${baseUrl}/prenota/${rooms[0].roomId}` : `${baseUrl}/prenota/sun`;
+
+    const line_items: Stripe.Checkout.SessionCreateParams["line_items"] = [];
+
+    if (roomsPayload?.length) {
+      for (const r of rooms) {
+        const unitAmount = r.pricePerNight * r.nights;
+        if (unitAmount <= 0) continue;
+        line_items.push({
+          quantity: 1,
+          price_data: {
+            currency: "eur",
+            unit_amount: Math.max(1, Math.round(unitAmount * 100)),
+            product_data: {
+              name: `Ohana B&B – Camera ${r.roomId.toUpperCase()}`,
+              description: `${r.nights} notte/i (${checkIn} → ${checkOut})`,
+            },
+          },
+        });
+      }
+      if (codeUsed && totalToCharge < totalNum) {
+        const discountEur = totalNum - totalToCharge;
+        line_items.push({
+          quantity: 1,
+          price_data: {
+            currency: "eur",
+            unit_amount: -Math.round(discountEur * 100),
+            product_data: {
+              name: `Sconto ${codeUsed.toUpperCase()}`,
+              description: "Codice promozionale applicato",
+            },
+          },
+        });
+      }
+    } else {
+      line_items.push({
+        quantity: 1,
+        price_data: {
+          currency: "eur",
+          unit_amount: Math.max(1, Math.round(totalToCharge * 100)),
+          product_data: {
+            name: `Ohana B&B – Camera ${rooms[0].roomId.toUpperCase()}`,
+            description: `${nightsNum} notte/i, ${guests ?? 1} ospite/i (${checkIn} → ${checkOut})`,
+          },
+        },
+      });
+    }
+
+    const amountTotal = Math.max(1, Math.round(totalToCharge * 100));
 
     const params: Stripe.Checkout.SessionCreateParams = {
       mode: "payment",
       payment_method_types: ["card"],
       customer_email: email,
       metadata: {
-        roomId,
+        roomIds,
         checkIn,
         checkOut,
         guests: String(guests ?? 1),
@@ -134,21 +200,9 @@ export async function POST(request: Request) {
         nights: String(nightsNum),
         ...(codeUsed ? { discountCode: codeUsed.toUpperCase() } : {}),
       },
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: "eur",
-            unit_amount: amount,
-            product_data: {
-              name: `Soggiorno Ohana B&B – camera ${roomId.toUpperCase()}`,
-              description: `${nightsNum} notte/i, ${guests ?? 1} ospite/i (${checkIn} → ${checkOut})`,
-            },
-          },
-        },
-      ],
+      line_items,
       success_url: `${baseUrl}/prenotazione-completata?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/prenota/${roomId}`,
+      cancel_url: cancelUrl,
     };
 
     const session = await stripe.checkout.sessions.create(params);
