@@ -72,13 +72,21 @@ export async function POST(request: Request) {
     } = bodyTyped;
 
     // Supporto prenotazione singola (roomId) o multipla (rooms)
-    const rooms: Array<{ roomId: RoomId; pricePerNight: number; nights: number }> = roomsPayload?.length
-      ? roomsPayload
-          .filter((r) => r.roomId && ["sun", "moon", "earth"].includes(r.roomId))
-          .map((r) => ({ roomId: r.roomId as RoomId, pricePerNight: Number(r.pricePerNight) || 0, nights: Number(r.nights) || 0 }))
-          .filter((r) => r.nights >= 1 && r.pricePerNight > 0)
-      : singleRoomId && ["sun", "moon", "earth"].includes(singleRoomId)
-        ? [{ roomId: singleRoomId as RoomId, pricePerNight: 0, nights: Number(nights) || 0 }];
+    let rooms: Array<{ roomId: RoomId; pricePerNight: number; nights: number }>;
+    if (roomsPayload?.length) {
+      rooms = roomsPayload
+        .filter((r) => r.roomId && ["sun", "moon", "earth"].includes(r.roomId))
+        .map((r) => ({
+          roomId: r.roomId as RoomId,
+          pricePerNight: Number(r.pricePerNight) || 0,
+          nights: Number(r.nights) || 0,
+        }))
+        .filter((r) => r.nights >= 1 && r.pricePerNight > 0);
+    } else if (singleRoomId && ["sun", "moon", "earth"].includes(singleRoomId)) {
+      rooms = [{ roomId: singleRoomId as RoomId, pricePerNight: 0, nights: Number(nights) || 0 }];
+    } else {
+      rooms = [];
+    }
 
     if (!rooms.length || !checkIn || !checkOut || !name || !email) {
       return NextResponse.json(
