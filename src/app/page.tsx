@@ -55,6 +55,11 @@ const copy = {
       { icon: "📶", text: "Wi-Fi veloce + comfort" },
       { icon: "🍳", text: "Colazione inclusa" },
     ],
+    fratelliTitle: "Pasqua a tavola con noi",
+    fratelliSubtitle: "In collaborazione con",
+    fratelliBody:
+      "Con noi puoi ordinare direttamente casatiello napoletano e pizza ripiena napoletana pasquale, preparati da Fratelli di Pizza. Tradizione dal 1958: consegnato direttamente al vostro arrivo.",
+    fratelliCta: "Scrivici su WhatsApp",
     contactsTitle: "Come arrivare & contatti",
     contactsSubtitle:
       "Ti seguiamo prima, durante e dopo il soggiorno. Scrivici in qualsiasi momento.",
@@ -148,6 +153,11 @@ const copy = {
       { icon: "📶", text: "Fast Wi-Fi + comfort" },
       { icon: "🍳", text: "Breakfast included" },
     ],
+    fratelliTitle: "Easter at the table with us",
+    fratelliSubtitle: "In partnership with",
+    fratelliBody:
+      "With us you can order directly Neapolitan casatiello and stuffed Neapolitan Easter pizza, made by Fratelli di Pizza. Tradition since 1958: delivered directly on your arrival.",
+    fratelliCta: "Write us on WhatsApp",
     contactsTitle: "How to reach us & contacts",
     contactsSubtitle:
       "We stay in touch before, during and after your stay. Write us anytime.",
@@ -678,6 +688,41 @@ export default function Home() {
                   </Link>
                 </div>
               </article>
+            </div>
+          </section>
+
+          <section
+            id="fratelli"
+            className="section fratelli-section"
+            aria-labelledby="fratelli-title"
+          >
+            <div className="fratelli-card">
+              <div className="fratelli-card-inner">
+                <div className="fratelli-logo-wrap">
+                  <Image
+                    src="/fratelli-di-pizza-logo.png"
+                    alt="Fratelli di Pizza"
+                    width={200}
+                    height={120}
+                    className="fratelli-logo"
+                  />
+                </div>
+                <h2 className="fratelli-title" id="fratelli-title">
+                  {t.fratelliTitle}
+                </h2>
+                <p className="fratelli-subtitle">
+                  {t.fratelliSubtitle} <strong>Fratelli di Pizza</strong>
+                </p>
+                <p className="fratelli-body">{t.fratelliBody}</p>
+                <a
+                  href={`https://wa.me/${CONTACT_PHONE.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fratelli-cta"
+                >
+                  {t.fratelliCta}
+                </a>
+              </div>
             </div>
           </section>
 
