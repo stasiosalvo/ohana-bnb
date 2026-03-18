@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { isEasterSeason } from "@/lib/easter";
+import { EasterDecos } from "./easter-decos";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -59,9 +61,18 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const easter = isEasterSeason();
   return (
-    <html lang="it">
-      <body style={{ fontFamily: fontFamilySans }}>
+    <html lang="it" className={easter ? "easter" : undefined}>
+      <body style={{ fontFamily: fontFamilySans }} className={easter ? "easter" : undefined}>
+        {easter && (
+          <>
+            <div className="easter-ribbon" aria-hidden>
+              <span className="easter-ribbon-text">Buona Pasqua 🐣</span>
+            </div>
+            <EasterDecos />
+          </>
+        )}
         {children}
       </body>
     </html>

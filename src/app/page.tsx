@@ -43,6 +43,18 @@ const copy = {
     inclBreakfast: "Coupon bar incluso",
     servicesTitle: "Servizi inclusi",
     servicesSubtitle: "Piccoli gesti che rendono il soggiorno speciale.",
+    promoBannerLabel: "Offerta di benvenuto",
+    promoBannerTitle: "I primi 10 che prenotano con il codice",
+    promoBannerDiscount: "25% di sconto",
+    promoBannerCta: "Prenota ora",
+    whyTitle: "Perché scegliere Ohana B&B?",
+    whySubtitle: "Quattro piccoli motivi per sentirti subito a casa.",
+    whyItems: [
+      { icon: "🚆", text: "Posizione strategica" },
+      { icon: "🛏️", text: "Camere nuove e pulite" },
+      { icon: "📶", text: "Wi-Fi veloce + comfort" },
+      { icon: "🍳", text: "Colazione inclusa" },
+    ],
     contactsTitle: "Come arrivare & contatti",
     contactsSubtitle:
       "Ti seguiamo prima, durante e dopo il soggiorno. Scrivici in qualsiasi momento.",
@@ -124,6 +136,18 @@ const copy = {
     inclBreakfast: "Coupon bar included",
     servicesTitle: "Included services",
     servicesSubtitle: "Small details that make your stay special.",
+    promoBannerLabel: "Welcome offer",
+    promoBannerTitle: "The first 10 to book with code",
+    promoBannerDiscount: "25% off",
+    promoBannerCta: "Book now",
+    whyTitle: "Why choose Ohana B&B?",
+    whySubtitle: "Four small reasons you'll feel at home right away.",
+    whyItems: [
+      { icon: "🚆", text: "Strategic location" },
+      { icon: "🛏️", text: "New and spotless rooms" },
+      { icon: "📶", text: "Fast Wi-Fi + comfort" },
+      { icon: "🍳", text: "Breakfast included" },
+    ],
     contactsTitle: "How to reach us & contacts",
     contactsSubtitle:
       "We stay in touch before, during and after your stay. Write us anytime.",
@@ -365,6 +389,23 @@ export default function Home() {
         </section>
 
         <main>
+          <section className="promo-banner" aria-labelledby="promo-banner-title">
+            <div className="promo-banner-inner">
+              <span className="promo-banner-label" id="promo-banner-title">
+                {t.promoBannerLabel}
+              </span>
+              <p className="promo-banner-text">
+                {t.promoBannerTitle}{" "}
+                <strong className="promo-banner-code">WELCOME25</strong>
+              </p>
+              <p className="promo-banner-discount">{t.promoBannerDiscount}</p>
+              <Link href="/prenota/sun" className="promo-banner-cta" role="button">
+                <span>{t.promoBannerCta}</span>
+                <span aria-hidden>→</span>
+              </Link>
+            </div>
+          </section>
+
           <section className="hero-grid" aria-labelledby="hero-title">
             <div>
               <div className="eyebrow">
@@ -637,6 +678,34 @@ export default function Home() {
                   </Link>
                 </div>
               </article>
+            </div>
+          </section>
+
+          <section
+            id="perche"
+            className="section"
+            aria-labelledby="why-title"
+          >
+            <div className="section-header">
+              <div>
+                <h2 className="section-title" id="why-title">
+                  {t.whyTitle}
+                </h2>
+                <p className="section-subtitle">{t.whySubtitle}</p>
+              </div>
+            </div>
+
+            <div className="why-card">
+              <ul className="why-list" aria-label={t.whyTitle}>
+                {t.whyItems.map((item, idx) => (
+                  <li key={`${item.text}-${idx}`} className="why-item">
+                    <span className="why-emoji" aria-hidden>
+                      {item.icon}
+                    </span>
+                    <span className="why-text">{item.text}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </section>
 
