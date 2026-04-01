@@ -60,6 +60,17 @@ const copy = {
     fratelliBody:
       "Con noi puoi ordinare direttamente casatiello napoletano e pizza ripiena napoletana pasquale, preparati da Fratelli di Pizza. Tradizione dal 1958: consegnato direttamente al vostro arrivo.",
     fratelliCta: "Scrivici su WhatsApp",
+    aboutTitle: "Chi siamo",
+    aboutSubtitle: "Una storia di famiglia, passione e ospitalità vera.",
+    aboutParagraphs: [
+      "Ohana nasce da una storia semplice, ma piena di passione: quella di una famiglia che da sempre vive e respira ospitalità.",
+      "Da anni lavoriamo nel mondo della ristorazione, gestendo una pizzeria a San Sebastiano al Vesuvio e, in passato, altre attività che ci hanno insegnato cosa significa davvero accogliere le persone: farle sentire a casa, anche quando sono lontane.",
+      "Per noi l’ospitalità non è solo un lavoro, è un modo di essere. È attenzione ai dettagli, è un sorriso sincero, è la cura per ogni piccolo gesto che può rendere speciale il soggiorno di chi ci sceglie.",
+      "Ohana non è un nome scelto a caso. Significa famiglia. E questo è esattamente ciò che vogliamo trasmettere: un luogo dove sentirsi accolti, rispettati e coccolati.",
+      "Le nostre tre camere – Sun, Moon ed Earth – non rappresentano solo elementi naturali, ma portano con sé qualcosa di ancora più personale: le iniziali dei tre figli della proprietaria. Un modo per rendere questo spazio ancora più intimo, autentico e legato alla nostra storia.",
+      "Abbiamo immaginato questo B&B come un rifugio elegante ma familiare, dove ogni ospite possa trovare tranquillità, comfort e un’accoglienza vera, fatta con il cuore.",
+      "Perché per noi, chi arriva non è solo un cliente. È un ospite. E, anche solo per qualche giorno, diventa parte della nostra Ohana.",
+    ],
     contactsTitle: "Come arrivare & contatti",
     contactsSubtitle:
       "Ti seguiamo prima, durante e dopo il soggiorno. Scrivici in qualsiasi momento.",
@@ -158,6 +169,17 @@ const copy = {
     fratelliBody:
       "With us you can order directly Neapolitan casatiello and stuffed Neapolitan Easter pizza, made by Fratelli di Pizza. Tradition since 1958: delivered directly on your arrival.",
     fratelliCta: "Write us on WhatsApp",
+    aboutTitle: "About us",
+    aboutSubtitle: "A family story, passion, and heartfelt hospitality.",
+    aboutParagraphs: [
+      "Ohana was born from a simple story filled with passion: a family that has always lived and breathed hospitality.",
+      "For years we’ve worked in the world of food and hospitality, running a pizzeria in San Sebastiano al Vesuvio and, in the past, other activities that taught us what it truly means to welcome people: making them feel at home, even when they’re far away.",
+      "For us, hospitality isn’t just a job—it’s a way of being. It’s attention to detail, a genuine smile, and care for every small gesture that can make a stay special.",
+      "Ohana isn’t a random name. It means family. And that’s exactly what we want to share: a place where you feel welcomed, respected, and pampered.",
+      "Our three rooms—Sun, Moon, and Earth—don’t only represent natural elements: they also carry something personal, the initials of the owner’s three children. A way to make this space even more intimate and authentic.",
+      "We imagined this B&B as an elegant yet familiar refuge, where every guest can find tranquility, comfort, and a warm welcome made with heart.",
+      "Because for us, whoever arrives isn’t just a customer. They’re a guest—and, even for a few days, part of our Ohana.",
+    ],
     contactsTitle: "How to reach us & contacts",
     contactsSubtitle:
       "We stay in touch before, during and after your stay. Write us anytime.",
@@ -256,6 +278,17 @@ const copy = {
     fratelliBody:
       "Avec nous, vous pouvez commander directement le casatiello napolitain et la pizza farcie napolitaine de Pâques, préparés par Fratelli di Pizza. Tradition depuis 1958 : livré directement à votre arrivée.",
     fratelliCta: "Écrivez‑nous sur WhatsApp",
+    aboutTitle: "Qui sommes‑nous",
+    aboutSubtitle: "Une histoire de famille, de passion et d’accueil sincère.",
+    aboutParagraphs: [
+      "Ohana nasce da una storia semplice, ma piena di passione: quella di una famiglia che da sempre vive e respira ospitalità.",
+      "Da anni lavoriamo nel mondo della ristorazione, gestendo una pizzeria a San Sebastiano al Vesuvio e, in passato, altre attività che ci hanno insegnato cosa significa davvero accogliere le persone: farle sentire a casa, anche quando sono lontane.",
+      "Per noi l’ospitalità non è solo un lavoro, è un modo di essere. È attenzione ai dettagli, è un sorriso sincero, è la cura per ogni piccolo gesto che può rendere speciale il soggiorno di chi ci sceglie.",
+      "Ohana non è un nome scelto a caso. Significa famiglia. E questo è esattamente ciò che vogliamo trasmettere: un luogo dove sentirsi accolti, rispettati e coccolati.",
+      "Le nostre tre camere – Sun, Moon ed Earth – non rappresentano solo elementi naturali, ma portano con sé qualcosa di ancora più personale: le iniziali dei tre figli della proprietaria. Un modo per rendere questo spazio ancora più intimo, autentico e legato alla nostra storia.",
+      "Abbiamo immaginato questo B&B come un rifugio elegante ma familiare, dove ogni ospite possa trovare tranquillità, comfort e un’accoglienza vera, fatta con il cuore.",
+      "Perché per noi, chi arriva non è solo un cliente. È un ospite. E, anche solo per qualche giorno, diventa parte della nostra Ohana.",
+    ],
     contactsTitle: "Accès & contacts",
     contactsSubtitle:
       "Nous restons en contact avant, pendant et après votre séjour. Écrivez‑nous à tout moment.",
@@ -354,6 +387,17 @@ const copy = {
     fratelliBody:
       "Con nosotros puedes pedir directamente casatiello napolitano y pizza rellena napolitana de Pascua, preparados por Fratelli di Pizza. Tradición desde 1958: entregado directamente a vuestra llegada.",
     fratelliCta: "Escríbenos por WhatsApp",
+    aboutTitle: "Quiénes somos",
+    aboutSubtitle: "Una historia de familia, pasión y hospitalidad de verdad.",
+    aboutParagraphs: [
+      "Ohana nasce da una storia semplice, ma piena di passione: quella di una famiglia che da sempre vive e respira ospitalità.",
+      "Da anni lavoriamo nel mondo della ristorazione, gestendo una pizzeria a San Sebastiano al Vesuvio e, in passato, altre attività che ci hanno insegnato cosa significa davvero accogliere le persone: farle sentire a casa, anche quando sono lontane.",
+      "Per noi l’ospitalità non è solo un lavoro, è un modo di essere. È attenzione ai dettagli, è un sorriso sincero, è la cura per ogni piccolo gesto che può rendere speciale il soggiorno di chi ci sceglie.",
+      "Ohana non è un nome scelto a caso. Significa famiglia. E questo è esattamente ciò che vogliamo trasmettere: un luogo dove sentirsi accolti, rispettati e coccolati.",
+      "Le nostre tre camere – Sun, Moon ed Earth – non rappresentano solo elementi naturali, ma portano con sé qualcosa di ancora più personale: le iniziali dei tre figli della proprietaria. Un modo per rendere questo spazio ancora più intimo, autentico e legato alla nostra storia.",
+      "Abbiamo immaginato questo B&B come un rifugio elegante ma familiare, dove ogni ospite possa trovare tranquillità, comfort e un’accoglienza vera, fatta con il cuore.",
+      "Perché per noi, chi arriva non è solo un cliente. È un ospite. E, anche solo per qualche giorno, diventa parte della nostra Ohana.",
+    ],
     contactsTitle: "Cómo llegar & contacto",
     contactsSubtitle:
       "Te acompañamos antes, durante y después de la estancia. Escríbenos cuando quieras.",
@@ -514,6 +558,9 @@ export default function Home() {
         <header className="topbar">
           <nav className="nav-links nav-links--left">
               <Link href="/galleria">{lang === "it" ? "Camere" : "Rooms"}</Link>
+              <Link href="/chi-siamo">
+                {lang === "it" ? "Chi siamo" : "About"}
+              </Link>
               <a href="#recensioni">
                 {lang === "it" ? "Recensioni" : "Reviews"}
               </a>
