@@ -657,13 +657,13 @@ export default function Home() {
 
               <div className="hero-cta-row">
                 <Link href="/prenota/sun">
-                  <button className="btn-primary" type="button">
+                  <button className="btn-primary btn-primary--hero" type="button">
                     {t.ctaPrimary}
                     <span aria-hidden>→</span>
                   </button>
                 </Link>
                 <Link href="/galleria">
-                  <button className="btn-primary" type="button">
+                  <button className="btn-primary btn-primary--hero" type="button">
                     {t.ctaSecondary}
                     <span aria-hidden>→</span>
                   </button>
