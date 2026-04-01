@@ -801,7 +801,7 @@ export default function Home() {
                   </div>
                   <Link href="/prenota/sun">
                     <button
-                      className="btn-ghost"
+                      className="btn-ghost btn-room-book"
                       style={{ marginTop: 8, width: "100%" }}
                       type="button"
                     >
@@ -844,7 +844,7 @@ export default function Home() {
                   </div>
                   <Link href="/prenota/moon">
                     <button
-                      className="btn-ghost"
+                      className="btn-ghost btn-room-book"
                       style={{ marginTop: 8, width: "100%" }}
                       type="button"
                     >
@@ -887,7 +887,7 @@ export default function Home() {
                   </div>
                   <Link href="/prenota/earth">
                     <button
-                      className="btn-ghost"
+                      className="btn-ghost btn-room-book"
                       style={{ marginTop: 8, width: "100%" }}
                       type="button"
                     >
