@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
-type Lang = "it" | "en";
+type Lang = "it" | "en" | "fr" | "es";
 
 const content = {
   it: {
@@ -64,6 +64,62 @@ const content = {
       },
     ],
   },
+  fr: {
+    title: "Politique relative aux cookies",
+    intro:
+      "Cette page explique comment Ohana B&B utilise les cookies et des technologies similaires sur ce site, conformément au droit italien et au Règlement (UE) 2016/679 (RGPD).",
+    back: "Retour à l’accueil",
+    sections: [
+      {
+        title: "Que sont les cookies",
+        body: "Les cookies sont de petits fichiers texte qu’un site peut enregistrer sur votre appareil (ordinateur, tablette, smartphone) pour mémoriser des préférences, vous reconnaître ou améliorer la navigation. Ils peuvent être « internes » (définis par nous) ou « tiers » (définis par des services externes).",
+      },
+      {
+        title: "Cookies utilisés sur ce site",
+        body: "Nous utilisons des cookies strictement nécessaires au fonctionnement du site (p. ex. sécurité, équilibrage de charge) et des cookies qui mémorisent votre langue (IT/EN/FR/ES). Pour les paiements en ligne, nous utilisons Stripe, qui peut déposer ses propres cookies afin de gérer le paiement en toute sécurité ; nous ne stockons pas les données de carte. Nous n’utilisons pas de cookies de profilage publicitaire.",
+      },
+      {
+        title: "Base légale et durée de conservation",
+        body: "Les cookies nécessaires reposent sur l’intérêt légitime lié au bon fonctionnement du site ; les cookies de préférence (langue) reposent sur votre choix. Les cookies de session sont supprimés à la fermeture du navigateur ; les cookies de préférence peuvent rester pendant une durée limitée (p. ex. 12 mois) jusqu’à suppression.",
+      },
+      {
+        title: "Gérer les cookies",
+        body: "Vous pouvez désactiver ou supprimer les cookies depuis les paramètres de votre navigateur. Les instructions se trouvent généralement dans la rubrique « Aide » ou « Paramètres » (Chrome, Firefox, Safari, Edge, etc.). La désactivation des cookies nécessaires peut limiter certaines fonctionnalités (p. ex. réservation ou paiement).",
+      },
+      {
+        title: "Contact",
+        body: `Pour toute question sur les cookies et la confidentialité, écrivez‑nous à ${CONTACT_EMAIL} ou appelez le ${CONTACT_PHONE}.`,
+      },
+    ],
+  },
+  es: {
+    title: "Política de cookies",
+    intro:
+      "Esta página explica cómo Ohana B&B utiliza cookies y tecnologías similares en este sitio web, de acuerdo con la normativa italiana y el Reglamento (UE) 2016/679 (RGPD).",
+    back: "Volver a inicio",
+    sections: [
+      {
+        title: "Qué son las cookies",
+        body: "Las cookies son pequeños archivos de texto que un sitio puede guardar en tu dispositivo (ordenador, tablet, smartphone) para recordar preferencias, reconocerte o mejorar la navegación. Pueden ser de «primera parte» (gestionadas por nosotros) o de «terceros» (gestionadas por servicios externos).",
+      },
+      {
+        title: "Cookies utilizadas en este sitio",
+        body: "Utilizamos cookies estrictamente necesarias para el funcionamiento del sitio (p. ej., seguridad, balanceo de carga) y cookies que recuerdan tu idioma (IT/EN/FR/ES). Para pagos online usamos Stripe, que puede establecer sus propias cookies para gestionar el checkout de forma segura; no almacenamos datos de tarjeta. No usamos cookies de publicidad/perfilado.",
+      },
+      {
+        title: "Base legal y conservación",
+        body: "Las cookies necesarias se basan en el interés legítimo para el correcto funcionamiento del sitio; las cookies de preferencia (idioma) dependen de tu elección. Las cookies de sesión se eliminan al cerrar el navegador; las de preferencia pueden permanecer por un tiempo limitado (p. ej., 12 meses) hasta que las elimines.",
+      },
+      {
+        title: "Cómo gestionar cookies",
+        body: "Puedes desactivar o eliminar cookies desde la configuración de tu navegador. Las instrucciones suelen estar en «Ayuda» o «Configuración» (Chrome, Firefox, Safari, Edge, etc.). Ten en cuenta que desactivar cookies necesarias puede limitar algunas funciones (p. ej., reserva o pago).",
+      },
+      {
+        title: "Contacto",
+        body: `Si tienes preguntas sobre cookies y privacidad, escríbenos a ${CONTACT_EMAIL} o llámanos al ${CONTACT_PHONE}.`,
+      },
+    ],
+  },
 };
 
 export default function CookiePage() {
@@ -98,6 +154,20 @@ export default function CookiePage() {
               onClick={() => setLang("en")}
             >
               EN
+            </button>
+            <button
+              type="button"
+              className={`lang-pill ${lang === "fr" ? "lang-pill--active" : ""}`}
+              onClick={() => setLang("fr")}
+            >
+              FR
+            </button>
+            <button
+              type="button"
+              className={`lang-pill ${lang === "es" ? "lang-pill--active" : ""}`}
+              onClick={() => setLang("es")}
+            >
+              ES
             </button>
           </div>
         </header>

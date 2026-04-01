@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
-type Lang = "it" | "en";
+type Lang = "it" | "en" | "fr" | "es";
 
 const content = {
   it: {
@@ -72,6 +72,70 @@ const content = {
       },
     ],
   },
+  fr: {
+    title: "Politique de confidentialité",
+    intro:
+      "Ohana B&B respecte votre vie privée. Vous trouverez ci‑dessous les informations sur le traitement des données personnelles conformément au Règlement (UE) 2016/679 (RGPD) et au droit italien applicable.",
+    back: "Retour à l’accueil",
+    sections: [
+      {
+        title: "Responsable du traitement",
+        body: `Le responsable du traitement est Ohana B&B, situé Via Lavinaio 19, 80142 Naples (NA). Vous pouvez nous contacter à ${CONTACT_EMAIL} ou au ${CONTACT_PHONE}.`,
+      },
+      {
+        title: "Données collectées",
+        body: "Nous collectons les données nécessaires à la réservation et au séjour : nom, adresse e‑mail, numéro de téléphone, dates d’arrivée et de départ, nombre de personnes. Les données de paiement sont traitées en toute sécurité par Stripe et ne sont pas stockées sur nos serveurs. Conformément à la réglementation hôtelière, nous pouvons collecter des données d’identité pour le registre des voyageurs.",
+      },
+      {
+        title: "Finalités et base légale",
+        body: "Les données sont traitées pour : gérer les réservations et la relation contractuelle ; respecter les obligations légales (fiscales, registre voyageurs, sécurité publique) ; envoyer des communications liées au séjour. La base légale est l’exécution du contrat, les obligations légales et, le cas échéant, l’intérêt légitime.",
+      },
+      {
+        title: "Conservation",
+        body: "Les données sont conservées le temps nécessaire à la gestion de la relation et au respect des obligations légales (y compris les obligations fiscales et de conservation des documents, pouvant dépasser 10 ans si requis).",
+      },
+      {
+        title: "Vos droits",
+        body: `Vous disposez des droits d’accès, de rectification, d’effacement, de limitation, de portabilité et d’opposition, ainsi que du droit d’introduire une réclamation auprès de l’autorité de contrôle (Garante per la Protezione dei Dati Personali – garanteprivacy.it). Pour exercer vos droits, contactez ${CONTACT_EMAIL}.`,
+      },
+      {
+        title: "Communication",
+        body: "Les données peuvent être partagées avec des prestataires nécessaires (p. ex. traitement des paiements via Stripe, services techniques du site). Nous ne vendons ni ne partageons vos données à des fins de marketing.",
+      },
+    ],
+  },
+  es: {
+    title: "Política de privacidad",
+    intro:
+      "Ohana B&B respeta tu privacidad. A continuación encontrarás información sobre el tratamiento de datos personales de acuerdo con el Reglamento (UE) 2016/679 (RGPD) y la normativa italiana aplicable.",
+    back: "Volver a inicio",
+    sections: [
+      {
+        title: "Responsable del tratamiento",
+        body: `El responsable del tratamiento es Ohana B&B, con sede en Via Lavinaio 19, 80142 Nápoles (NA). Puedes contactarnos en ${CONTACT_EMAIL} o en ${CONTACT_PHONE}.`,
+      },
+      {
+        title: "Datos recopilados",
+        body: "Recopilamos los datos necesarios para la reserva y la estancia: nombre, correo electrónico, teléfono, fechas de entrada y salida, número de huéspedes. Los datos de pago los gestiona de forma segura Stripe y no se almacenan en nuestros servidores. En cumplimiento de la normativa de alojamiento, podemos recopilar datos de identificación para el registro de huéspedes.",
+      },
+      {
+        title: "Finalidades y base legal",
+        body: "Tratamos los datos para: gestionar reservas y la relación contractual; cumplir obligaciones legales (fiscales, registro de huéspedes, seguridad pública); enviar comunicaciones relacionadas con la estancia. La base legal es la ejecución del contrato, el cumplimiento de obligaciones legales y, cuando proceda, el interés legítimo.",
+      },
+      {
+        title: "Conservación",
+        body: "Los datos se conservan el tiempo necesario para la gestión de la relación y el cumplimiento de obligaciones legales (incluidas obligaciones fiscales y de conservación documental, que pueden superar 10 años si así se exige).",
+      },
+      {
+        title: "Tus derechos",
+        body: `Tienes derecho de acceso, rectificación, supresión, limitación, portabilidad y oposición, así como a presentar una reclamación ante la autoridad de control (Garante per la Protezione dei Dati Personali – garanteprivacy.it). Para ejercer tus derechos, escribe a ${CONTACT_EMAIL}.`,
+      },
+      {
+        title: "Comunicación",
+        body: "Los datos pueden compartirse con proveedores necesarios (p. ej., procesamiento de pagos vía Stripe, servicios técnicos del sitio). No vendemos ni cedemos tus datos a terceros con fines de marketing.",
+      },
+    ],
+  },
 };
 
 export default function PrivacyPage() {
@@ -106,6 +170,20 @@ export default function PrivacyPage() {
               onClick={() => setLang("en")}
             >
               EN
+            </button>
+            <button
+              type="button"
+              className={`lang-pill ${lang === "fr" ? "lang-pill--active" : ""}`}
+              onClick={() => setLang("fr")}
+            >
+              FR
+            </button>
+            <button
+              type="button"
+              className={`lang-pill ${lang === "es" ? "lang-pill--active" : ""}`}
+              onClick={() => setLang("es")}
+            >
+              ES
             </button>
           </div>
         </header>

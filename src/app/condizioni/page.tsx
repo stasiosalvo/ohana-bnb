@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
-type Lang = "it" | "en";
+type Lang = "it" | "en" | "fr" | "es";
 
 const content = {
   it: {
@@ -54,6 +54,58 @@ const content = {
     contactTitle: "Contact",
     contactText: `For questions or requests: ${CONTACT_EMAIL} or ${CONTACT_PHONE} (WhatsApp too).`,
   },
+  fr: {
+    title: "Conditions de séjour",
+    intro:
+      "Les conditions suivantes s’appliquent aux réservations directes chez Ohana B&B. Pour les annulations ou modifications, contactez‑nous par e‑mail ou WhatsApp.",
+    back: "Retour à l’accueil",
+    cancellationTitle: "Conditions d’annulation",
+    cancellationFree:
+      "Annulation gratuite jusqu’à 24 heures avant l’heure de check‑in (14 h). Remboursement intégral des sommes déjà payées.",
+    cancellationLate:
+      "Annulation entre 24 h et 0 h avant le check‑in : nous conservons la première nuit à titre de frais ; le reste éventuellement payé est remboursé.",
+    cancellationNoShow:
+      "No‑show sans préavis : la totalité de la première nuit est facturée.",
+    cancellationModify:
+      "Changement de dates ou de chambre : sur demande et selon disponibilité ; une différence tarifaire peut s’appliquer.",
+    stayTitle: "Règles du séjour",
+    checkInOut:
+      "Check‑in à partir de 14 h, check‑out avant 10 h. Horaires flexibles sur demande lorsque possible.",
+    noSmoking: "Il est interdit de fumer dans les chambres et les espaces communs intérieurs.",
+    petsTitle: "Animaux",
+    petsBody:
+      "Nous acceptons les chiens avec plaisir. Un supplément de 5 € par nuit s’applique. Merci de le signaler lors de la réservation ; nous demandons de respecter les autres clients (laisse dans les espaces communs lorsque requis).",
+    petsWelcome:
+      "Pour le confort de votre compagnon, nous mettons à disposition un couchage, des gamelles et une petite friandise de bienvenue.",
+    contactTitle: "Contact",
+    contactText: `Pour toute question : ${CONTACT_EMAIL} ou ${CONTACT_PHONE} (WhatsApp aussi).`,
+  },
+  es: {
+    title: "Condiciones de estancia",
+    intro:
+      "Las siguientes condiciones se aplican a las reservas directas en Ohana B&B. Para cancelaciones o cambios, contáctanos por email o WhatsApp.",
+    back: "Volver a inicio",
+    cancellationTitle: "Condiciones de cancelación",
+    cancellationFree:
+      "Cancelación gratuita hasta 24 horas antes de la hora de check‑in (14:00). Reembolso total de lo ya pagado.",
+    cancellationLate:
+      "Cancelación entre 24 y 0 horas antes del check‑in: retenemos el importe de la primera noche como penalización; el resto pagado se reembolsa.",
+    cancellationNoShow:
+      "No presentarse (no‑show) sin aviso: se cobra el importe completo de la primera noche.",
+    cancellationModify:
+      "Cambios de fechas o de habitación: bajo petición y según disponibilidad; puede aplicarse diferencia de tarifa.",
+    stayTitle: "Normas de la estancia",
+    checkInOut:
+      "Check‑in desde las 14:00, check‑out antes de las 10:00. Horarios flexibles bajo petición cuando sea posible.",
+    noSmoking: "No está permitido fumar en las habitaciones ni en las zonas comunes interiores.",
+    petsTitle: "Mascotas",
+    petsBody:
+      "Aceptamos perros. Se aplica un suplemento de 5 € por noche. Por favor avísanos al reservar; pedimos cuidado y respeto a los demás huéspedes (correa en zonas comunes cuando corresponda).",
+    petsWelcome:
+      "Para que tu amigo de cuatro patas esté cómodo, proporcionamos camita, cuencos para agua y comida y un pequeño detalle de bienvenida.",
+    contactTitle: "Contacto",
+    contactText: `Para preguntas o solicitudes: ${CONTACT_EMAIL} o ${CONTACT_PHONE} (también WhatsApp).`,
+  },
 };
 
 export default function CondizioniPage() {
@@ -88,6 +140,20 @@ export default function CondizioniPage() {
               onClick={() => setLang("en")}
             >
               EN
+            </button>
+            <button
+              type="button"
+              className={`lang-pill ${lang === "fr" ? "lang-pill--active" : ""}`}
+              onClick={() => setLang("fr")}
+            >
+              FR
+            </button>
+            <button
+              type="button"
+              className={`lang-pill ${lang === "es" ? "lang-pill--active" : ""}`}
+              onClick={() => setLang("es")}
+            >
+              ES
             </button>
           </div>
         </header>

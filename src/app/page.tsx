@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
 
-type Lang = "it" | "en";
+type Lang = "it" | "en" | "fr" | "es";
 
 const CAROUSEL_PHOTOS = [
   "/galleria/sun-1.jpg",
@@ -216,6 +216,202 @@ const copy = {
     reviewFormSubmit: "Submit review",
     reviewThanks: "Thank you so much for sharing your experience! We really appreciate it.",
     },
+  fr: {
+    heroEyebrow: "Bed & Breakfast",
+    heroTitle: "Ohana, votre refuge élégant au cœur de la ville.",
+    heroSubtitle:
+      "Des chambres pensées dans les moindres détails, un petit‑déjeuner en douceur et la chaleur d’une maison. Un B&B boutique qui célèbre la tranquillité, la lumière et l’art des petites attentions.",
+    ctaPrimary: "Réserver votre séjour",
+    ctaSecondary: "Découvrir les chambres",
+    roomsTitle: "Nos chambres",
+    roomsSubtitle: "Trois ambiances différentes, la même attention.",
+    roomSunName: "Sun",
+    roomSunDesc:
+      "Chaleureuse, lumineuse et dorée, avec une sensation ensoleillée toute la journée. Avec balcon.",
+    roomMoonName: "Moon",
+    roomMoonDesc:
+      "Calme et enveloppante, pensée pour celles et ceux qui aiment ralentir. Avec balcon.",
+    roomEarthName: "Earth",
+    roomEarthDesc:
+      "Spacieuse et naturelle, idéale pour les longs séjours et les familles. Avec fenêtre.",
+    fromNight: "à partir de",
+    perNight: "/nuit",
+    inclBreakfast: "Bon petit‑déjeuner inclus",
+    servicesTitle: "Services inclus",
+    servicesSubtitle: "De petits détails qui rendent le séjour spécial.",
+    promoBannerLabel: "Offre de bienvenue",
+    promoBannerTitle: "Les 10 premiers à réserver avec le code",
+    promoBannerDiscount: "‑25%",
+    promoBannerCta: "Réserver maintenant",
+    whyTitle: "Pourquoi choisir Ohana B&B ?",
+    whySubtitle: "Quatre raisons simples de se sentir comme chez soi.",
+    whyItems: [
+      { icon: "🚆", text: "Emplacement stratégique" },
+      { icon: "🛏️", text: "Chambres neuves et impeccables" },
+      { icon: "📶", text: "Wi‑Fi rapide + confort" },
+      { icon: "🍳", text: "Petit‑déjeuner inclus" },
+    ],
+    fratelliTitle: "Pâques à table avec nous",
+    fratelliSubtitle: "En partenariat avec",
+    fratelliBody:
+      "Avec nous, vous pouvez commander directement le casatiello napolitain et la pizza farcie napolitaine de Pâques, préparés par Fratelli di Pizza. Tradition depuis 1958 : livré directement à votre arrivée.",
+    fratelliCta: "Écrivez‑nous sur WhatsApp",
+    contactsTitle: "Accès & contacts",
+    contactsSubtitle:
+      "Nous restons en contact avant, pendant et après votre séjour. Écrivez‑nous à tout moment.",
+    contactAddressLabel: "Adresse",
+    contactAddressValue: "Via Lavinaio 19, 80142, Napoli, Campania, Italie",
+    contactPhoneLabel: "Téléphone",
+    contactEmailLabel: "Email",
+    contactWhatsappLabel: "WhatsApp",
+    contactPhoneValue: CONTACT_PHONE,
+    contactEmailValue: CONTACT_EMAIL,
+    contactWhatsappValue: CONTACT_PHONE,
+    contactActionCall: "Appeler",
+    contactActionMail: "Envoyer un email",
+    contactActionWhatsapp: "Ouvrir WhatsApp",
+    contactFollowUs: "Suivez‑nous ici",
+    locationTransportation: "Transports",
+    locationAirports: "Aéroports",
+    locationTrainStations: "Gares",
+    locationAttractions: "À proximité",
+    locationCapodichino: "Capodichino",
+    locationNapoliCentrale: "Gare centrale de Naples",
+    locationMetro: "Métro",
+    locationMetroPiazzaGaribaldi: "Piazza Garibaldi, Naples",
+    locationPortaNolana: "Napoli Porta Nolana (Circumvesuviana)",
+    locationGalleriaPrincipe: "Galleria Principe di Napoli",
+    locationBasilicaPaolo: "Basilica di San Paolo Maggiore",
+    locationCentroStorico: "Centre historique",
+    locationViaTribunali: "Via dei Tribunali",
+    locationSanLorenzo: "Fouilles de San Lorenzo Maggiore",
+    locationAquedotto: "Aqueduc romain",
+    locationSanGregorio: "Via San Gregorio Armeno",
+    locationTesoroSanGennaro: "Museo del Tesoro di San Gennaro",
+    locationMuseoDonnaregina: "Museo Diocesano Donnaregina",
+    locationCappellaSansevero: "Museo Cappella Sansevero (Cristo Velato)",
+    locationDuomo: "Cathédrale de Naples – Duomo di San Gennaro",
+    locationGalleriaUmberto: "Galleria Umberto I",
+    locationPiazzaSanGaetano: "Piazza San Gaetano – fouilles gréco‑romaines",
+    locationAttractionsTitle: "Attractions & musées à proximité",
+    locationRestaurantsTitle: "Pizzerias & restaurants réputés",
+    locationDaMichele: "L'Antica Pizzeria Da Michele",
+    locationSorbillo: "Pizzeria Sorbillo",
+    locationDiMatteo: "Pizzeria Di Matteo",
+    locationStarita: "Pizzeria Starita a Materdei",
+    locationIlPresidente: "Il Figlio del Presidente",
+    footerMadeBy: "Site Ohana B&B",
+    footerPrivacy: "Confidentialité",
+    footerCookie: "Cookies",
+    footerCondizioni: "Conditions",
+    policyNote: "Annulation gratuite jusqu’à 24 h. Conditions complètes dans",
+    policyLink: "Conditions de séjour",
+    reviewsTitle: "Avis des voyageurs",
+    reviewsSubtitle: "Les expériences de celles et ceux qui ont séjourné chez nous.",
+    reviewFormName: "Votre nom",
+    reviewFormMessage: "Votre avis",
+    reviewFormRating: "Note",
+    reviewFormSubmit: "Envoyer",
+    reviewThanks: "Merci beaucoup d’avoir partagé votre expérience !",
+  },
+  es: {
+    heroEyebrow: "Bed & Breakfast",
+    heroTitle: "Ohana, tu refugio elegante en el corazón de la ciudad.",
+    heroSubtitle:
+      "Habitaciones cuidadas al detalle, desayuno tranquilo y el calor de un hogar. Un B&B boutique que celebra la calma, la luz y las pequeñas atenciones.",
+    ctaPrimary: "Reserva tu estancia",
+    ctaSecondary: "Descubre las habitaciones",
+    roomsTitle: "Nuestras habitaciones",
+    roomsSubtitle: "Tres ambientes distintos, el mismo cuidado.",
+    roomSunName: "Sun",
+    roomSunDesc:
+      "Cálida, luminosa y dorada, con sensación de sol todo el día. Con balcón.",
+    roomMoonName: "Moon",
+    roomMoonDesc:
+      "Silenciosa y acogedora, pensada para quien ama bajar el ritmo. Con balcón.",
+    roomEarthName: "Earth",
+    roomEarthDesc:
+      "Amplia y natural, ideal para estancias largas y familias. Con ventana.",
+    fromNight: "desde",
+    perNight: "/noche",
+    inclBreakfast: "Cupón de desayuno incluido",
+    servicesTitle: "Servicios incluidos",
+    servicesSubtitle: "Pequeños detalles que hacen especial la estancia.",
+    promoBannerLabel: "Oferta de bienvenida",
+    promoBannerTitle: "Los primeros 10 en reservar con el código",
+    promoBannerDiscount: "‑25%",
+    promoBannerCta: "Reservar ahora",
+    whyTitle: "¿Por qué elegir Ohana B&B?",
+    whySubtitle: "Cuatro motivos para sentirse como en casa desde el primer momento.",
+    whyItems: [
+      { icon: "🚆", text: "Ubicación estratégica" },
+      { icon: "🛏️", text: "Habitaciones nuevas y limpias" },
+      { icon: "📶", text: "Wi‑Fi rápido + confort" },
+      { icon: "🍳", text: "Desayuno incluido" },
+    ],
+    fratelliTitle: "Semana Santa en la mesa con nosotros",
+    fratelliSubtitle: "En colaboración con",
+    fratelliBody:
+      "Con nosotros puedes pedir directamente casatiello napolitano y pizza rellena napolitana de Pascua, preparados por Fratelli di Pizza. Tradición desde 1958: entregado directamente a vuestra llegada.",
+    fratelliCta: "Escríbenos por WhatsApp",
+    contactsTitle: "Cómo llegar & contacto",
+    contactsSubtitle:
+      "Te acompañamos antes, durante y después de la estancia. Escríbenos cuando quieras.",
+    contactAddressLabel: "Dirección",
+    contactAddressValue: "Via Lavinaio 19, 80142, Napoli, Campania, Italia",
+    contactPhoneLabel: "Teléfono",
+    contactEmailLabel: "Email",
+    contactWhatsappLabel: "WhatsApp",
+    contactPhoneValue: CONTACT_PHONE,
+    contactEmailValue: CONTACT_EMAIL,
+    contactWhatsappValue: CONTACT_PHONE,
+    contactActionCall: "Llamar",
+    contactActionMail: "Enviar email",
+    contactActionWhatsapp: "Abrir WhatsApp",
+    contactFollowUs: "Síguenos aquí",
+    locationTransportation: "Transporte",
+    locationAirports: "Aeropuertos",
+    locationTrainStations: "Estaciones",
+    locationAttractions: "Cerca de aquí",
+    locationCapodichino: "Capodichino",
+    locationNapoliCentrale: "Estación central de Nápoles",
+    locationMetro: "Metro",
+    locationMetroPiazzaGaribaldi: "Piazza Garibaldi, Nápoles",
+    locationPortaNolana: "Napoli Porta Nolana (Circumvesuviana)",
+    locationGalleriaPrincipe: "Galleria Principe di Napoli",
+    locationBasilicaPaolo: "Basilica di San Paolo Maggiore",
+    locationCentroStorico: "Centro histórico",
+    locationViaTribunali: "Via dei Tribunali",
+    locationSanLorenzo: "Excavaciones de San Lorenzo Maggiore",
+    locationAquedotto: "Acueducto romano",
+    locationSanGregorio: "Via San Gregorio Armeno",
+    locationTesoroSanGennaro: "Museo del Tesoro di San Gennaro",
+    locationMuseoDonnaregina: "Museo Diocesano Donnaregina",
+    locationCappellaSansevero: "Museo Cappella Sansevero (Cristo Velato)",
+    locationDuomo: "Catedral de Nápoles – Duomo di San Gennaro",
+    locationGalleriaUmberto: "Galleria Umberto I",
+    locationPiazzaSanGaetano: "Piazza San Gaetano – excavaciones grecorromanas",
+    locationAttractionsTitle: "Atracciones y museos cercanos",
+    locationRestaurantsTitle: "Pizzerías y restaurantes recomendados",
+    locationDaMichele: "L'Antica Pizzeria Da Michele",
+    locationSorbillo: "Pizzeria Sorbillo",
+    locationDiMatteo: "Pizzeria Di Matteo",
+    locationStarita: "Pizzeria Starita a Materdei",
+    locationIlPresidente: "Il Figlio del Presidente",
+    footerMadeBy: "Sitio Ohana B&B",
+    footerPrivacy: "Privacidad",
+    footerCookie: "Cookies",
+    footerCondizioni: "Condiciones",
+    policyNote: "Cancelación gratuita hasta 24 h. Condiciones completas en",
+    policyLink: "Condiciones de estancia",
+    reviewsTitle: "Lo que dicen los huéspedes",
+    reviewsSubtitle: "Experiencias de quienes se alojaron con nosotros.",
+    reviewFormName: "Tu nombre",
+    reviewFormMessage: "Tu reseña",
+    reviewFormRating: "Valoración",
+    reviewFormSubmit: "Enviar",
+    reviewThanks: "¡Muchas gracias por compartir tu experiencia!",
+  },
 } as const;
 
 type ReviewItem = { id: string; name: string; text: string; rating: number; date: string };
@@ -361,6 +557,20 @@ export default function Home() {
                 onClick={() => setLang("en")}
               >
                 EN
+              </button>
+              <button
+                type="button"
+                className={`lang-pill ${lang === "fr" ? "lang-pill--active" : ""}`}
+                onClick={() => setLang("fr")}
+              >
+                FR
+              </button>
+              <button
+                type="button"
+                className={`lang-pill ${lang === "es" ? "lang-pill--active" : ""}`}
+                onClick={() => setLang("es")}
+              >
+                ES
               </button>
             </div>
           </div>
