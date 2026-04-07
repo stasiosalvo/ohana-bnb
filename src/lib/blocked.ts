@@ -113,3 +113,70 @@ export async function removeBlocked(id: string): Promise<boolean> {
   }
   return true;
 }
+
+/** Prefisso ID per periodi importati dal calendario iCal di Booking.com (sostituiti ad ogni sync). */
+export const BOOKING_ICAL_BLOCK_PREFIX = "bk_ical_";
+
+export async function setAllBlocked(list: BlockedPeriod[]): Promise<void> {
+  const redis = getRedis();
+  if (redis) {
+    try {
+      await redis.set(STORAGE_KEY, JSON.stringify(list));
+    } catch {
+      //
+    }
+  }
+}
+
+/**
+ * Sostituisce i blocchi importati da Booking (bk_ical_*) per le camere indicate.
+ * Per una camera con `undefined` in `byRoom` mantiene i vecchi bk_ical di quella camera.
+ * Non tocca prenotazioni sito (Stripe), blocchi manuali admin, ecc.
+ */
+export async function applyBookingIcalSync(
+  byRoom: Partial<
+    Record<
+      RoomId,
+      { checkIn: string; checkOut: string; uid: string }[]
+    >
+  >
+): Promise<void> {
+  const list = await getAllBlocked();
+  const keptNonBooking = list.filter(
+    (b) => !b.id.startsWith(BOOKING_ICAL_BLOCK_PREFIX)
+  );
+  const oldBookingBlocks = list.filter((b) =>
+    b.id.startsWith(BOOKING_ICAL_BLOCK_PREFIX)
+  );
+
+  const rooms: RoomId[] = ["sun", "moon", "earth"];
+  const next: BlockedPeriod[] = [...keptNonBooking];
+
+  for (const roomId of rooms) {
+    const periods = byRoom[roomId];
+    if (periods === undefined) {
+      next.push(...oldBookingBlocks.filter((b) => b.roomId === roomId));
+      continue;
+    }
+    for (const p of periods) {
+      const h = simpleHash(`${p.uid}|${p.checkIn}|${p.checkOut}`);
+      next.push({
+        id: `${BOOKING_ICAL_BLOCK_PREFIX}${roomId}_${h}`,
+        roomId,
+        checkIn: p.checkIn,
+        checkOut: p.checkOut,
+        note: "Booking.com (sync)",
+      });
+    }
+  }
+
+  await setAllBlocked(next);
+}
+
+function simpleHash(s: string): string {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h).toString(36);
+}

@@ -949,41 +949,6 @@ export default function Home() {
           </section>
 
           <section
-            id="fratelli"
-            className="section fratelli-section"
-            aria-labelledby="fratelli-title"
-          >
-            <div className="fratelli-card">
-              <div className="fratelli-card-inner">
-                <div className="fratelli-logo-wrap">
-                  <Image
-                    src="/fratelli-di-pizza-logo.png"
-                    alt="Fratelli di Pizza"
-                    width={200}
-                    height={120}
-                    className="fratelli-logo"
-                  />
-                </div>
-                <h2 className="fratelli-title" id="fratelli-title">
-                  {t.fratelliTitle}
-                </h2>
-                <p className="fratelli-subtitle">
-                  {t.fratelliSubtitle} <strong>Fratelli di Pizza</strong>
-                </p>
-                <p className="fratelli-body">{t.fratelliBody}</p>
-                <a
-                  href={`https://wa.me/${CONTACT_PHONE.replace(/\D/g, "")}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="fratelli-cta"
-                >
-                  {t.fratelliCta}
-                </a>
-              </div>
-            </div>
-          </section>
-
-          <section
             id="perche"
             className="section"
             aria-labelledby="why-title"
