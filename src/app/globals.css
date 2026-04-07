@@ -83,30 +83,68 @@ main {
 
 .topbar {
   display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+}
+
+/* Pagine senza menu completo (galleria, legali, ecc.): stessa palette beige-dorato */
+.topbar:not(.topbar--stacked) {
+  flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-  min-width: 0;
+  gap: 16px;
+  padding: 12px 14px;
+  background: linear-gradient(180deg, #fbf6ee 0%, #f2e4c8 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(200, 169, 106, 0.5);
+  box-shadow: 0 8px 22px rgba(101, 80, 45, 0.1);
 }
 
-.nav-links--left {
+.topbar--stacked {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  padding: 16px 14px 18px;
+  background: linear-gradient(
+    180deg,
+    #fbf6ee 0%,
+    #f4e8d2 42%,
+    #e9d5b0 100%
+  );
+  border-radius: 22px;
+  border: 1px solid rgba(200, 169, 106, 0.55);
+  box-shadow:
+    0 12px 32px rgba(101, 80, 45, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.topbar-head {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  gap: 8px;
+}
+
+.topbar-head-spacer {
   flex: 1;
-  justify-content: flex-start;
   min-width: 0;
 }
 
-.topbar-right {
+.topbar-head-lang {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
-.brand--centered {
+.brand--header-logo {
   flex-shrink: 0;
-  order: 0;
+  margin: 0 auto;
 }
 
 .brand {
@@ -122,10 +160,11 @@ main {
 .brand-logo {
   height: 140px;
   width: auto;
-  max-width: 360px;
+  max-width: 400px;
   object-fit: contain;
   display: block;
   flex-shrink: 0;
+  filter: brightness(1.04) contrast(1.03);
 }
 
 .brand-mark {
@@ -225,46 +264,55 @@ main {
 }
 
 @media (max-width: 768px) {
-  .topbar {
+  .topbar--stacked {
     gap: 12px;
+    padding: 14px 10px 16px;
   }
 
   .brand-logo {
-    height: 90px;
-    max-width: 260px;
+    height: 110px;
+    max-width: 320px;
   }
 
-  .nav-links--left {
+  .nav-links--pill-row {
     gap: 8px;
-    font-size: 13px;
   }
 
-  .topbar-right {
-    width: 100%;
-    justify-content: flex-end;
+  .nav-links--pill-row a {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 520px) {
+  .topbar-head-spacer {
+    display: none;
+  }
+
+  .topbar-head {
     flex-wrap: wrap;
-    gap: 10px;
+    justify-content: center;
   }
 
-  .nav-links {
-    gap: 10px;
-    font-size: 12px;
-    flex-wrap: wrap;
-  }
-
-  .nav-links--left {
-    justify-content: flex-start;
-  }
-
-  .nav-links a {
-    white-space: nowrap;
+  .topbar-head-lang {
+    flex: 1 1 100%;
+    justify-content: center;
   }
 }
 
 @media (max-width: 480px) {
-  .nav-links {
-    font-size: 11px;
-    gap: 8px;
+  .nav-links--pill-row {
+    gap: 6px;
+  }
+
+  .nav-links--pill-row a {
+    padding: 8px 10px;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.2;
+    max-width: 170px;
   }
 
   .lang-pill {
@@ -278,14 +326,17 @@ main {
   align-items: center;
   gap: 16px;
   font-size: 13px;
-  color: rgba(90, 74, 58, 0.78); /* beige-tortora */
+  color: #e6d1a6;
 }
 
 .nav-links a {
   position: relative;
-  padding-bottom: 2px;
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  padding: 8px 4px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0.95;
 }
 
 .nav-links a::after {
@@ -296,8 +347,13 @@ main {
   width: 0;
   height: 2px;
   border-radius: 999px;
-  background: rgba(200, 169, 106, 0.95); /* dorato */
+  background: linear-gradient(90deg, #8b6b35 0%, #d8bb7a 55%, #f2dfb1 100%);
   transition: width 0.18s ease-out;
+}
+
+.nav-links a:hover {
+  opacity: 1;
+  color: #f3e4c1;
 }
 
 .nav-links a:hover::after {
@@ -310,13 +366,87 @@ main {
   box-shadow: 0 0 0 4px rgba(200, 169, 106, 0.22);
 }
 
+/* Menu sotto il logo: pulsanti dorati */
+.nav-links--pill-row {
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.nav-links--pill-row a {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    #fffdf7 0%,
+    #f3e4c8 38%,
+    #d4a84a 100%
+  );
+  color: #3d342a;
+  border: 1px solid rgba(176, 125, 20, 0.45);
+  box-shadow:
+    0 4px 12px rgba(101, 80, 45, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 800;
+  text-decoration: none;
+  opacity: 1;
+  white-space: nowrap;
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.nav-links--pill-row a::after {
+  display: none;
+}
+
+.nav-links--pill-row a:hover {
+  color: #2a2118;
+  filter: brightness(1.04);
+  transform: translateY(-1px);
+  box-shadow:
+    0 8px 18px rgba(101, 80, 45, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.nav-links--pill-row a:focus-visible {
+  box-shadow:
+    0 0 0 4px rgba(200, 169, 106, 0.35),
+    0 4px 12px rgba(101, 80, 45, 0.18);
+}
+
+/* CTA in fila con le altre voci (prenotazione) */
+.nav-links--pill-row .nav-pill-book {
+  border-width: 2px;
+  border-color: rgba(140, 95, 18, 0.65);
+  background: linear-gradient(
+    180deg,
+    #fffdf5 0%,
+    #f0d78c 38%,
+    #d9a032 100%
+  );
+  box-shadow:
+    0 6px 16px rgba(101, 80, 45, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.nav-links--pill-row .nav-pill-book:hover {
+  filter: brightness(1.06);
+  box-shadow:
+    0 10px 22px rgba(101, 80, 45, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
 .lang-switch {
   display: inline-flex;
   align-items: center;
   padding: 3px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 0 0 1px rgba(200, 169, 106, 0.4);
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0 0 1px rgba(200, 169, 106, 0.45);
 }
 
 .lang-pill {
@@ -335,8 +465,8 @@ main {
   background: radial-gradient(circle at 20% 10%, #fffaf0 0%, #f0e1c3 40%, #d3b37c 100%);
   color: #3d342a;
   box-shadow:
-    0 4px 10px rgba(137, 111, 70, 0.35),
-    0 0 0 1px rgba(255, 255, 255, 0.9);
+    0 4px 10px rgba(137, 111, 70, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.85);
 }
 
 /* Banner promozionale in evidenza – WELCOME25 (stili forti per override reset) */

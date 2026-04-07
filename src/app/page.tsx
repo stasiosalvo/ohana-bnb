@@ -555,38 +555,20 @@ export default function Home() {
   return (
     <div className="page-shell">
       <div className="page-inner">
-        <header className="topbar">
-          <nav className="nav-links nav-links--left">
-              <Link href="/galleria">{lang === "it" ? "Camere" : "Rooms"}</Link>
-              <Link href="/chi-siamo">
-                {lang === "it" ? "Chi siamo" : "About"}
-              </Link>
-              <a href="#recensioni">
-                {lang === "it" ? "Recensioni" : "Reviews"}
-              </a>
-              <a href="#servizi">
-                {lang === "it" ? "Servizi" : "Services"}
-              </a>
-              <Link href="/condizioni">
-                {lang === "it" ? "Condizioni" : "Terms"}
-              </Link>
-              <a href="#contatti">
-                {lang === "it" ? "Come arrivare" : "How to reach us"}
-              </a>
-            </nav>
-
-          <Link href="/" className="brand brand--centered">
-            <img
-              src="/ohana-logo.png"
-              alt="Ohana Bed & Breakfast"
-              width={260}
-              height={84}
-              className="brand-logo"
-            />
-          </Link>
-
-          <div className="topbar-right">
-            <div className="lang-switch" aria-label="Seleziona lingua">
+        <header className="topbar topbar--stacked">
+          <div className="topbar-head">
+            <div className="topbar-head-spacer" aria-hidden />
+            <Link href="/" className="brand brand--header-logo">
+              <img
+                src="/ohana-logo.png"
+                alt="Ohana Bed & Breakfast"
+                width={400}
+                height={140}
+                className="brand-logo"
+              />
+            </Link>
+            <div className="topbar-head-lang">
+              <div className="lang-switch" aria-label="Seleziona lingua">
               <button
                 type="button"
                 className={`lang-pill ${
@@ -619,8 +601,43 @@ export default function Home() {
               >
                 ES
               </button>
+              </div>
             </div>
           </div>
+
+          <nav
+            className="nav-links nav-links--pill-row"
+            aria-label={lang === "it" ? "Navigazione principale" : "Main navigation"}
+          >
+            <Link href="/galleria">{lang === "it" ? "Camere" : "Rooms"}</Link>
+            <Link href="/chi-siamo">
+              {lang === "it" ? "Chi siamo" : "About"}
+            </Link>
+            <a href="#recensioni">
+              {lang === "it" ? "Recensioni" : "Reviews"}
+            </a>
+            <a href="#servizi">
+              {lang === "it" ? "Servizi" : "Services"}
+            </a>
+            <Link href="/condizioni">
+              {lang === "it" ? "Condizioni" : "Terms"}
+            </Link>
+            <a href="#contatti">
+              {lang === "it" ? "Come arrivare" : "How to reach us"}
+            </a>
+            <Link
+              href="/prenota/sun"
+              className="nav-pill-book"
+            >
+              {lang === "it"
+                ? "Prenota ora"
+                : lang === "en"
+                  ? "Book now"
+                  : lang === "fr"
+                    ? "Réserver"
+                    : "Reservar"}
+            </Link>
+          </nav>
         </header>
 
         <section className="hero-carousel" aria-label="Foto delle camere">
