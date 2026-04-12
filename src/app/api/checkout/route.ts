@@ -2,18 +2,12 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { applyDiscount, canUseDiscountCode } from "@/lib/discount";
 import { isPeriodBlocked, type RoomId } from "@/lib/blocked";
+import { roomStaySubtotalEur } from "@/lib/room-pricing";
 import {
   nightsBetween,
   stayTaxEur,
   STAY_TAX_EUR_PER_PERSON_PER_NIGHT,
 } from "@/lib/tourist-tax";
-
-/** Prezzi camera/notte (allineati a prenota/[roomId]) — per validazione lato server */
-const ROOM_PRICE_EUR: Record<RoomId, number> = {
-  sun: 80,
-  moon: 80,
-  earth: 70,
-};
 
 export const runtime = "nodejs";
 
@@ -57,7 +51,7 @@ export async function POST(request: Request) {
 
     const bodyTyped = body as {
       roomId?: string;
-      rooms?: Array<{ roomId: string; pricePerNight: number; nights: number }>;
+      rooms?: Array<{ roomId: string; pricePerNight?: number; nights: number }>;
       checkIn?: string;
       checkOut?: string;
       guests?: number;
@@ -86,18 +80,17 @@ export async function POST(request: Request) {
     } = bodyTyped;
 
     // Supporto prenotazione singola (roomId) o multipla (rooms)
-    let rooms: Array<{ roomId: RoomId; pricePerNight: number; nights: number }>;
+    let rooms: Array<{ roomId: RoomId; nights: number }>;
     if (roomsPayload?.length) {
       rooms = roomsPayload
         .filter((r) => r.roomId && ["sun", "moon", "earth"].includes(r.roomId))
         .map((r) => ({
           roomId: r.roomId as RoomId,
-          pricePerNight: Number(r.pricePerNight) || 0,
           nights: Number(r.nights) || 0,
         }))
-        .filter((r) => r.nights >= 1 && r.pricePerNight > 0);
+        .filter((r) => r.nights >= 1);
     } else if (singleRoomId && ["sun", "moon", "earth"].includes(singleRoomId)) {
-      rooms = [{ roomId: singleRoomId as RoomId, pricePerNight: 0, nights: Number(nights) || 0 }];
+      rooms = [{ roomId: singleRoomId as RoomId, nights: Number(nights) || 0 }];
     } else {
       rooms = [];
     }
@@ -146,13 +139,10 @@ export async function POST(request: Request) {
     }
 
     let expectedRoomSubtotal = 0;
-    if (roomsPayload?.length) {
-      for (const r of rooms) {
-        expectedRoomSubtotal += r.pricePerNight * r.nights;
-      }
-    } else if (singleRoomId && rooms[0]) {
-      expectedRoomSubtotal = ROOM_PRICE_EUR[rooms[0].roomId] * nightsNum;
+    for (const r of rooms) {
+      expectedRoomSubtotal += roomStaySubtotalEur(r.roomId, checkIn, checkOut);
     }
+    expectedRoomSubtotal = Math.round(expectedRoomSubtotal * 100) / 100;
     if (Math.abs(expectedRoomSubtotal - totalNum) > 0.05) {
       return NextResponse.json(
         { error: "L'importo non corrisponde alle camere selezionate. Aggiorna la pagina e riprova." },
@@ -191,7 +181,7 @@ export async function POST(request: Request) {
 
     if (roomsPayload?.length) {
       for (const r of rooms) {
-        const unitAmount = r.pricePerNight * r.nights;
+        const unitAmount = roomStaySubtotalEur(r.roomId, checkIn, checkOut);
         if (unitAmount <= 0) continue;
         line_items.push({
           quantity: 1,

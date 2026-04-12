@@ -18,6 +18,9 @@ export const bookingTouristTaxCopy: Record<
     payTaxOnSiteCheckbox: string;
     helpPayOnSite: string;
     helpPayOnline: string;
+    /** {rate} {nights} {nightsWord} {guests} {guestsWord} {amount} */
+    receiptTaxLine: string;
+    receiptTaxOnSiteBadge: string;
   }
 > = {
   it: {
@@ -36,6 +39,9 @@ export const bookingTouristTaxCopy: Record<
     helpPayOnSite: "In cassa all'arrivo: porta l'importo in contanti indicato sopra.",
     helpPayOnline:
       "La tassa di soggiorno comunale è inclusa nel totale che pagherai ora con carta.",
+    receiptTaxLine:
+      "€{rate} × {nights} {nightsWord} × {guests} {guestsWord} = €{amount}",
+    receiptTaxOnSiteBadge: "da pagare in contanti in struttura",
   },
   en: {
     langSwitchAria: "Select language",
@@ -53,6 +59,9 @@ export const bookingTouristTaxCopy: Record<
     helpPayOnSite: "At check-in: please bring the cash amount shown above.",
     helpPayOnline:
       "The municipal tourist tax is included in the total you will pay now by card.",
+    receiptTaxLine:
+      "€{rate} × {nights} {nightsWord} × {guests} {guestsWord} = €{amount}",
+    receiptTaxOnSiteBadge: "pay in cash on arrival",
   },
   fr: {
     langSwitchAria: "Choisir la langue",
@@ -71,6 +80,9 @@ export const bookingTouristTaxCopy: Record<
       "À l'arrivée : merci d'apporter le montant en espèces indiqué ci-dessus.",
     helpPayOnline:
       "La taxe de séjour municipale est incluse dans le total que vous payez par carte.",
+    receiptTaxLine:
+      "{rate} € × {nights} {nightsWord} × {guests} {guestsWord} = {amount} €",
+    receiptTaxOnSiteBadge: "à payer en espèces sur place",
   },
   es: {
     langSwitchAria: "Seleccionar idioma",
@@ -88,5 +100,8 @@ export const bookingTouristTaxCopy: Record<
     helpPayOnSite: "Al llegar: trae en efectivo el importe indicado arriba.",
     helpPayOnline:
       "La tasa turística municipal está incluida en el total que pagarás ahora con tarjeta.",
+    receiptTaxLine:
+      "{rate} € × {nights} {nightsWord} × {guests} {guestsWord} = {amount} €",
+    receiptTaxOnSiteBadge: "en efectivo al llegar",
   },
 };

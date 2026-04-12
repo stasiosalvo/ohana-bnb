@@ -18,6 +18,18 @@ export const prenotaPageCopy: Record<
     totalLineMulti: string;
     /** {name} {price} */
     singleRoomPriceLine: string;
+    /** Giugno/luglio: tariffe variabili (mostrato se le date toccano quei mesi) */
+    junJulPricingNote: string;
+    /** Agosto: €90 / €100 (mostrato se le date toccano agosto) */
+    augustPricingNote: string;
+    receiptAria: string;
+    receiptTitle: string;
+    /** {name} = Sun / Moon / Earth */
+    receiptRoomHeading: string;
+    receiptSubtotalRooms: string;
+    /** {label} codice o nome promozione */
+    receiptDiscount: string;
+    receiptAfterDiscountRooms: string;
     arrival: string;
     departure: string;
     checkingAvailability: string;
@@ -82,6 +94,16 @@ export const prenotaPageCopy: Record<
     pillSingleSuffix: "m² · bagno privato",
     totalLineMulti: "totale €{total} ({nights} notte/i)",
     singleRoomPriceLine: "{name}: da €{price} / notte, coupon bar incluso.",
+    junJulPricingNote:
+      "Giugno e luglio: €80 da lunedì a venerdì, €90 sabato e domenica (tutte le camere). Il totale si aggiorna in base alle date.",
+    augustPricingNote:
+      "Agosto: €90 a notte; €100 nei giorni 1, 2, 7, 8, 9, 14, 15, 16, 21, 22, 23, 28, 29 e 30 (tutte le camere). Il totale si aggiorna in base alle date.",
+    receiptAria: "Dettaglio importi e totale",
+    receiptTitle: "Dettaglio importi",
+    receiptRoomHeading: "Camera {name}",
+    receiptSubtotalRooms: "Subtotale camere",
+    receiptDiscount: "Sconto · {label}",
+    receiptAfterDiscountRooms: "Totale camere",
     arrival: "Arrivo",
     departure: "Partenza",
     checkingAvailability: "Verifica disponibilità...",
@@ -154,6 +176,16 @@ export const prenotaPageCopy: Record<
     pillSingleSuffix: "m² · private bathroom",
     totalLineMulti: "total €{total} ({nights} night(s))",
     singleRoomPriceLine: "{name}: from €{price} / night, bar coupon included.",
+    junJulPricingNote:
+      "June & July: €80 Mon–Fri, €90 Sat & Sun (all rooms). The total updates based on your dates.",
+    augustPricingNote:
+      "August: €90 per night; €100 on Aug 1–2, 7–9, 14–16, 21–23, 28–30 (all rooms). The total updates based on your dates.",
+    receiptAria: "Price breakdown and total",
+    receiptTitle: "Price breakdown",
+    receiptRoomHeading: "Room {name}",
+    receiptSubtotalRooms: "Rooms subtotal",
+    receiptDiscount: "Discount · {label}",
+    receiptAfterDiscountRooms: "Rooms total",
     arrival: "Check-in",
     departure: "Check-out",
     checkingAvailability: "Checking availability...",
@@ -226,6 +258,16 @@ export const prenotaPageCopy: Record<
     pillSingleSuffix: "m² · salle de bain privée",
     totalLineMulti: "total {total} € ({nights} nuit(s))",
     singleRoomPriceLine: "{name} : à partir de {price} € / nuit, bon petit‑déjeuner inclus.",
+    junJulPricingNote:
+      "Juin et juillet : 80 € lun–ven, 90 € sam–dim (toutes les chambres). Le total s’ajuste selon les dates.",
+    augustPricingNote:
+      "Août : 90 € / nuit ; 100 € les 1, 2, 7, 8, 9, 14, 15, 16, 21, 22, 23, 28, 29 et 30 (toutes les chambres). Le total s’ajuste selon les dates.",
+    receiptAria: "Détail des montants et total",
+    receiptTitle: "Détail des montants",
+    receiptRoomHeading: "Chambre {name}",
+    receiptSubtotalRooms: "Sous-total chambres",
+    receiptDiscount: "Réduction · {label}",
+    receiptAfterDiscountRooms: "Total chambres",
     arrival: "Arrivée",
     departure: "Départ",
     checkingAvailability: "Vérification des disponibilités...",
@@ -298,6 +340,16 @@ export const prenotaPageCopy: Record<
     pillSingleSuffix: "m² · baño privado",
     totalLineMulti: "total {total} € ({nights} noche(s))",
     singleRoomPriceLine: "{name}: desde {price} € / noche, cupón de bar incluido.",
+    junJulPricingNote:
+      "Junio y julio: 80 € lun–vie, 90 € sáb–dom (todas las habitaciones). El total se actualiza según las fechas.",
+    augustPricingNote:
+      "Agosto: 90 € / noche; 100 € los días 1, 2, 7, 8, 9, 14, 15, 16, 21, 22, 23, 28, 29 y 30 (todas las habitaciones). El total se actualiza según las fechas.",
+    receiptAria: "Desglose de importes y total",
+    receiptTitle: "Desglose de importes",
+    receiptRoomHeading: "Habitación {name}",
+    receiptSubtotalRooms: "Subtotal alojamiento",
+    receiptDiscount: "Descuento · {label}",
+    receiptAfterDiscountRooms: "Total alojamiento",
     arrival: "Llegada",
     departure: "Salida",
     checkingAvailability: "Comprobando disponibilidad...",

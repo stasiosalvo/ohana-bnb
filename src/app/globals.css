@@ -102,6 +102,16 @@ main {
   box-shadow: 0 8px 22px rgba(101, 80, 45, 0.1);
 }
 
+/* Lingue + chip (es. «Torna alla homepage»): colonna e gap per evitare sovrapposizioni su mobile */
+.topbar-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+}
+
 .topbar--stacked {
   flex-direction: column;
   align-items: stretch;
@@ -297,6 +307,29 @@ main {
   .topbar-head-lang {
     flex: 1 1 100%;
     justify-content: center;
+  }
+
+  /* Header compatto (prenota, galleria, legali): logo su una riga, lingue e link sotto — niente accavallamento */
+  .topbar:not(.topbar--stacked) {
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 14px 12px;
+  }
+
+  .topbar:not(.topbar--stacked) .brand {
+    flex: 1 1 100%;
+    justify-content: center;
+  }
+
+  .topbar:not(.topbar--stacked) .topbar-right {
+    flex: 1 1 100%;
+    align-items: center;
+    gap: 14px;
+    padding-top: 4px;
+  }
+
+  .topbar:not(.topbar--stacked) .topbar-right .chip {
+    margin-top: 2px;
   }
 }
 
@@ -2077,6 +2110,109 @@ button.booking-room-card {
   color: #166534;
   margin: 6px 0 0;
   font-weight: 500;
+}
+
+.booking-receipt {
+  margin-top: 10px;
+  padding: 12px 12px 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px dashed rgba(91, 76, 56, 0.38);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.booking-receipt-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  opacity: 0.78;
+  margin: 0 0 10px;
+  font-weight: 700;
+}
+
+.booking-receipt-room {
+  font-weight: 600;
+  font-size: 11px;
+  margin: 10px 0 6px;
+  color: #2f281f;
+}
+
+.booking-receipt-room:first-of-type {
+  margin-top: 0;
+}
+
+.booking-receipt-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.booking-receipt-line--muted {
+  opacity: 0.88;
+  font-size: 11px;
+}
+
+.booking-receipt-line--sub {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(91, 76, 56, 0.15);
+  font-weight: 600;
+}
+
+.booking-receipt-line--discount {
+  color: #166534;
+}
+
+.booking-receipt-line--tax {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(91, 76, 56, 0.15);
+  align-items: flex-start;
+}
+
+.booking-receipt-tax-label {
+  font-weight: 600;
+  flex-shrink: 0;
+  max-width: 42%;
+}
+
+.booking-receipt-tax-formula {
+  text-align: right;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.booking-receipt-note {
+  font-size: 11px;
+  font-style: italic;
+  opacity: 0.88;
+  margin: 4px 0 0;
+  text-align: right;
+}
+
+.booking-receipt-checkbox {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(91, 76, 56, 0.12);
+}
+
+.booking-receipt-line--grand {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid rgba(91, 76, 56, 0.28);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.booking-receipt-vat-hint {
+  font-size: 10px;
+  opacity: 0.75;
+  margin: 6px 0 0;
+  line-height: 1.3;
 }
 
 .badge-small {

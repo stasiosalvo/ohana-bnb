@@ -5,7 +5,13 @@ import Link from "next/link";
 import { useEffect, useMemo, use, useState } from "react";
 import { bookingTouristTaxCopy } from "@/lib/booking-i18n";
 import { prenotaPageCopy } from "@/lib/i18n/prenota-page";
-import { useSiteLang } from "@/lib/site-language";
+import { useSiteLang, type SiteLang } from "@/lib/site-language";
+import {
+  roomNightlyBreakdown,
+  roomStaySubtotalEur,
+  stayTouchesAugust,
+  stayTouchesJuneOrJuly,
+} from "@/lib/room-pricing";
 import {
   nightsBetween,
   STAY_TAX_EUR_PER_PERSON_PER_NIGHT,
@@ -50,6 +56,22 @@ const ROOMS: Record<
     maxGuests: 2,
   },
 };
+
+const RECEIPT_LOCALE: Record<SiteLang, string> = {
+  it: "it-IT",
+  en: "en-GB",
+  fr: "fr-FR",
+  es: "es-ES",
+};
+
+function formatReceiptDate(ymd: string, lang: SiteLang): string {
+  const [y, m, d] = ymd.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString(RECEIPT_LOCALE[lang], {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
 
 type Props = {
   params: Promise<{ roomId: string }>;
@@ -113,9 +135,34 @@ export default function PrenotaRoomPage({ params }: Props) {
     return nightsBetween(checkIn, checkOut);
   }, [checkIn, checkOut]);
 
-  const total = useMemo(
-    () => selectedRooms.reduce((sum, id) => sum + ROOMS[id].pricePerNight * nights, 0),
-    [selectedRooms, nights]
+  const total = useMemo(() => {
+    if (!checkIn || !checkOut || nights <= 0) return 0;
+    return selectedRooms.reduce(
+      (sum, id) => sum + roomStaySubtotalEur(id, checkIn, checkOut),
+      0
+    );
+  }, [selectedRooms, checkIn, checkOut, nights]);
+
+  const showJunJulNote = useMemo(
+    () =>
+      Boolean(
+        checkIn &&
+          checkOut &&
+          nights > 0 &&
+          stayTouchesJuneOrJuly(checkIn, checkOut)
+      ),
+    [checkIn, checkOut, nights]
+  );
+
+  const showAugustNote = useMemo(
+    () =>
+      Boolean(
+        checkIn &&
+          checkOut &&
+          nights > 0 &&
+          stayTouchesAugust(checkIn, checkOut)
+      ),
+    [checkIn, checkOut, nights]
   );
 
   useEffect(() => {
@@ -167,6 +214,25 @@ export default function PrenotaRoomPage({ params }: Props) {
   );
 
   const totalToPayOnline = displayTotal + (payTouristTaxOnSite ? 0 : touristTax);
+
+  const nightlyLinesByRoom = useMemo(() => {
+    if (!checkIn || !checkOut || nights <= 0) return [];
+    return selectedRooms.map((roomId) => ({
+      roomId,
+      lines: roomNightlyBreakdown(roomId, checkIn, checkOut),
+    }));
+  }, [selectedRooms, checkIn, checkOut, nights]);
+
+  const receiptTaxFormula = useMemo(() => {
+    if (nights <= 0) return "";
+    return tax.receiptTaxLine
+      .replace("{rate}", STAY_TAX_EUR_PER_PERSON_PER_NIGHT.toFixed(2))
+      .replace("{nights}", String(nights))
+      .replace("{nightsWord}", nights === 1 ? tax.night : tax.nights)
+      .replace("{guests}", String(guestCount))
+      .replace("{guestsWord}", guestCount === 1 ? tax.guest : tax.guests)
+      .replace("{amount}", touristTax.toFixed(2));
+  }, [nights, guestCount, touristTax, tax]);
 
   async function handleApplyCode() {
     if (!discountCode.trim() || total <= 0) return;
@@ -228,7 +294,6 @@ export default function PrenotaRoomPage({ params }: Props) {
           ? {
               rooms: selectedRooms.map((id) => ({
                 roomId: id,
-                pricePerNight: ROOMS[id].pricePerNight,
                 nights,
               })),
               checkIn,
@@ -390,6 +455,37 @@ export default function PrenotaRoomPage({ params }: Props) {
                   </button>
                 </div>
               </div>
+
+              {(showJunJulNote || showAugustNote) && (
+                <div style={{ marginTop: 12 }}>
+                  {showJunJulNote && (
+                    <p
+                      style={{
+                        marginTop: 0,
+                        marginBottom: showAugustNote ? 8 : 0,
+                        fontSize: 13,
+                        lineHeight: 1.45,
+                        color: "#5c5349",
+                      }}
+                    >
+                      {p.junJulPricingNote}
+                    </p>
+                  )}
+                  {showAugustNote && (
+                    <p
+                      style={{
+                        marginTop: 0,
+                        marginBottom: 0,
+                        fontSize: 13,
+                        lineHeight: 1.45,
+                        color: "#5c5349",
+                      }}
+                    >
+                      {p.augustPricingNote}
+                    </p>
+                  )}
+                </div>
+              )}
 
               <div style={{ marginTop: 14, fontSize: 13, color: "#7d7166" }}>
                 <span className="booking-room-pill">
@@ -654,56 +750,63 @@ export default function PrenotaRoomPage({ params }: Props) {
                     {discountError}
                   </p>
                 )}
-                {appliedDiscount && (
-                  <p className="discount-success">
-                    {p.discountSuccessLine
-                      .replace("{label}", appliedDiscount.label)
-                      .replace("{total}", appliedDiscount.discountedTotal.toFixed(0))}
-                  </p>
-                )}
-              </div>
-
-              <div
-                style={{
-                  height: 1,
-                  margin: "4px 0 6px",
-                  background: "rgba(255,255,255,0.65)",
-                }}
-              />
-
-              <div className="booking-summary-row">
-                <span className="booking-summary-label">{tax.estimatedTotal}</span>
-                <span className="booking-summary-value-strong">
-                  {nights > 0 ? (
-                    <>
-                      €{displayTotal.toFixed(0)}{" "}
-                      <span style={{ fontWeight: 400, fontSize: 11 }}>
-                        {tax.roomVatNote}
-                      </span>
-                    </>
-                  ) : (
-                    "—"
-                  )}
-                </span>
               </div>
 
               {nights > 0 && (
-                <>
-                  <div className="booking-summary-row" style={{ alignItems: "flex-start" }}>
-                    <span className="booking-summary-label">{tax.touristTaxLabel}</span>
-                    <span style={{ textAlign: "right", fontSize: 13 }}>
-                      €{STAY_TAX_EUR_PER_PERSON_PER_NIGHT.toFixed(2)} × {nights}{" "}
-                      {nights === 1 ? tax.night : tax.nights} × {guestCount}{" "}
-                      {guestCount === 1 ? tax.guest : tax.guests} = €{touristTax.toFixed(2)}
-                    </span>
+                <div
+                  className="booking-receipt"
+                  role="region"
+                  aria-label={p.receiptAria}
+                >
+                  <div className="booking-receipt-title">{p.receiptTitle}</div>
+                  {nightlyLinesByRoom.map(({ roomId, lines }) => (
+                    <div key={roomId}>
+                      <div className="booking-receipt-room">
+                        {p.receiptRoomHeading.replace("{name}", ROOMS[roomId].name)}
+                      </div>
+                      {lines.map((line) => (
+                        <div
+                          key={line.dateYmd}
+                          className="booking-receipt-line booking-receipt-line--muted"
+                        >
+                          <span>{formatReceiptDate(line.dateYmd, lang)}</span>
+                          <span>€{line.amountEur.toFixed(2)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                  <div className="booking-receipt-line booking-receipt-line--sub">
+                    <span>{p.receiptSubtotalRooms}</span>
+                    <span>€{total.toFixed(2)}</span>
                   </div>
+                  {appliedDiscount && (
+                    <div className="booking-receipt-line booking-receipt-line--discount">
+                      <span>
+                        {p.receiptDiscount.replace("{label}", appliedDiscount.label)}
+                      </span>
+                      <span>−€{appliedDiscount.discountEur.toFixed(2)}</span>
+                    </div>
+                  )}
+                  <div className="booking-receipt-line booking-receipt-line--sub">
+                    <span>{p.receiptAfterDiscountRooms}</span>
+                    <span>€{displayTotal.toFixed(2)}</span>
+                  </div>
+                  <p className="booking-receipt-vat-hint">{tax.roomVatNote}</p>
+
+                  <div className="booking-receipt-line booking-receipt-line--tax">
+                    <span className="booking-receipt-tax-label">{tax.touristTaxLabel}</span>
+                    <span className="booking-receipt-tax-formula">{receiptTaxFormula}</span>
+                  </div>
+                  {payTouristTaxOnSite && touristTax > 0 && (
+                    <p className="booking-receipt-note">{tax.receiptTaxOnSiteBadge}</p>
+                  )}
+
                   <label
+                    className="booking-receipt-checkbox"
                     style={{
                       display: "flex",
                       gap: 10,
                       alignItems: "flex-start",
-                      marginTop: 8,
-                      marginBottom: 6,
                       cursor: "pointer",
                       fontSize: 13,
                       lineHeight: 1.35,
@@ -717,16 +820,15 @@ export default function PrenotaRoomPage({ params }: Props) {
                     />
                     <span>{tax.payTaxOnSiteCheckbox}</span>
                   </label>
-                  <p className="text-muted" style={{ fontSize: 12, marginTop: 0, marginBottom: 8 }}>
+                  <p className="text-muted" style={{ fontSize: 12, marginTop: 6, marginBottom: 0 }}>
                     {payTouristTaxOnSite ? tax.helpPayOnSite : tax.helpPayOnline}
                   </p>
-                  <div className="booking-summary-row">
-                    <span className="booking-summary-label">{tax.totalPayOnline}</span>
-                    <span className="booking-summary-value-strong">
-                      €{totalToPayOnline.toFixed(2)}
-                    </span>
+
+                  <div className="booking-receipt-line booking-receipt-line--grand">
+                    <span>{tax.totalPayOnline}</span>
+                    <span>€{totalToPayOnline.toFixed(2)}</span>
                   </div>
-                </>
+                </div>
               )}
 
               <p className="text-muted">{p.disclaimer}</p>
