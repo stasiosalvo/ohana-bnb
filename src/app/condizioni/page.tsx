@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
+import { useSiteLang } from "@/lib/site-language";
 
 type Lang = "it" | "en" | "fr" | "es";
 
@@ -28,6 +28,11 @@ const content = {
     petsTitle: "Animali",
     petsBody: "Accettiamo i cani con piacere. È previsto un supplemento di 5 € a notte per soggiorno. Va comunicato in fase di prenotazione; in camera e negli spazi comuni chiediamo di avere cura dell'animale e di rispettare gli altri ospiti (guinzaglio negli spazi comuni quando indicato).",
     petsWelcome: "Per rendere il soggiorno comodo anche al tuo amico a quattro zampe, mettiamo a disposizione cuccia, ciotole per acqua e cibo e un piccolo treat di benvenuto. Un gesto per farvi sentire a casa.",
+    touristTaxTitle: "Tassa di soggiorno",
+    touristTaxP1:
+      "La tassa di soggiorno è un’imposta comunale dovuta dai non residenti per ogni pernottamento nelle strutture ricettive, secondo la normativa del Comune di Napoli.",
+    touristTaxP2:
+      "L’importo applicato è di € 4,50 per persona per notte (salvo aggiornamenti del Comune). In fase di prenotazione puoi includerla nel pagamento online oppure versarla in contanti in struttura all’arrivo, come indicato nel riepilogo prima del pagamento.",
     contactTitle: "Contatti",
     contactText: `Per domande o richieste: ${CONTACT_EMAIL} o ${CONTACT_PHONE} (anche WhatsApp).`,
   },
@@ -51,6 +56,11 @@ const content = {
     petsTitle: "Pets",
     petsBody: "We welcome dogs. A supplement of €5 per night applies. Please let us know at booking; we ask that you take care of your pet and respect other guests (leash in common areas when required).",
     petsWelcome: "To make your four-legged friend's stay comfortable too, we provide a dog bed, bowls for water and food, and a small welcome treat. A little touch to make you feel at home.",
+    touristTaxTitle: "Tourist tax (city tax)",
+    touristTaxP1:
+      "The tourist tax is a municipal charge payable by non-residents for each night spent in tourist accommodation, in accordance with the regulations of the Municipality of Naples.",
+    touristTaxP2:
+      "The amount applied is €4.50 per person per night (subject to municipal updates). When booking you can include it in your online payment or pay in cash at the property on arrival, as shown in the summary before payment.",
     contactTitle: "Contact",
     contactText: `For questions or requests: ${CONTACT_EMAIL} or ${CONTACT_PHONE} (WhatsApp too).`,
   },
@@ -77,6 +87,11 @@ const content = {
       "Nous acceptons les chiens avec plaisir. Un supplément de 5 € par nuit s’applique. Merci de le signaler lors de la réservation ; nous demandons de respecter les autres clients (laisse dans les espaces communs lorsque requis).",
     petsWelcome:
       "Pour le confort de votre compagnon, nous mettons à disposition un couchage, des gamelles et une petite friandise de bienvenue.",
+    touristTaxTitle: "Taxe de séjour",
+    touristTaxP1:
+      "La taxe de séjour est une contribution communale due par les non‑résidents pour chaque nuit passée dans un hébergement touristique, conformément à la réglementation de la ville de Naples.",
+    touristTaxP2:
+      "Le montant appliqué est de 4,50 € par personne et par nuit (sous réserve de mise à jour par la commune). Lors de la réservation, vous pouvez l’inclure dans le paiement en ligne ou la régler en espèces sur place à l’arrivée, comme indiqué dans le récapitulatif avant paiement.",
     contactTitle: "Contact",
     contactText: `Pour toute question : ${CONTACT_EMAIL} ou ${CONTACT_PHONE} (WhatsApp aussi).`,
   },
@@ -103,14 +118,19 @@ const content = {
       "Aceptamos perros. Se aplica un suplemento de 5 € por noche. Por favor avísanos al reservar; pedimos cuidado y respeto a los demás huéspedes (correa en zonas comunes cuando corresponda).",
     petsWelcome:
       "Para que tu amigo de cuatro patas esté cómodo, proporcionamos camita, cuencos para agua y comida y un pequeño detalle de bienvenida.",
+    touristTaxTitle: "Tasa turística",
+    touristTaxP1:
+      "La tasa turística es un tributo municipal que abonan quienes no residen en el municipio por cada noche de estancia en alojamientos turísticos, según la normativa del Ayuntamiento de Nápoles.",
+    touristTaxP2:
+      "El importe aplicado es de 4,50 € por persona y noche (salvo actualizaciones del Ayuntamiento). Al reservar puedes incluirla en el pago online o abonarla en efectivo en el alojamiento a la llegada, según se indica en el resumen previo al pago.",
     contactTitle: "Contacto",
     contactText: `Para preguntas o solicitudes: ${CONTACT_EMAIL} o ${CONTACT_PHONE} (también WhatsApp).`,
   },
 };
 
 export default function CondizioniPage() {
-  const [lang, setLang] = useState<Lang>("it");
-  const t = content[lang];
+  const { lang, setLang } = useSiteLang();
+  const t = content[lang as Lang];
 
   return (
     <div className="page-shell">
@@ -179,6 +199,12 @@ export default function CondizioniPage() {
             <h2 className="legal-heading">{t.stayTitle}</h2>
             <p className="legal-body">{t.checkInOut}</p>
             <p className="legal-body">{t.noSmoking}</p>
+          </section>
+
+          <section id="tassa-soggiorno" className="legal-block">
+            <h2 className="legal-heading">{t.touristTaxTitle}</h2>
+            <p className="legal-body">{t.touristTaxP1}</p>
+            <p className="legal-body">{t.touristTaxP2}</p>
           </section>
 
           <section id="animali" className="legal-block">

@@ -67,8 +67,12 @@ export async function POST(request: Request) {
   const phone = session.metadata?.phone ?? "";
   const nights = session.metadata?.nights ?? "0";
   const discountCode = session.metadata?.discountCode as string | undefined;
+  const touristTaxEurRaw = session.metadata?.touristTaxEur ?? "";
+  const payTouristTaxOnSite = session.metadata?.payTouristTaxOnSite === "true";
   const customerEmail = session.customer_email ?? session.customer_details?.email ?? "";
   const amountTotal = session.amount_total != null ? session.amount_total / 100 : 0;
+  const touristTaxParsed = Number.parseFloat(String(touristTaxEurRaw).replace(",", "."));
+  const touristTaxEur = Number.isFinite(touristTaxParsed) ? touristTaxParsed : 0;
 
   // Incrementa utilizzo codice sconto (per limiti tipo "primi 10 clienti")
   if (discountCode?.trim()) {
@@ -109,7 +113,12 @@ export async function POST(request: Request) {
       <p><strong>Partenza:</strong> ${escapeHtml(checkOut)}</p>
       <p><strong>Notti:</strong> ${escapeHtml(nights)}</p>
       <p><strong>Ospiti:</strong> ${escapeHtml(guests)}</p>
-      <p><strong>Importo pagato:</strong> € ${amountTotal.toFixed(2)}</p>
+      <p><strong>Importo pagato online (Stripe):</strong> € ${amountTotal.toFixed(2)}</p>
+      <p><strong>Tassa di soggiorno (€4,50/persona/notte):</strong> € ${touristTaxEur.toFixed(2)} — ${
+        payTouristTaxOnSite
+          ? "<strong>da incassare in contanti in struttura</strong> (non inclusa nel pagamento con carta)."
+          : "inclusa nel pagamento online."
+      }</p>
       <p style="margin-top: 20px; color: #666; font-size: 12px;">Questa email è stata inviata automaticamente dopo il pagamento su Stripe.</p>
     `;
 
@@ -141,7 +150,12 @@ export async function POST(request: Request) {
           <li><strong>Check-out:</strong> ${escapeHtml(checkOut)}</li>
           <li><strong>Notti:</strong> ${escapeHtml(nights)}</li>
           <li><strong>Ospiti:</strong> ${escapeHtml(guests)}</li>
-          <li><strong>Importo pagato:</strong> € ${amountTotal.toFixed(2)}</li>
+          <li><strong>Importo pagato online:</strong> € ${amountTotal.toFixed(2)}</li>
+          <li><strong>Tassa di soggiorno (€4,50/persona/notte):</strong> € ${touristTaxEur.toFixed(2)} — ${
+            payTouristTaxOnSite
+              ? "da pagare in contanti in struttura all'arrivo."
+              : "già inclusa nel pagamento con carta."
+          }</li>
         </ul>
         <p>Per modifiche o informazioni puoi contattarci:</p>
         <p>Email: <a href="mailto:${escapeHtml(contactEmail)}">${escapeHtml(contactEmail)}</a><br>

@@ -2,6 +2,18 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { applyDiscount, canUseDiscountCode } from "@/lib/discount";
 import { isPeriodBlocked, type RoomId } from "@/lib/blocked";
+import {
+  nightsBetween,
+  stayTaxEur,
+  STAY_TAX_EUR_PER_PERSON_PER_NIGHT,
+} from "@/lib/tourist-tax";
+
+/** Prezzi camera/notte (allineati a prenota/[roomId]) — per validazione lato server */
+const ROOM_PRICE_EUR: Record<RoomId, number> = {
+  sun: 80,
+  moon: 80,
+  earth: 70,
+};
 
 export const runtime = "nodejs";
 
@@ -55,6 +67,7 @@ export async function POST(request: Request) {
       nights?: number;
       total?: number;
       discountCode?: string;
+      payTouristTaxOnSite?: boolean;
     };
 
     const {
@@ -69,6 +82,7 @@ export async function POST(request: Request) {
       nights,
       total,
       discountCode,
+      payTouristTaxOnSite,
     } = bodyTyped;
 
     // Supporto prenotazione singola (roomId) o multipla (rooms)
@@ -122,6 +136,33 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    const serverNights = nightsBetween(checkIn, checkOut);
+    if (serverNights !== nightsNum || serverNights < 1) {
+      return NextResponse.json(
+        { error: "Le date del soggiorno non sono coerenti. Aggiorna la pagina e riprova." },
+        { status: 400 }
+      );
+    }
+
+    let expectedRoomSubtotal = 0;
+    if (roomsPayload?.length) {
+      for (const r of rooms) {
+        expectedRoomSubtotal += r.pricePerNight * r.nights;
+      }
+    } else if (singleRoomId && rooms[0]) {
+      expectedRoomSubtotal = ROOM_PRICE_EUR[rooms[0].roomId] * nightsNum;
+    }
+    if (Math.abs(expectedRoomSubtotal - totalNum) > 0.05) {
+      return NextResponse.json(
+        { error: "L'importo non corrisponde alle camere selezionate. Aggiorna la pagina e riprova." },
+        { status: 400 }
+      );
+    }
+
+    const guestCount = Math.max(1, Math.min(20, Number(guests) || 1));
+    const touristTaxEur = stayTaxEur(serverNights, guestCount);
+    const payOnSite = Boolean(payTouristTaxOnSite);
 
     let totalToCharge = totalNum;
     const codeUsed = discountCode?.trim();
@@ -192,7 +233,21 @@ export async function POST(request: Request) {
       });
     }
 
-    const amountTotal = Math.max(1, Math.round(totalToCharge * 100));
+    if (!payOnSite && touristTaxEur > 0) {
+      line_items.push({
+        quantity: 1,
+        price_data: {
+          currency: "eur",
+          unit_amount: Math.max(1, Math.round(touristTaxEur * 100)),
+          product_data: {
+            name: "Tassa di soggiorno (comunale)",
+            description: `${STAY_TAX_EUR_PER_PERSON_PER_NIGHT} €/persona/notte × ${serverNights} notti × ${guestCount} ${
+              guestCount === 1 ? "ospite" : "ospiti"
+            }`,
+          },
+        },
+      });
+    }
 
     const params: Stripe.Checkout.SessionCreateParams = {
       mode: "payment",
@@ -206,6 +261,8 @@ export async function POST(request: Request) {
         name,
         phone: phone ?? "",
         nights: String(nightsNum),
+        touristTaxEur: touristTaxEur.toFixed(2),
+        payTouristTaxOnSite: payOnSite ? "true" : "false",
         ...(codeUsed ? { discountCode: codeUsed.toUpperCase() } : {}),
       },
       line_items,

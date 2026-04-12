@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { cookieBannerCopy } from "@/lib/i18n/cookie-banner-copy";
+import { useSiteLang } from "@/lib/site-language";
 
 const CONSENT_KEY = "ohana_cookie_consent_v1";
 const COOKIE_NAME = "ohana_cookie_consent";
@@ -20,6 +22,8 @@ function setConsentCookie(value: ConsentValue, days = 180) {
 }
 
 export function CookieBanner() {
+  const { lang } = useSiteLang();
+  const t = cookieBannerCopy[lang];
   const [visible, setVisible] = useState(false);
   const [showPrefs, setShowPrefs] = useState(false);
   const [prefs, setPrefs] = useState<ConsentPrefs>({
@@ -74,17 +78,16 @@ export function CookieBanner() {
 
   return (
     <>
-      <div className="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookie consent">
+      <div className="cookie-banner" role="dialog" aria-live="polite" aria-label={t.dialogAria}>
         <div className="cookie-banner-inner">
           <div className="cookie-banner-text">
-            <div className="cookie-banner-title">Cookie</div>
+            <div className="cookie-banner-title">{t.title}</div>
             <p className="cookie-banner-body">
-              Usiamo cookie necessari al funzionamento del sito e, con il tuo consenso, cookie di
-              preferenza e misurazione. Puoi accettare, rifiutare o gestire le preferenze.
+              {t.body}
               <span className="cookie-banner-links">
-                <Link href="/cookie">Cookie policy</Link>
+                <Link href="/cookie">{t.policy}</Link>
                 <span aria-hidden> · </span>
-                <Link href="/privacy">Privacy</Link>
+                <Link href="/privacy">{t.privacy}</Link>
               </span>
             </p>
           </div>
@@ -96,21 +99,21 @@ export function CookieBanner() {
                 persist({ value: "essential", analytics: false, marketing: false, preferences: false })
               }
             >
-              Rifiuta
+              {t.reject}
             </button>
             <button
               type="button"
               className="cookie-btn cookie-btn--secondary"
               onClick={() => setShowPrefs(true)}
             >
-              Preferenze
+              {t.preferences}
             </button>
             <button
               type="button"
               className="cookie-btn cookie-btn--accept"
               onClick={() => persist({ value: "all", analytics: true, marketing: true, preferences: true })}
             >
-              Accetta tutto
+              {t.acceptAll}
             </button>
           </div>
         </div>
@@ -121,21 +124,19 @@ export function CookieBanner() {
           className="cookie-modal"
           role="dialog"
           aria-modal="true"
-          aria-label="Preferenze cookie"
+          aria-label={t.prefsModalAria}
           onClick={() => setShowPrefs(false)}
         >
           <div className="cookie-modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="cookie-modal-header">
               <div>
-                <div className="cookie-modal-title">Preferenze cookie</div>
-                <div className="cookie-modal-subtitle">
-                  Scegli quali cookie consentire. Quelli necessari sono sempre attivi.
-                </div>
+                <div className="cookie-modal-title">{t.prefsTitle}</div>
+                <div className="cookie-modal-subtitle">{t.prefsSubtitle}</div>
               </div>
               <button
                 type="button"
                 className="cookie-icon-btn"
-                aria-label="Chiudi"
+                aria-label={t.close}
                 onClick={() => setShowPrefs(false)}
               >
                 ✕
@@ -145,16 +146,16 @@ export function CookieBanner() {
             <div className="cookie-prefs">
               <label className="cookie-pref">
                 <span className="cookie-pref-main">
-                  <span className="cookie-pref-name">Necessari</span>
-                  <span className="cookie-pref-desc">Sempre attivi per funzionamento e sicurezza.</span>
+                  <span className="cookie-pref-name">{t.necessaryName}</span>
+                  <span className="cookie-pref-desc">{t.necessaryDesc}</span>
                 </span>
-                <span className="cookie-pill">Attivi</span>
+                <span className="cookie-pill">{t.necessaryPill}</span>
               </label>
 
               <label className="cookie-pref">
                 <span className="cookie-pref-main">
-                  <span className="cookie-pref-name">Preferenze</span>
-                  <span className="cookie-pref-desc">Es. lingua e impostazioni.</span>
+                  <span className="cookie-pref-name">{t.prefName}</span>
+                  <span className="cookie-pref-desc">{t.prefDesc}</span>
                 </span>
                 <input
                   type="checkbox"
@@ -165,8 +166,8 @@ export function CookieBanner() {
 
               <label className="cookie-pref">
                 <span className="cookie-pref-main">
-                  <span className="cookie-pref-name">Statistiche</span>
-                  <span className="cookie-pref-desc">Misurazione visite e performance.</span>
+                  <span className="cookie-pref-name">{t.statsName}</span>
+                  <span className="cookie-pref-desc">{t.statsDesc}</span>
                 </span>
                 <input
                   type="checkbox"
@@ -177,8 +178,8 @@ export function CookieBanner() {
 
               <label className="cookie-pref">
                 <span className="cookie-pref-main">
-                  <span className="cookie-pref-name">Marketing</span>
-                  <span className="cookie-pref-desc">Cookie di marketing/advertising (se attivati).</span>
+                  <span className="cookie-pref-name">{t.marketingName}</span>
+                  <span className="cookie-pref-desc">{t.marketingDesc}</span>
                 </span>
                 <input
                   type="checkbox"
@@ -196,14 +197,14 @@ export function CookieBanner() {
                   persist({ value: "essential", analytics: false, marketing: false, preferences: false })
                 }
               >
-                Rifiuta tutto
+                {t.rejectAll}
               </button>
               <button
                 type="button"
                 className="cookie-btn cookie-btn--secondary"
                 onClick={() => persist({ value: "all", analytics: true, marketing: true, preferences: true })}
               >
-                Accetta tutto
+                {t.acceptAll}
               </button>
               <button
                 type="button"
@@ -216,7 +217,7 @@ export function CookieBanner() {
                   });
                 }}
               >
-                Salva preferenze
+                {t.savePrefs}
               </button>
             </div>
           </div>

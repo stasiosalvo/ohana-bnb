@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
+import { useSiteLang } from "@/lib/site-language";
 
 type Lang = "it" | "en" | "fr" | "es";
 
@@ -139,8 +139,8 @@ const content = {
 };
 
 export default function PrivacyPage() {
-  const [lang, setLang] = useState<Lang>("it");
-  const t = content[lang];
+  const { lang, setLang } = useSiteLang();
+  const t = content[lang as Lang];
 
   return (
     <div className="page-shell">

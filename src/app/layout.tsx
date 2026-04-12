@@ -1,7 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { isEasterSeason } from "@/lib/easter";
 import { EasterDecos } from "./easter-decos";
+import { EasterRibbon } from "./easter-ribbon";
 import { CookieBanner } from "./cookie-banner";
+import { Providers } from "./providers";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -66,16 +68,16 @@ export default function RootLayout({
   return (
     <html lang="it" className={easter ? "easter" : undefined}>
       <body style={{ fontFamily: fontFamilySans }} className={easter ? "easter" : undefined}>
-        {easter && (
-          <>
-            <div className="easter-ribbon" aria-hidden>
-              <span className="easter-ribbon-text">Buona Pasqua 🐣</span>
-            </div>
-            <EasterDecos />
-          </>
-        )}
-        <CookieBanner />
-        {children}
+        <Providers>
+          {easter && (
+            <>
+              <EasterRibbon />
+              <EasterDecos />
+            </>
+          )}
+          <CookieBanner />
+          {children}
+        </Providers>
       </body>
     </html>
   );

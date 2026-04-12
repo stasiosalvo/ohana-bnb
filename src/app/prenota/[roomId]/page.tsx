@@ -3,6 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, use, useState } from "react";
+import { bookingTouristTaxCopy } from "@/lib/booking-i18n";
+import { prenotaPageCopy } from "@/lib/i18n/prenota-page";
+import { useSiteLang } from "@/lib/site-language";
+import {
+  nightsBetween,
+  STAY_TAX_EUR_PER_PERSON_PER_NIGHT,
+  stayTaxEur,
+} from "@/lib/tourist-tax";
 
 type RoomId = "sun" | "moon" | "earth";
 
@@ -72,6 +80,10 @@ export default function PrenotaRoomPage({ params }: Props) {
   const [discountError, setDiscountError] = useState<string | null>(null);
   const [availabilityOk, setAvailabilityOk] = useState<boolean | null>(null);
   const [checkingAvailability, setCheckingAvailability] = useState(false);
+  const [payTouristTaxOnSite, setPayTouristTaxOnSite] = useState(false);
+  const { lang, setLang } = useSiteLang();
+  const tax = bookingTouristTaxCopy[lang];
+  const p = prenotaPageCopy[lang];
 
   const toggleRoom = (id: RoomId) => {
     setSelectedRooms((prev) => {
@@ -98,11 +110,7 @@ export default function PrenotaRoomPage({ params }: Props) {
 
   const nights = useMemo(() => {
     if (!checkIn || !checkOut) return 0;
-    const inDate = new Date(checkIn);
-    const outDate = new Date(checkOut);
-    const diffMs = outDate.getTime() - inDate.getTime();
-    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
-    return diffDays > 0 ? diffDays : 0;
+    return nightsBetween(checkIn, checkOut);
   }, [checkIn, checkOut]);
 
   const total = useMemo(
@@ -148,6 +156,18 @@ export default function PrenotaRoomPage({ params }: Props) {
 
   const displayTotal = appliedDiscount ? appliedDiscount.discountedTotal : total;
 
+  const guestCount = useMemo(() => {
+    const n = Number(guests) || minGuests;
+    return Math.min(maxGuests, Math.max(minGuests, n));
+  }, [guests, minGuests, maxGuests]);
+
+  const touristTax = useMemo(
+    () => (nights > 0 ? stayTaxEur(nights, guestCount) : 0),
+    [nights, guestCount]
+  );
+
+  const totalToPayOnline = displayTotal + (payTouristTaxOnSite ? 0 : touristTax);
+
   async function handleApplyCode() {
     if (!discountCode.trim() || total <= 0) return;
     setDiscountError(null);
@@ -170,11 +190,11 @@ export default function PrenotaRoomPage({ params }: Props) {
         });
       } else {
         setAppliedDiscount(null);
-        setDiscountError("Codice non valido o non applicabile.");
+        setDiscountError(p.discountInvalid);
       }
     } catch {
       setAppliedDiscount(null);
-      setDiscountError("Impossibile verificare il codice. Riprova.");
+      setDiscountError(p.discountVerifyFail);
     } finally {
       setApplyingCode(false);
     }
@@ -185,20 +205,18 @@ export default function PrenotaRoomPage({ params }: Props) {
     setError(null);
 
     if (!checkIn || !checkOut || !name || !email) {
-      setError("Compila almeno le date, il nome e l'email per procedere.");
+      setError(p.errorFillFields);
       return;
     }
 
     if (nights <= 0) {
-      setError("La data di partenza deve essere successiva alla data di arrivo.");
+      setError(p.errorCheckoutDates);
       return;
     }
 
     if (availabilityOk === false) {
       setError(
-        selectedRooms.length > 1
-          ? "Per una o più camere le date non sono disponibili. Scegli altre date o rimuovi una camera."
-          : "Queste date non sono disponibili per questa camera. Scegli altre date o un'altra camera."
+        selectedRooms.length > 1 ? p.datesUnavailableMulti : p.datesUnavailableSingle
       );
       return;
     }
@@ -222,6 +240,7 @@ export default function PrenotaRoomPage({ params }: Props) {
               notes,
               nights,
               total,
+              payTouristTaxOnSite,
               discountCode: appliedDiscount ? discountCode.trim() : undefined,
             }
           : {
@@ -235,6 +254,7 @@ export default function PrenotaRoomPage({ params }: Props) {
               notes,
               nights,
               total,
+              payTouristTaxOnSite,
               discountCode: appliedDiscount ? discountCode.trim() : undefined,
             };
       const res = await fetch("/api/checkout", {
@@ -247,19 +267,17 @@ export default function PrenotaRoomPage({ params }: Props) {
 
       const data = (await res.json()) as { url?: string; error?: string };
       if (!res.ok) {
-        setError(data.error || "Impossibile avviare il pagamento, riprova tra poco.");
+        setError(data.error || p.paymentStartFail);
         return;
       }
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setError("Risposta inattesa dal server di pagamento.");
+        setError(p.paymentUnexpected);
       }
     } catch (err) {
       console.error(err);
-      setError(
-        "C'è stato un problema con il pagamento online. Puoi riprovare più tardi oppure contattarci via email o WhatsApp."
-      );
+      setError(p.paymentCatch);
     } finally {
       setIsSubmitting(false);
     }
@@ -280,67 +298,95 @@ export default function PrenotaRoomPage({ params }: Props) {
             />
           </Link>
           <div className="topbar-right">
+            <div className="lang-switch" aria-label={tax.langSwitchAria}>
+              <button
+                type="button"
+                className={`lang-pill ${lang === "it" ? "lang-pill--active" : ""}`}
+                onClick={() => setLang("it")}
+              >
+                IT
+              </button>
+              <button
+                type="button"
+                className={`lang-pill ${lang === "en" ? "lang-pill--active" : ""}`}
+                onClick={() => setLang("en")}
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                className={`lang-pill ${lang === "fr" ? "lang-pill--active" : ""}`}
+                onClick={() => setLang("fr")}
+              >
+                FR
+              </button>
+              <button
+                type="button"
+                className={`lang-pill ${lang === "es" ? "lang-pill--active" : ""}`}
+                onClick={() => setLang("es")}
+              >
+                ES
+              </button>
+            </div>
             <Link href="/" className="chip">
-              Torna alla homepage
+              {tax.backHome}
             </Link>
           </div>
         </header>
 
         <main>
-          <section className="booking-layout" aria-label="Prenotazione camera">
+          <section className="booking-layout" aria-label={p.layoutAria}>
             <div>
               <div className="eyebrow">
                 <span className="eyebrow-dot" />
-                <span>Prenotazione camera</span>
+                <span>{p.eyebrow}</span>
               </div>
               <h1 className="booking-header-title">
                 {selectedRooms.length > 1
-                  ? `Prenota ${selectedRooms.length} camere`
-                  : `Camera ${room.name}`}
+                  ? p.titleMulti.replace("{n}", String(selectedRooms.length))
+                  : `${p.titleSinglePrefix} ${room.name}`}
               </h1>
               <p className="hero-subtitle">
                 {selectedRooms.length > 1
-                  ? "Stesse date per tutte le camere. Aggiungi o rimuovi camere qui sotto."
-                  : room.short}
+                  ? p.subtitleMulti
+                  : p.roomShort[roomKey]}
               </p>
 
               <div className="booking-room-selector">
-                <span className="booking-room-selector-label">
-                  Seleziona una o più camere (stesse date)
-                </span>
-                <div className="booking-room-cards" role="group" aria-label="Selezione camere">
+                <span className="booking-room-selector-label">{p.roomSelectorLabel}</span>
+                <div className="booking-room-cards" role="group" aria-label={p.roomCardsAria}>
                   <button
                     type="button"
                     onClick={() => toggleRoom("sun")}
                     className={`booking-room-card ${selectedRooms.includes("sun") ? "booking-room-card--active" : ""}`}
                     aria-pressed={selectedRooms.includes("sun")}
-                    aria-label="Sun €80/notte"
+                    aria-label={`Sun €80${p.perNight}`}
                   >
                     <span className="booking-room-card-check">{selectedRooms.includes("sun") ? "✓" : ""}</span>
                     <span className="booking-room-card-name">Sun</span>
-                    <span className="booking-room-card-price">€80/notte</span>
+                    <span className="booking-room-card-price">€80{p.perNight}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => toggleRoom("moon")}
                     className={`booking-room-card ${selectedRooms.includes("moon") ? "booking-room-card--active" : ""}`}
                     aria-pressed={selectedRooms.includes("moon")}
-                    aria-label="Moon €80/notte"
+                    aria-label={`Moon €80${p.perNight}`}
                   >
                     <span className="booking-room-card-check">{selectedRooms.includes("moon") ? "✓" : ""}</span>
                     <span className="booking-room-card-name">Moon</span>
-                    <span className="booking-room-card-price">€80/notte</span>
+                    <span className="booking-room-card-price">€80{p.perNight}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => toggleRoom("earth")}
                     className={`booking-room-card ${selectedRooms.includes("earth") ? "booking-room-card--active" : ""}`}
                     aria-pressed={selectedRooms.includes("earth")}
-                    aria-label="Earth €70/notte"
+                    aria-label={`Earth €70${p.perNight}`}
                   >
                     <span className="booking-room-card-check">{selectedRooms.includes("earth") ? "✓" : ""}</span>
                     <span className="booking-room-card-name">Earth</span>
-                    <span className="booking-room-card-price">€70/notte</span>
+                    <span className="booking-room-card-price">€70{p.perNight}</span>
                   </button>
                 </div>
               </div>
@@ -348,23 +394,27 @@ export default function PrenotaRoomPage({ params }: Props) {
               <div style={{ marginTop: 14, fontSize: 13, color: "#7d7166" }}>
                 <span className="booking-room-pill">
                   <span>
-                    {minGuests === maxGuests ? maxGuests : `${minGuests}-${maxGuests}`} ospiti
+                    {minGuests === maxGuests ? maxGuests : `${minGuests}-${maxGuests}`} {p.pillGuests}
                     {selectedRooms.length > 1
-                      ? ` · ${selectedRooms.length} camere`
-                      : ` · ${room.sizeM2} m² · bagno privato`}
+                      ? ` · ${selectedRooms.length} ${p.pillRooms}`
+                      : ` · ${room.sizeM2} ${p.pillSingleSuffix}`}
                   </span>
                 </span>{" "}
                 <span style={{ marginLeft: 6 }}>
                   {selectedRooms.length > 1
-                    ? `${selectedRooms.map((id) => ROOMS[id].name).join(" + ")}: totale €${total} (${nights} notte/i)`
-                    : `Camera ${room.name}: Da €${room.pricePerNight} / notte, coupon bar incluso.`}
+                    ? `${selectedRooms.map((id) => ROOMS[id].name).join(" + ")}: ${p.totalLineMulti
+                        .replace("{total}", String(total))
+                        .replace("{nights}", String(nights))}`
+                    : p.singleRoomPriceLine
+                        .replace("{name}", `${p.summaryCamera} ${room.name}`)
+                        .replace("{price}", String(room.pricePerNight))}
                 </span>
               </div>
 
               <form onSubmit={handleSubmit} className="booking-form">
                 <div className="field">
                   <label className="field-label" htmlFor="checkIn">
-                    Arrivo
+                    {p.arrival}
                   </label>
                   <input
                     id="checkIn"
@@ -378,7 +428,7 @@ export default function PrenotaRoomPage({ params }: Props) {
 
                 <div className="field">
                   <label className="field-label" htmlFor="checkOut">
-                    Partenza
+                    {p.departure}
                   </label>
                   <input
                     id="checkOut"
@@ -394,12 +444,14 @@ export default function PrenotaRoomPage({ params }: Props) {
                   <div className="field" style={{ gridColumn: "1 / -1" }}>
                     {checkingAvailability && (
                       <span style={{ fontSize: 12, color: "var(--color-muted)" }}>
-                        Verifica disponibilità...
+                        {p.checkingAvailability}
                       </span>
                     )}
                     {!checkingAvailability && availabilityOk === false && (
                       <span style={{ fontSize: 12, color: "#a43131" }}>
-                        Queste date non sono disponibili per questa camera. Scegli altre date o un&apos;altra camera.
+                        {selectedRooms.length > 1
+                          ? p.datesUnavailableMulti
+                          : p.datesUnavailableSingle}
                       </span>
                     )}
                   </div>
@@ -407,7 +459,7 @@ export default function PrenotaRoomPage({ params }: Props) {
 
                 <div className="field">
                   <label className="field-label" htmlFor="guests">
-                    Ospiti
+                    {p.guestsLabel}
                   </label>
                   <select
                     id="guests"
@@ -425,7 +477,7 @@ export default function PrenotaRoomPage({ params }: Props) {
                       (_, i) => room.minGuests + i
                     ).map((g) => (
                       <option key={g} value={g}>
-                        {g} {g === 1 ? "ospite" : "ospiti"}
+                        {g} {g === 1 ? p.guestOne : p.guestsMany}
                       </option>
                     ))}
                   </select>
@@ -433,12 +485,12 @@ export default function PrenotaRoomPage({ params }: Props) {
 
                 <div className="field">
                   <label className="field-label" htmlFor="name">
-                    Nome e cognome
+                    {p.nameLabel}
                   </label>
                   <input
                     id="name"
                     className="field-input"
-                    placeholder="Mario Rossi"
+                    placeholder={p.namePlaceholder}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -447,13 +499,13 @@ export default function PrenotaRoomPage({ params }: Props) {
 
                 <div className="field">
                   <label className="field-label" htmlFor="email">
-                    Email
+                    {p.emailLabel}
                   </label>
                   <input
                     id="email"
                     type="email"
                     className="field-input"
-                    placeholder="nome@example.com"
+                    placeholder={p.emailPlaceholder}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -462,12 +514,12 @@ export default function PrenotaRoomPage({ params }: Props) {
 
                 <div className="field">
                   <label className="field-label" htmlFor="phone">
-                    Telefono (opzionale)
+                    {p.phoneLabel}
                   </label>
                   <input
                     id="phone"
                     className="field-input"
-                    placeholder="+39 ..."
+                    placeholder={p.phonePlaceholder}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                   />
@@ -475,19 +527,16 @@ export default function PrenotaRoomPage({ params }: Props) {
 
                 <div className="field" style={{ gridColumn: "1 / -1" }}>
                   <label className="field-label" htmlFor="notes">
-                    Richieste particolari
+                    {p.notesLabel}
                   </label>
                   <textarea
                     id="notes"
                     className="field-textarea"
-                    placeholder="Intolleranze alimentari, orari di arrivo, occasioni speciali..."
+                    placeholder={p.notesPlaceholder}
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                   />
-                  <p className="field-note">
-                    Ti risponderemo via email per confermare la disponibilità e
-                    i dettagli prima dell&apos;arrivo.
-                  </p>
+                  <p className="field-note">{p.notesHint}</p>
                 </div>
 
                 {error && (
@@ -509,12 +558,8 @@ export default function PrenotaRoomPage({ params }: Props) {
                     alignItems: "center",
                   }}
                 >
-                  <span className="field-label">
-                    Metodo di pagamento sicuro
-                  </span>
-                  <span className="badge-small">
-                    Carta di credito, debito, Apple Pay, Google Pay (Stripe)
-                  </span>
+                  <span className="field-label">{p.paymentMethodLabel}</span>
+                  <span className="badge-small">{p.paymentMethodBadge}</span>
                 </div>
 
                 <div
@@ -533,91 +578,61 @@ export default function PrenotaRoomPage({ params }: Props) {
                     disabled={isSubmitting || checkingAvailability || availabilityOk === false}
                   >
                     {isSubmitting
-                      ? "Reindirizzamento in corso..."
+                      ? p.submitRedirecting
                       : checkingAvailability
-                        ? "Verifica disponibilità..."
+                        ? p.submitChecking
                         : availabilityOk === false
-                          ? "Date non disponibili"
-                          : "Procedi al pagamento"}
+                          ? p.submitUnavailable
+                          : p.submitPay}
                   </button>
-                  <span className="text-muted">
-                    La prenotazione è confermata solo dopo l&apos;email di
-                    conferma.
-                  </span>
+                  <span className="text-muted">{p.submitNote}</span>
                 </div>
               </form>
             </div>
 
-            <aside className="booking-summary" aria-label="Riepilogo prenotazione">
+            <aside className="booking-summary" aria-label={p.summaryAsideAria}>
               <div className="hero-card-top">
                 <div>
-                  <div className="hero-card-title">
-                    Riepilogo soggiorno
-                  </div>
+                  <div className="hero-card-title">{p.summaryTitle}</div>
                   <div style={{ fontSize: 12, opacity: 0.9 }}>
-                    Camera {room.name} · Ohana B&B
+                    {p.summaryCamera} {room.name} · Ohana B&amp;B
                   </div>
                 </div>
-                <span className="hero-card-chip">
-                  Pagamento sicuro Stripe
-                </span>
+                <span className="hero-card-chip">{p.summaryChip}</span>
               </div>
 
               <div className="booking-summary-row">
-                <span className="booking-summary-label">Date</span>
+                <span className="booking-summary-label">{p.datesLabel}</span>
                 <span>
                   {checkIn && checkOut
                     ? `${checkIn} → ${checkOut}`
-                    : "Seleziona le date"}
+                    : p.selectDates}
                 </span>
               </div>
 
               <div className="booking-summary-row">
-                <span className="booking-summary-label">Notti</span>
+                <span className="booking-summary-label">{p.nightsLabel}</span>
                 <span>{nights || "-"}</span>
               </div>
 
               <div className="booking-summary-row">
-                <span className="booking-summary-label">Ospiti</span>
+                <span className="booking-summary-label">{p.guestsSummaryLabel}</span>
                 <span>
-                  {guests} {Number(guests) === 1 ? "ospite" : "ospiti"}
-                </span>
-              </div>
-
-              <div
-                style={{
-                  height: 1,
-                  margin: "4px 0 6px",
-                  background: "rgba(255,255,255,0.65)",
-                }}
-              />
-
-              <div className="booking-summary-row">
-                <span className="booking-summary-label">Totale stimato</span>
-                <span className="booking-summary-value-strong">
-                  {nights > 0 ? (
-                    <>
-                      €{total.toFixed(0)}{" "}
-                      <span style={{ fontWeight: 400, fontSize: 11 }}>
-                        (tasse incluse)
-                      </span>
-                    </>
-                  ) : (
-                    "—"
-                  )}
+                  {guests}{" "}
+                  {Number(guests) === 1 ? p.guestOne : p.guestsMany}
                 </span>
               </div>
 
               <div className="discount-block">
                 <label className="field-label" htmlFor="discount-code">
-                  Codice sconto
+                  {p.discountLabel}
                 </label>
                 <div className="discount-row">
                   <input
                     id="discount-code"
                     type="text"
                     className="field-input discount-input"
-                    placeholder="Es. ESTATE25"
+                    placeholder={p.discountPlaceholder}
                     value={discountCode}
                     onChange={(e) => {
                       setDiscountCode(e.target.value);
@@ -631,7 +646,7 @@ export default function PrenotaRoomPage({ params }: Props) {
                     onClick={handleApplyCode}
                     disabled={nights <= 0 || applyingCode || !discountCode.trim()}
                   >
-                    {applyingCode ? "..." : "Applica"}
+                    {applyingCode ? p.discountApplying : p.discountApply}
                   </button>
                 </div>
                 {discountError && (
@@ -641,22 +656,83 @@ export default function PrenotaRoomPage({ params }: Props) {
                 )}
                 {appliedDiscount && (
                   <p className="discount-success">
-                    {appliedDiscount.label} applicato. Totale: €{appliedDiscount.discountedTotal.toFixed(0)}
+                    {p.discountSuccessLine
+                      .replace("{label}", appliedDiscount.label)
+                      .replace("{total}", appliedDiscount.discountedTotal.toFixed(0))}
                   </p>
                 )}
               </div>
 
-              <p className="text-muted">
-                Il totale è indicativo e potrebbe variare in base a promozioni
-                o periodi di alta stagione. Vedrai l&apos;importo esatto prima
-                di confermare il pagamento su Stripe.
-              </p>
+              <div
+                style={{
+                  height: 1,
+                  margin: "4px 0 6px",
+                  background: "rgba(255,255,255,0.65)",
+                }}
+              />
+
+              <div className="booking-summary-row">
+                <span className="booking-summary-label">{tax.estimatedTotal}</span>
+                <span className="booking-summary-value-strong">
+                  {nights > 0 ? (
+                    <>
+                      €{displayTotal.toFixed(0)}{" "}
+                      <span style={{ fontWeight: 400, fontSize: 11 }}>
+                        {tax.roomVatNote}
+                      </span>
+                    </>
+                  ) : (
+                    "—"
+                  )}
+                </span>
+              </div>
+
+              {nights > 0 && (
+                <>
+                  <div className="booking-summary-row" style={{ alignItems: "flex-start" }}>
+                    <span className="booking-summary-label">{tax.touristTaxLabel}</span>
+                    <span style={{ textAlign: "right", fontSize: 13 }}>
+                      €{STAY_TAX_EUR_PER_PERSON_PER_NIGHT.toFixed(2)} × {nights}{" "}
+                      {nights === 1 ? tax.night : tax.nights} × {guestCount}{" "}
+                      {guestCount === 1 ? tax.guest : tax.guests} = €{touristTax.toFixed(2)}
+                    </span>
+                  </div>
+                  <label
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                      alignItems: "flex-start",
+                      marginTop: 8,
+                      marginBottom: 6,
+                      cursor: "pointer",
+                      fontSize: 13,
+                      lineHeight: 1.35,
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={payTouristTaxOnSite}
+                      onChange={(e) => setPayTouristTaxOnSite(e.target.checked)}
+                      style={{ marginTop: 3, flexShrink: 0 }}
+                    />
+                    <span>{tax.payTaxOnSiteCheckbox}</span>
+                  </label>
+                  <p className="text-muted" style={{ fontSize: 12, marginTop: 0, marginBottom: 8 }}>
+                    {payTouristTaxOnSite ? tax.helpPayOnSite : tax.helpPayOnline}
+                  </p>
+                  <div className="booking-summary-row">
+                    <span className="booking-summary-label">{tax.totalPayOnline}</span>
+                    <span className="booking-summary-value-strong">
+                      €{totalToPayOnline.toFixed(2)}
+                    </span>
+                  </div>
+                </>
+              )}
+
+              <p className="text-muted">{p.disclaimer}</p>
 
               <div className="booking-actions">
-                <span className="badge-small">
-                  Puoi sempre scriverci per modificare o cancellare la
-                  prenotazione in anticipo.
-                </span>
+                <span className="badge-small">{p.badgeFooter}</span>
               </div>
             </aside>
           </section>

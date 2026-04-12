@@ -3,7 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
+import { homeExtra } from "@/lib/i18n/home-extra";
 import { CONTACT_EMAIL, CONTACT_PHONE } from "@/lib/site";
+import { useSiteLang } from "@/lib/site-language";
 
 type Lang = "it" | "en" | "fr" | "es";
 
@@ -281,13 +283,13 @@ const copy = {
     aboutTitle: "Qui sommes‑nous",
     aboutSubtitle: "Une histoire de famille, de passion et d’accueil sincère.",
     aboutParagraphs: [
-      "Ohana nasce da una storia semplice, ma piena di passione: quella di una famiglia che da sempre vive e respira ospitalità.",
-      "Da anni lavoriamo nel mondo della ristorazione, gestendo una pizzeria a San Sebastiano al Vesuvio e, in passato, altre attività che ci hanno insegnato cosa significa davvero accogliere le persone: farle sentire a casa, anche quando sono lontane.",
-      "Per noi l’ospitalità non è solo un lavoro, è un modo di essere. È attenzione ai dettagli, è un sorriso sincero, è la cura per ogni piccolo gesto che può rendere speciale il soggiorno di chi ci sceglie.",
-      "Ohana non è un nome scelto a caso. Significa famiglia. E questo è esattamente ciò che vogliamo trasmettere: un luogo dove sentirsi accolti, rispettati e coccolati.",
-      "Le nostre tre camere – Sun, Moon ed Earth – non rappresentano solo elementi naturali, ma portano con sé qualcosa di ancora più personale: le iniziali dei tre figli della proprietaria. Un modo per rendere questo spazio ancora più intimo, autentico e legato alla nostra storia.",
-      "Abbiamo immaginato questo B&B come un rifugio elegante ma familiare, dove ogni ospite possa trovare tranquillità, comfort e un’accoglienza vera, fatta con il cuore.",
-      "Perché per noi, chi arriva non è solo un cliente. È un ospite. E, anche solo per qualche giorno, diventa parte della nostra Ohana.",
+      "Ohana naît d’une histoire simple mais pleine de passion : celle d’une famille qui a toujours vécu l’hospitalité au quotidien.",
+      "Depuis des années, nous travaillons dans la restauration et l’accueil, avec une pizzeria à San Sebastiano al Vesuvio et, par le passé, d’autres expériences qui nous ont appris ce qu’être accueillant veut vraiment dire : faire sentir les gens comme chez elles, même loin de chez elles.",
+      "Pour nous, l’hospitalité n’est pas seulement un métier : c’est une façon d’être. Attention aux détails, sourire sincère, soin pour chaque petit geste qui peut rendre un séjour spécial.",
+      "Ohana n’est pas un nom choisi au hasard. Il signifie famille. Et c’est exactement ce que nous voulons partager : un lieu où l’on se sent accueilli, respecté et choyé.",
+      "Nos trois chambres — Sun, Moon et Earth — ne représentent pas seulement la nature : elles portent aussi quelque chose de très personnel, les initiales des trois enfants de la propriétaire. Une façon de rendre cet espace encore plus intime et authentique.",
+      "Nous avons imaginé ce B&B comme un refuge élégant mais familier, où chaque voyageur trouve calme, confort et un accueil sincère, fait avec le cœur.",
+      "Parce que pour nous, celui ou celle qui arrive n’est pas seulement un client : c’est un invité. Et même pour quelques jours, il ou elle fait partie de notre Ohana.",
     ],
     contactsTitle: "Accès & contacts",
     contactsSubtitle:
@@ -390,13 +392,13 @@ const copy = {
     aboutTitle: "Quiénes somos",
     aboutSubtitle: "Una historia de familia, pasión y hospitalidad de verdad.",
     aboutParagraphs: [
-      "Ohana nasce da una storia semplice, ma piena di passione: quella di una famiglia che da sempre vive e respira ospitalità.",
-      "Da anni lavoriamo nel mondo della ristorazione, gestendo una pizzeria a San Sebastiano al Vesuvio e, in passato, altre attività che ci hanno insegnato cosa significa davvero accogliere le persone: farle sentire a casa, anche quando sono lontane.",
-      "Per noi l’ospitalità non è solo un lavoro, è un modo di essere. È attenzione ai dettagli, è un sorriso sincero, è la cura per ogni piccolo gesto che può rendere speciale il soggiorno di chi ci sceglie.",
-      "Ohana non è un nome scelto a caso. Significa famiglia. E questo è esattamente ciò che vogliamo trasmettere: un luogo dove sentirsi accolti, rispettati e coccolati.",
-      "Le nostre tre camere – Sun, Moon ed Earth – non rappresentano solo elementi naturali, ma portano con sé qualcosa di ancora più personale: le iniziali dei tre figli della proprietaria. Un modo per rendere questo spazio ancora più intimo, autentico e legato alla nostra storia.",
-      "Abbiamo immaginato questo B&B come un rifugio elegante ma familiare, dove ogni ospite possa trovare tranquillità, comfort e un’accoglienza vera, fatta con il cuore.",
-      "Perché per noi, chi arriva non è solo un cliente. È un ospite. E, anche solo per qualche giorno, diventa parte della nostra Ohana.",
+      "Ohana nace de una historia sencilla pero llena de pasión: la de una familia que siempre ha vivido la hospitalidad.",
+      "Llevamos años en el mundo de la restauración y el alojamiento, con una pizzería en San Sebastiano al Vesuvio y, en el pasado, otras experiencias que nos enseñaron qué significa acoger de verdad: hacer sentir a la gente como en casa, incluso lejos de casa.",
+      "Para nosotros la hospitalidad no es solo un trabajo: es una forma de ser. Atención al detalle, una sonrisa sincera y cuidado por cada pequeño gesto que puede hacer especial una estancia.",
+      "Ohana no es un nombre al azar. Significa familia. Y eso es justo lo que queremos transmitir: un lugar donde sentirse bienvenido, respetado y mimado.",
+      "Nuestras tres habitaciones — Sun, Moon y Earth — no son solo elementos de la naturaleza: llevan algo muy personal, las iniciales de los tres hijos de la propietaria. Una forma de hacer este espacio aún más íntimo y auténtico.",
+      "Imaginamos este B&B como un refugio elegante pero familiar, donde cada huésped encuentre tranquilidad, confort y un recibimiento sincero, hecho con el corazón.",
+      "Porque para nosotros quien llega no es solo un cliente: es un huésped. Y aunque sea unos días, forma parte de nuestra Ohana.",
     ],
     contactsTitle: "Cómo llegar & contacto",
     contactsSubtitle:
@@ -461,8 +463,9 @@ const copy = {
 type ReviewItem = { id: string; name: string; text: string; rating: number; date: string };
 
 export default function Home() {
-  const [lang, setLang] = useState<Lang>("it");
-  const t = copy[lang];
+  const { lang, setLang } = useSiteLang();
+  const t = copy[lang as Lang];
+  const x = homeExtra[lang];
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [reviewName, setReviewName] = useState("");
   const [reviewText, setReviewText] = useState("");
@@ -525,7 +528,7 @@ export default function Home() {
     e.preventDefault();
     setReviewError(null);
     if (!reviewName.trim() || !reviewText.trim()) {
-      setReviewError(lang === "it" ? "Nome e messaggio sono obbligatori." : "Name and message are required.");
+      setReviewError(x.reviewErrorRequired);
       return;
     }
     setReviewSending(true);
@@ -548,7 +551,7 @@ export default function Home() {
         setReviewText("");
         setReviewRating(5);
       })
-      .catch((err) => setReviewError(err.message || (lang === "it" ? "Errore nell'invio." : "Error sending.")))
+      .catch((err) => setReviewError(err.message || x.reviewErrorSend))
       .finally(() => setReviewSending(false));
   };
 
@@ -568,7 +571,7 @@ export default function Home() {
               />
             </Link>
             <div className="topbar-head-lang">
-              <div className="lang-switch" aria-label="Seleziona lingua">
+              <div className="lang-switch" aria-label={x.langSwitchAria}>
               <button
                 type="button"
                 className={`lang-pill ${
@@ -607,40 +610,21 @@ export default function Home() {
 
           <nav
             className="nav-links nav-links--pill-row"
-            aria-label={lang === "it" ? "Navigazione principale" : "Main navigation"}
+            aria-label={x.navAria}
           >
-            <Link href="/galleria">{lang === "it" ? "Camere" : "Rooms"}</Link>
-            <Link href="/chi-siamo">
-              {lang === "it" ? "Chi siamo" : "About"}
-            </Link>
-            <a href="#recensioni">
-              {lang === "it" ? "Recensioni" : "Reviews"}
-            </a>
-            <a href="#servizi">
-              {lang === "it" ? "Servizi" : "Services"}
-            </a>
-            <Link href="/condizioni">
-              {lang === "it" ? "Condizioni" : "Terms"}
-            </Link>
-            <a href="#contatti">
-              {lang === "it" ? "Come arrivare" : "How to reach us"}
-            </a>
-            <Link
-              href="/prenota/sun"
-              className="nav-pill-book"
-            >
-              {lang === "it"
-                ? "Prenota ora"
-                : lang === "en"
-                  ? "Book now"
-                  : lang === "fr"
-                    ? "Réserver"
-                    : "Reservar"}
+            <Link href="/galleria">{x.navRooms}</Link>
+            <Link href="/chi-siamo">{x.navAbout}</Link>
+            <a href="#recensioni">{x.navReviews}</a>
+            <a href="#servizi">{x.navServices}</a>
+            <Link href="/condizioni">{x.navTerms}</Link>
+            <a href="#contatti">{x.navHowToReach}</a>
+            <Link href="/prenota/sun" className="nav-pill-book">
+              {x.navBook}
             </Link>
           </nav>
         </header>
 
-        <section className="hero-carousel" aria-label="Foto delle camere">
+        <section className="hero-carousel" aria-label={x.carouselAria}>
           <div className="hero-carousel-inner">
             {CAROUSEL_PHOTOS.map((src, i) => (
               <div
@@ -702,21 +686,9 @@ export default function Home() {
               <p className="hero-subtitle">{t.heroSubtitle}</p>
 
               <div className="hero-badges">
-                <span className="hero-badge">
-                  {lang === "it"
-                    ? "Solo 3 camere, atmosfera intima"
-                    : "Only 3 rooms, intimate atmosphere"}
-                </span>
-                <span className="hero-badge">
-                  {lang === "it"
-                    ? "Il cuore di Napoli, il calore di casa"
-                    : "The heart of Naples, the warmth of home"}
-                </span>
-                <span className="hero-badge">
-                  {lang === "it"
-                    ? "A soli 5 minuti dalla Stazione Centrale: muoversi in città sarà semplice e veloce."
-                    : "Just 5 minutes from Central Station: getting around the city will be easy and quick."}
-                </span>
+                <span className="hero-badge">{x.heroBadge1}</span>
+                <span className="hero-badge">{x.heroBadge2}</span>
+                <span className="hero-badge">{x.heroBadge3}</span>
               </div>
 
               <div className="hero-cta-row">
@@ -735,86 +707,44 @@ export default function Home() {
               </div>
             </div>
 
-            <aside className="hero-card" aria-label="Dettagli struttura">
+            <aside className="hero-card" aria-label={x.heroCardAria}>
               <div className="hero-card-top">
                 <div>
-                  <div className="hero-card-title">
-                    {lang === "it" ? "Ohana Boutique B&B" : "Ohana Boutique B&B"}
-                  </div>
-                  <div style={{ fontSize: 12, opacity: 0.8 }}>
-                    {lang === "it"
-                      ? "3 camere, massimo 6 ospiti."
-                      : "3 rooms, up to 6 guests."}
-                  </div>
+                  <div className="hero-card-title">Ohana Boutique B&amp;B</div>
+                  <div style={{ fontSize: 12, opacity: 0.8 }}>{x.heroCardGuestsNote}</div>
                 </div>
               </div>
 
               <div className="hero-card-grid">
                 <div className="hero-card-pill">
-                  <span className="hero-card-pill-label">
-                    {lang === "it" ? "Camere" : "Rooms"}
-                  </span>
-                  <span className="hero-card-pill-main">
-                    {lang === "it"
-                      ? "Sun · Moon · Earth"
-                      : "Sun · Moon · Earth"}
-                  </span>
+                  <span className="hero-card-pill-label">{x.heroCardRoomsLabel}</span>
+                  <span className="hero-card-pill-main">Sun · Moon · Earth</span>
                 </div>
                 <div className="hero-card-pill">
-                  <span className="hero-card-pill-label">
-                    {lang === "it" ? "Colazione" : "Breakfast"}
-                  </span>
-                  <span className="hero-card-pill-main">
-                    {lang === "it"
-                      ? "Coupon da spendere al bar"
-                      : "Coupon to spend at the bar"}
-                  </span>
+                  <span className="hero-card-pill-label">{x.heroCardBreakfastLabel}</span>
+                  <span className="hero-card-pill-main">{x.heroCardBreakfastValue}</span>
                 </div>
                 <div className="hero-card-pill">
-                  <span className="hero-card-pill-label">
-                    {lang === "it" ? "Distanza" : "Distance"}
-                  </span>
-                  <span className="hero-card-pill-main">
-                    {lang === "it"
-                      ? "5 minuti a piedi dalla Stazione Centrale"
-                      : "5 minutes walk from Central Station"}
-                  </span>
+                  <span className="hero-card-pill-label">{x.heroCardDistanceLabel}</span>
+                  <span className="hero-card-pill-main">{x.heroCardDistanceValue}</span>
                 </div>
                 <div className="hero-card-pill">
-                  <span className="hero-card-pill-label">
-                    {lang === "it" ? "Stile" : "Style"}
-                  </span>
-                  <span className="hero-card-pill-main">
-                    {lang === "it"
-                      ? "Colorato, luce naturale, dettagliato"
-                      : "Colourful, natural light, detailed"}
-                  </span>
+                  <span className="hero-card-pill-label">{x.heroCardStyleLabel}</span>
+                  <span className="hero-card-pill-main">{x.heroCardStyleValue}</span>
                 </div>
               </div>
 
               <div className="hero-card-footer">
                 <div>
-                  <div style={{ fontSize: 11, opacity: 0.8 }}>
-                    {lang === "it" ? "Stanze a partire da" : "Rooms from"}
-                  </div>
+                  <div style={{ fontSize: 11, opacity: 0.8 }}>{x.roomsFrom}</div>
                   <div style={{ fontSize: 16, fontWeight: 600 }}>
                     €70{" "}
-                    <span style={{ fontSize: 11, fontWeight: 400 }}>
-                      {lang === "it" ? "/notte" : "/night"}
-                    </span>
+                    <span style={{ fontSize: 11, fontWeight: 400 }}>{t.perNight}</span>
                   </div>
                 </div>
                 <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 11, opacity: 0.8 }}>
-                    {lang === "it"
-                      ? "Prenotazione sicura"
-                      : "Secure booking"}
-                  </div>
-                  <div style={{ fontSize: 11 }}>
-                    {lang === "it"
-                      ? "Pagamento online con carta o wallet"
-                      : "Online payment by card or wallet"}
-                  </div>
+                  <div style={{ fontSize: 11, opacity: 0.8 }}>{x.secureBooking}</div>
+                  <div style={{ fontSize: 11 }}>{x.secureBookingSub}</div>
                 </div>
               </div>
             </aside>
@@ -826,11 +756,7 @@ export default function Home() {
                 <h2 className="section-title">{t.roomsTitle}</h2>
                 <p className="section-subtitle">{t.roomsSubtitle}</p>
               </div>
-              <span className="badge-soft">
-                {lang === "it"
-                  ? "Check-in 14:00 · Check-out 10:00"
-                  : "Check-in 2pm · Check-out 10am"}
-              </span>
+              <span className="badge-soft">{x.checkInOutBadge}</span>
             </div>
 
             <div className="rooms-grid">
@@ -852,8 +778,7 @@ export default function Home() {
                   <p className="room-meta">{t.roomSunDesc}</p>
                   <div className="room-bottom-row">
                     <span className="pill-soft">
-                      2 {lang === "it" ? "ospiti" : "guests"} · 20 m² ·{" "}
-                      {lang === "it" ? "bagno privato" : "private bathroom"}
+                      2 {x.guests} · 20 m² · {x.privateBath}
                     </span>
                     <div>
                       <span className="price">
@@ -869,9 +794,7 @@ export default function Home() {
                       style={{ marginTop: 8, width: "100%" }}
                       type="button"
                     >
-                      {lang === "it"
-                        ? "Prenota Sun"
-                        : "Book Sun room"}
+                      {x.bookSun}
                     </button>
                   </Link>
                 </div>
@@ -895,8 +818,7 @@ export default function Home() {
                   <p className="room-meta">{t.roomMoonDesc}</p>
                   <div className="room-bottom-row">
                     <span className="pill-soft">
-                      2 {lang === "it" ? "ospiti" : "guests"} · 20 m² ·{" "}
-                      {lang === "it" ? "bagno privato" : "private bathroom"}
+                      2 {x.guests} · 20 m² · {x.privateBath}
                     </span>
                     <div>
                       <span className="price">
@@ -912,9 +834,7 @@ export default function Home() {
                       style={{ marginTop: 8, width: "100%" }}
                       type="button"
                     >
-                      {lang === "it"
-                        ? "Prenota Moon"
-                        : "Book Moon room"}
+                      {x.bookMoon}
                     </button>
                   </Link>
                 </div>
@@ -938,8 +858,7 @@ export default function Home() {
                   <p className="room-meta">{t.roomEarthDesc}</p>
                   <div className="room-bottom-row">
                     <span className="pill-soft">
-                      2 {lang === "it" ? "ospiti" : "guests"} · 20 m² ·{" "}
-                      {lang === "it" ? "bagno privato" : "private bathroom"}
+                      2 {x.guests} · 20 m² · {x.privateBath}
                     </span>
                     <div>
                       <span className="price">
@@ -955,9 +874,7 @@ export default function Home() {
                       style={{ marginTop: 8, width: "100%" }}
                       type="button"
                     >
-                      {lang === "it"
-                        ? "Prenota Earth"
-                        : "Book Earth room"}
+                      {x.bookEarth}
                     </button>
                   </Link>
                 </div>
@@ -1010,98 +927,49 @@ export default function Home() {
             <div className="services-grid">
               <div className="service-card">
                 <span className="service-icon" aria-hidden>☕</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Coupon colazione da spendere al bar"
-                    : "Breakfast coupon to spend at the bar"}
-                </span>
+                <span className="service-text">{x.service1}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>📶</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Wi-Fi veloce in tutte le camere"
-                    : "Fast Wi‑Fi in every room"}
-                </span>
+                <span className="service-text">{x.service2}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>🛏️</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "La biancheria e gli asciugamani vengono forniti puliti all'arrivo e sono inclusi per tutta la durata del soggiorno."
-                    : "Linen and towels are provided clean on arrival and included for the whole stay."}
-                </span>
+                <span className="service-text">{x.service3}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>🧹</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Pulizia quotidiana disponibile su richiesta, con supplemento."
-                    : "Daily cleaning available on request, with extra charge."}
-                </span>
+                <span className="service-text">{x.service4}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>🛋️</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Letto king size con materassi e cuscini di qualità"
-                    : "King size bed with quality mattress and pillows"}
-                </span>
+                <span className="service-text">{x.service5}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>🕐</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Check-in anticipato o check-out posticipato di 30 minuti disponibili su richiesta, con eventuale supplemento."
-                    : "Early check-in or late check-out (30 min) available on request, with possible extra charge."}
-                </span>
+                <span className="service-text">{x.service6}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>❄️</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Aria condizionata e televisore in tutte le camere"
-                    : "Air conditioning and TV in all rooms"}
-                </span>
+                <span className="service-text">{x.service7}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>☕</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Macchina del caffè in tutte le stanze"
-                    : "Coffee machine in all rooms"}
-                </span>
+                <span className="service-text">{x.service8}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>🧊</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Frigobar in tutte le camere"
-                    : "Fridge/minibar in all rooms"}
-                </span>
+                <span className="service-text">{x.service9}</span>
               </div>
               <div className="service-card">
                 <span className="service-icon" aria-hidden>🍳</span>
-                <span className="service-text">
-                  {lang === "it"
-                    ? "Nel B&B è disponibile una piccola cucina utilizzabile dagli ospiti"
-                    : "A small kitchen is available in the B&B for guests to use"}
-                </span>
+                <span className="service-text">{x.service10}</span>
               </div>
               <div className="service-card service-card--pet">
                 <span className="service-icon" aria-hidden>🐕</span>
                 <span className="service-text">
-                  {lang === "it" ? (
-                    <>
-                      Accettiamo i cani con piacere. Per condizioni e supplemento vedi{" "}
-                      <Link href="/condizioni#animali">Condizioni di soggiorno</Link>.
-                    </>
-                  ) : (
-                    <>
-                      We welcome dogs. For conditions and supplement see{" "}
-                      <Link href="/condizioni#animali">Terms of stay</Link>.
-                    </>
-                  )}
+                  {x.petsBefore}{" "}
+                  <Link href="/condizioni#animali">{x.petsLink}</Link>.
                 </span>
               </div>
             </div>
@@ -1121,14 +989,10 @@ export default function Home() {
               </div>
             </div>
             <div className="reviews-layout">
-              <div className="reviews-list-scroll" aria-label={lang === "it" ? "Elenco recensioni" : "Reviews list"}>
+              <div className="reviews-list-scroll" aria-label={x.reviewsListAria}>
                 <div className="reviews-list">
                 {reviews.length === 0 ? (
-                  <p className="reviews-empty">
-                    {lang === "it"
-                      ? "Ancora nessuna recensione. Sii il primo a lasciare un messaggio!"
-                      : "No reviews yet. Be the first to leave a message!"}
-                  </p>
+                  <p className="reviews-empty">{x.reviewsEmpty}</p>
                 ) : (
                   reviews.map((r) => (
                     <article key={r.id} className="review-card">
@@ -1139,10 +1003,11 @@ export default function Home() {
                       <footer className="review-meta">
                         <span className="review-name">{r.name}</span>
                         <span className="review-date">
-                          {new Date(r.date).toLocaleDateString(
-                            lang === "it" ? "it-IT" : "en-GB",
-                            { day: "numeric", month: "short", year: "numeric" }
-                          )}
+                          {new Date(r.date).toLocaleDateString(x.dateLocale, {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
                         </span>
                       </footer>
                     </article>
@@ -1151,9 +1016,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="reviews-form-wrap">
-                <h3 className="reviews-form-title">
-                  {lang === "it" ? "Lascia una recensione" : "Leave a review"}
-                </h3>
+                <h3 className="reviews-form-title">{x.leaveReview}</h3>
                 {reviewSent ? (
                   <p className="review-success">{t.reviewThanks}</p>
                 ) : (
@@ -1207,9 +1070,7 @@ export default function Home() {
                       className="btn-primary"
                       disabled={reviewSending}
                     >
-                      {reviewSending
-                        ? (lang === "it" ? "Invio..." : "Sending...")
-                        : t.reviewFormSubmit}
+                      {reviewSending ? x.sending : t.reviewFormSubmit}
                     </button>
                   </form>
                 )}
@@ -1232,13 +1093,9 @@ export default function Home() {
             </div>
 
             <div className="location-layout">
-              <div className="map-shell" aria-label="Mappa indicativa">
+              <div className="map-shell" aria-label={x.mapShellAria}>
                 <iframe
-                  title={
-                    lang === "it"
-                      ? "Mappa posizione Ohana B&B"
-                      : "Ohana B&B location map"
-                  }
+                  title={x.mapIframeTitle}
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3019.123!2d14.2622!3d40.8519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x133b0866e1c3e8a5%3A0x9e8a7c8b8b8b8b8b!2sVia%20Lavinaio%2C%2019%2C%2080142%20Napoli%20NA!5e0!3m2!1sit!2sit!4v1700000000000"
@@ -1309,7 +1166,7 @@ export default function Home() {
 
             <div className="contact-row-wrap">
               <div className="contact-card location-block">
-                <h3 className="location-block-title">{lang === "it" ? "Contatti" : "Contact"}</h3>
+                <h3 className="location-block-title">{x.contactBlockTitle}</h3>
                 <ul className="contact-list">
                 <li className="contact-row">
                   <span className="contact-label">{t.contactAddressLabel}</span>
