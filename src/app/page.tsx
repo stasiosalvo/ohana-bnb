@@ -750,7 +750,7 @@ export default function Home() {
             </aside>
           </section>
 
-          <section id="camere" className="section" aria-labelledby="rooms-title">
+          <section id="camere" className="section section--gold-frame" aria-labelledby="rooms-title">
             <div className="section-header">
               <div>
                 <h2 className="section-title">{t.roomsTitle}</h2>
@@ -884,7 +884,7 @@ export default function Home() {
 
           <section
             id="perche"
-            className="section"
+            className="section section--gold-frame"
             aria-labelledby="why-title"
           >
             <div className="section-header">
@@ -899,11 +899,11 @@ export default function Home() {
             <div className="why-card">
               <ul className="why-list" aria-label={t.whyTitle}>
                 {t.whyItems.map((item, idx) => (
-                  <li key={`${item.text}-${idx}`} className="why-item">
-                    <span className="why-emoji" aria-hidden>
+                  <li key={`${item.text}-${idx}`} className="service-card why-item">
+                    <span className="service-icon why-emoji" aria-hidden>
                       {item.icon}
                     </span>
-                    <span className="why-text">{item.text}</span>
+                    <span className="service-text why-text">{item.text}</span>
                   </li>
                 ))}
               </ul>
@@ -912,7 +912,7 @@ export default function Home() {
 
           <section
             id="servizi"
-            className="section"
+            className="section section--gold-frame"
             aria-labelledby="services-title"
           >
             <div className="section-header">
@@ -924,6 +924,7 @@ export default function Home() {
               </div>
             </div>
 
+            <div className="section-inner-gold">
             <div className="services-grid">
               <div className="service-card">
                 <span className="service-icon" aria-hidden>☕</span>
@@ -973,11 +974,12 @@ export default function Home() {
                 </span>
               </div>
             </div>
+            </div>
           </section>
 
           <section
             id="recensioni"
-            className="section"
+            className="section section--gold-frame"
             aria-labelledby="reviews-title"
           >
             <div className="section-header">
@@ -988,6 +990,7 @@ export default function Home() {
                 <p className="section-subtitle">{t.reviewsSubtitle}</p>
               </div>
             </div>
+            <div className="section-inner-gold">
             <div className="reviews-layout">
               <div className="reviews-list-scroll" aria-label={x.reviewsListAria}>
                 <div className="reviews-list">
@@ -1076,11 +1079,12 @@ export default function Home() {
                 )}
               </div>
             </div>
+            </div>
           </section>
 
           <section
             id="contatti"
-            className="section"
+            className="section section--gold-frame"
             aria-labelledby="contacts-title"
           >
             <div className="section-header">

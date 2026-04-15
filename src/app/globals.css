@@ -911,6 +911,24 @@ section.promo-banner .promo-banner-cta:hover {
   margin-top: 4px;
 }
 
+.section--gold-frame {
+  padding: 18px 18px 16px;
+  margin-top: 14px;
+  border-top: none;
+  border-radius: 18px;
+  border: 1px solid rgba(200, 169, 106, 0.38);
+  border-left: 3px solid var(--color-accent-soft);
+  background: linear-gradient(145deg, rgba(255, 251, 243, 0.75), rgba(249, 242, 227, 0.52));
+  box-shadow: 0 8px 20px rgba(164, 129, 62, 0.08);
+}
+
+.section-inner-gold {
+  border-radius: 24px;
+  padding: 16px;
+  border: 1px solid rgba(200, 169, 106, 0.32);
+  background: linear-gradient(145deg, rgba(255, 251, 243, 0.7), rgba(250, 243, 229, 0.5));
+}
+
 .section-header {
   display: flex;
   justify-content: space-between;
@@ -1357,32 +1375,19 @@ section.promo-banner .promo-banner-cta:hover {
 }
 
 .why-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 12px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  list-style: none;
+}
+
+.why-item:hover {
+  /* Uses .service-card:hover style for visual consistency */
 }
 
 .why-emoji {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(200, 169, 106, 0.25);
-  flex-shrink: 0;
-  font-size: 18px;
+  /* Uses .service-icon style */
 }
 
 .why-text {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--color-text);
+  /* Uses .service-text style */
 }
 
 @media (max-width: 640px) {
@@ -2347,7 +2352,7 @@ button.booking-room-card {
   padding: 22px 20px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
 }
 .gallery-room-name {
