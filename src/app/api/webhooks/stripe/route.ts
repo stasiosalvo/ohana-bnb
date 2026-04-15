@@ -65,6 +65,7 @@ export async function POST(request: Request) {
   const guests = session.metadata?.guests ?? "1";
   const name = session.metadata?.name ?? "";
   const phone = session.metadata?.phone ?? "";
+  const whatsappPhone = session.metadata?.whatsappPhone ?? "";
   const nights = session.metadata?.nights ?? "0";
   const discountCode = session.metadata?.discountCode as string | undefined;
   const touristTaxEurRaw = session.metadata?.touristTaxEur ?? "";
@@ -108,6 +109,7 @@ export async function POST(request: Request) {
       <p><strong>Ospite:</strong> ${escapeHtml(name)}</p>
       <p><strong>Email:</strong> ${escapeHtml(customerEmail)}</p>
       <p><strong>Telefono:</strong> ${escapeHtml(phone) || "—"}</p>
+      <p><strong>WhatsApp (se diverso):</strong> ${escapeHtml(whatsappPhone) || "—"}</p>
       <p><strong>Camera/e:</strong> ${escapeHtml(roomsLabel)}</p>
       <p><strong>Arrivo:</strong> ${escapeHtml(checkIn)}</p>
       <p><strong>Partenza:</strong> ${escapeHtml(checkOut)}</p>

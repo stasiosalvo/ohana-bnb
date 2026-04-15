@@ -44,6 +44,9 @@ export const prenotaPageCopy: Record<
     emailPlaceholder: string;
     phoneLabel: string;
     phonePlaceholder: string;
+    whatsappLabel: string;
+    whatsappPlaceholder: string;
+    whatsappHint: string;
     notesLabel: string;
     notesPlaceholder: string;
     notesHint: string;
@@ -118,8 +121,12 @@ export const prenotaPageCopy: Record<
     namePlaceholder: "Mario Rossi",
     emailLabel: "Email",
     emailPlaceholder: "nome@example.com",
-    phoneLabel: "Telefono (opzionale)",
+    phoneLabel: "Telefono",
     phonePlaceholder: "+39 ...",
+    whatsappLabel: "WhatsApp (se diverso, opzionale)",
+    whatsappPlaceholder: "+39 ...",
+    whatsappHint:
+      "Se usi WhatsApp con un altro numero, inseriscilo qui: può servirci per contattarti rapidamente per informazioni utili al soggiorno.",
     notesLabel: "Richieste particolari",
     notesPlaceholder: "Intolleranze alimentari, orari di arrivo, occasioni speciali...",
     notesHint:
@@ -147,7 +154,7 @@ export const prenotaPageCopy: Record<
       "Il totale è indicativo e potrebbe variare in base a promozioni o periodi di alta stagione. Vedrai l'importo esatto prima di confermare il pagamento su Stripe.",
     badgeFooter:
       "Puoi sempre scriverci per modificare o cancellare la prenotazione in anticipo.",
-    errorFillFields: "Compila almeno le date, il nome e l'email per procedere.",
+    errorFillFields: "Compila date, nome, email e telefono per procedere.",
     errorCheckoutDates: "La data di partenza deve essere successiva alla data di arrivo.",
     discountInvalid: "Codice non valido o non applicabile.",
     discountVerifyFail: "Impossibile verificare il codice. Riprova.",
@@ -200,8 +207,12 @@ export const prenotaPageCopy: Record<
     namePlaceholder: "John Smith",
     emailLabel: "Email",
     emailPlaceholder: "name@example.com",
-    phoneLabel: "Phone (optional)",
+    phoneLabel: "Phone",
     phonePlaceholder: "+39 ...",
+    whatsappLabel: "WhatsApp (if different, optional)",
+    whatsappPlaceholder: "+39 ...",
+    whatsappHint:
+      "If your WhatsApp number is different, add it here so we can quickly reach you when useful details are needed.",
     notesLabel: "Special requests",
     notesPlaceholder: "Dietary needs, arrival time, special occasions...",
     notesHint:
@@ -229,7 +240,7 @@ export const prenotaPageCopy: Record<
       "The total is indicative and may vary by promotions or high season. You will see the exact amount before confirming payment on Stripe.",
     badgeFooter:
       "You can always contact us to change or cancel your booking in advance.",
-    errorFillFields: "Please fill in dates, name and email to continue.",
+    errorFillFields: "Please fill in dates, name, email and phone to continue.",
     errorCheckoutDates: "Check-out must be after check-in.",
     discountInvalid: "Invalid or expired code.",
     discountVerifyFail: "Could not verify the code. Please try again.",
@@ -282,8 +293,12 @@ export const prenotaPageCopy: Record<
     namePlaceholder: "Jean Dupont",
     emailLabel: "E‑mail",
     emailPlaceholder: "nom@exemple.com",
-    phoneLabel: "Téléphone (facultatif)",
+    phoneLabel: "Téléphone",
     phonePlaceholder: "+39 ...",
+    whatsappLabel: "WhatsApp (si différent, facultatif)",
+    whatsappPlaceholder: "+39 ...",
+    whatsappHint:
+      "Si votre numéro WhatsApp est différent, indiquez-le ici : cela peut être utile pour vous contacter rapidement en cas de besoin.",
     notesLabel: "Demandes particulières",
     notesPlaceholder: "Régimes alimentaires, horaires d’arrivé, occasions...",
     notesHint:
@@ -311,7 +326,7 @@ export const prenotaPageCopy: Record<
       "Le total est indicatif et peut varier selon les promotions ou la haute saison. Le montant exact s’affiche avant le paiement sur Stripe.",
     badgeFooter:
       "Vous pouvez nous écrire pour modifier ou annuler la réservation à l’avance.",
-    errorFillFields: "Indiquez les dates, le nom et l’e‑mail pour continuer.",
+    errorFillFields: "Indiquez les dates, le nom, l’e‑mail et le téléphone pour continuer.",
     errorCheckoutDates: "La date de départ doit être après la date d’arrivée.",
     discountInvalid: "Code non valide ou non applicable.",
     discountVerifyFail: "Impossible de vérifier le code. Réessayez.",
@@ -364,8 +379,12 @@ export const prenotaPageCopy: Record<
     namePlaceholder: "María García",
     emailLabel: "Email",
     emailPlaceholder: "nombre@ejemplo.com",
-    phoneLabel: "Teléfono (opcional)",
+    phoneLabel: "Teléfono",
     phonePlaceholder: "+39 ...",
+    whatsappLabel: "WhatsApp (si es distinto, opcional)",
+    whatsappPlaceholder: "+39 ...",
+    whatsappHint:
+      "Si tu número de WhatsApp es distinto, añádelo aquí: puede servir para contactarte rápido cuando haga falta.",
     notesLabel: "Petición especial",
     notesPlaceholder: "Alergias, hora de llegada, ocasiones especiales...",
     notesHint:
@@ -393,7 +412,7 @@ export const prenotaPageCopy: Record<
       "El total es orientativo y puede variar según promociones o temporada alta. Verás el importe exacto antes de pagar en Stripe.",
     badgeFooter:
       "Puedes escribirnos para modificar o cancelar la reserva con antelación.",
-    errorFillFields: "Completa fechas, nombre y email para continuar.",
+    errorFillFields: "Completa fechas, nombre, email y teléfono para continuar.",
     errorCheckoutDates: "La salida debe ser posterior a la llegada.",
     discountInvalid: "Código no válido o no aplicable.",
     discountVerifyFail: "No se pudo verificar el código. Inténtalo de nuevo.",

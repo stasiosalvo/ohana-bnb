@@ -58,6 +58,7 @@ export async function POST(request: Request) {
       name?: string;
       email?: string;
       phone?: string;
+      whatsappPhone?: string;
       nights?: number;
       total?: number;
       discountCode?: string;
@@ -73,6 +74,7 @@ export async function POST(request: Request) {
       name,
       email,
       phone,
+      whatsappPhone,
       nights,
       total,
       discountCode,
@@ -95,9 +97,9 @@ export async function POST(request: Request) {
       rooms = [];
     }
 
-    if (!rooms.length || !checkIn || !checkOut || !name || !email) {
+    if (!rooms.length || !checkIn || !checkOut || !name || !email || !phone?.trim()) {
       return NextResponse.json(
-        { error: "Dati prenotazione mancanti. Seleziona almeno una camera, date, nome e email." },
+        { error: "Dati prenotazione mancanti. Seleziona almeno una camera, date, nome, email e telefono." },
         { status: 400 }
       );
     }
@@ -249,7 +251,8 @@ export async function POST(request: Request) {
         checkOut,
         guests: String(guests ?? 1),
         name,
-        phone: phone ?? "",
+        phone: phone.trim(),
+        whatsappPhone: whatsappPhone?.trim() ?? "",
         nights: String(nightsNum),
         touristTaxEur: touristTaxEur.toFixed(2),
         payTouristTaxOnSite: payOnSite ? "true" : "false",

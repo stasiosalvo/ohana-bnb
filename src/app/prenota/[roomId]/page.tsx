@@ -89,6 +89,7 @@ export default function PrenotaRoomPage({ params }: Props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [whatsappPhone, setWhatsappPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -270,7 +271,7 @@ export default function PrenotaRoomPage({ params }: Props) {
     e.preventDefault();
     setError(null);
 
-    if (!checkIn || !checkOut || !name || !email) {
+    if (!checkIn || !checkOut || !name || !email || !phone.trim()) {
       setError(p.errorFillFields);
       return;
     }
@@ -302,6 +303,7 @@ export default function PrenotaRoomPage({ params }: Props) {
               name,
               email,
               phone,
+              whatsappPhone,
               notes,
               nights,
               total,
@@ -316,6 +318,7 @@ export default function PrenotaRoomPage({ params }: Props) {
               name,
               email,
               phone,
+              whatsappPhone,
               notes,
               nights,
               total,
@@ -618,7 +621,22 @@ export default function PrenotaRoomPage({ params }: Props) {
                     placeholder={p.phonePlaceholder}
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
+                    required
                   />
+                </div>
+
+                <div className="field">
+                  <label className="field-label" htmlFor="whatsappPhone">
+                    {p.whatsappLabel}
+                  </label>
+                  <input
+                    id="whatsappPhone"
+                    className="field-input"
+                    placeholder={p.whatsappPlaceholder}
+                    value={whatsappPhone}
+                    onChange={(e) => setWhatsappPhone(e.target.value)}
+                  />
+                  <p className="field-note">{p.whatsappHint}</p>
                 </div>
 
                 <div className="field" style={{ gridColumn: "1 / -1" }}>
