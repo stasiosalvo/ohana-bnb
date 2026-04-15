@@ -64,6 +64,90 @@ const RECEIPT_LOCALE: Record<SiteLang, string> = {
   es: "es-ES",
 };
 
+type PrefixOption = { country: string; dial: string };
+
+const EUROPE_PREFIX_OPTIONS: PrefixOption[] = [
+  { country: "AL", dial: "+355" }, { country: "AD", dial: "+376" }, { country: "AM", dial: "+374" },
+  { country: "AT", dial: "+43" }, { country: "AZ", dial: "+994" }, { country: "BY", dial: "+375" },
+  { country: "BE", dial: "+32" }, { country: "BA", dial: "+387" }, { country: "BG", dial: "+359" },
+  { country: "HR", dial: "+385" }, { country: "CY", dial: "+357" }, { country: "CZ", dial: "+420" },
+  { country: "DK", dial: "+45" }, { country: "EE", dial: "+372" }, { country: "FI", dial: "+358" },
+  { country: "FR", dial: "+33" }, { country: "GE", dial: "+995" }, { country: "DE", dial: "+49" },
+  { country: "GI", dial: "+350" }, { country: "GR", dial: "+30" }, { country: "HU", dial: "+36" },
+  { country: "IS", dial: "+354" }, { country: "IE", dial: "+353" }, { country: "IT", dial: "+39" },
+  { country: "XK", dial: "+383" }, { country: "LV", dial: "+371" }, { country: "LI", dial: "+423" },
+  { country: "LT", dial: "+370" }, { country: "LU", dial: "+352" }, { country: "MT", dial: "+356" },
+  { country: "MD", dial: "+373" }, { country: "MC", dial: "+377" }, { country: "ME", dial: "+382" },
+  { country: "NL", dial: "+31" }, { country: "MK", dial: "+389" }, { country: "NO", dial: "+47" },
+  { country: "PL", dial: "+48" }, { country: "PT", dial: "+351" }, { country: "RO", dial: "+40" },
+  { country: "RU", dial: "+7" }, { country: "SM", dial: "+378" }, { country: "RS", dial: "+381" },
+  { country: "SK", dial: "+421" }, { country: "SI", dial: "+386" }, { country: "ES", dial: "+34" },
+  { country: "SE", dial: "+46" }, { country: "CH", dial: "+41" }, { country: "TR", dial: "+90" },
+  { country: "UA", dial: "+380" }, { country: "GB", dial: "+44" }, { country: "VA", dial: "+379" },
+];
+
+const NON_EUROPE_PREFIX_OPTIONS: PrefixOption[] = [
+  { country: "AF", dial: "+93" }, { country: "DZ", dial: "+213" }, { country: "AO", dial: "+244" },
+  { country: "AG", dial: "+1-268" }, { country: "AR", dial: "+54" }, { country: "AU", dial: "+61" },
+  { country: "BS", dial: "+1-242" }, { country: "BH", dial: "+973" }, { country: "BD", dial: "+880" },
+  { country: "BB", dial: "+1-246" }, { country: "BZ", dial: "+501" }, { country: "BJ", dial: "+229" },
+  { country: "BT", dial: "+975" }, { country: "BO", dial: "+591" }, { country: "BW", dial: "+267" },
+  { country: "BR", dial: "+55" }, { country: "BN", dial: "+673" }, { country: "BF", dial: "+226" },
+  { country: "BI", dial: "+257" }, { country: "KH", dial: "+855" }, { country: "CM", dial: "+237" },
+  { country: "CA", dial: "+1" }, { country: "CV", dial: "+238" }, { country: "CF", dial: "+236" },
+  { country: "TD", dial: "+235" }, { country: "CL", dial: "+56" }, { country: "CN", dial: "+86" },
+  { country: "CO", dial: "+57" }, { country: "KM", dial: "+269" }, { country: "CG", dial: "+242" },
+  { country: "CD", dial: "+243" }, { country: "CR", dial: "+506" }, { country: "CI", dial: "+225" },
+  { country: "CU", dial: "+53" }, { country: "DJ", dial: "+253" }, { country: "DM", dial: "+1-767" },
+  { country: "DO", dial: "+1-809" }, { country: "EC", dial: "+593" }, { country: "EG", dial: "+20" },
+  { country: "SV", dial: "+503" }, { country: "GQ", dial: "+240" }, { country: "ER", dial: "+291" },
+  { country: "SZ", dial: "+268" }, { country: "ET", dial: "+251" }, { country: "FJ", dial: "+679" },
+  { country: "GA", dial: "+241" }, { country: "GM", dial: "+220" }, { country: "GH", dial: "+233" },
+  { country: "GD", dial: "+1-473" }, { country: "GT", dial: "+502" }, { country: "GN", dial: "+224" },
+  { country: "GW", dial: "+245" }, { country: "GY", dial: "+592" }, { country: "HT", dial: "+509" },
+  { country: "HN", dial: "+504" }, { country: "HK", dial: "+852" }, { country: "IN", dial: "+91" },
+  { country: "ID", dial: "+62" }, { country: "IR", dial: "+98" }, { country: "IQ", dial: "+964" },
+  { country: "IL", dial: "+972" }, { country: "JM", dial: "+1-876" }, { country: "JP", dial: "+81" },
+  { country: "JO", dial: "+962" }, { country: "KZ", dial: "+7" }, { country: "KE", dial: "+254" },
+  { country: "KI", dial: "+686" }, { country: "KP", dial: "+850" }, { country: "KR", dial: "+82" },
+  { country: "KW", dial: "+965" }, { country: "KG", dial: "+996" }, { country: "LA", dial: "+856" },
+  { country: "LB", dial: "+961" }, { country: "LS", dial: "+266" }, { country: "LR", dial: "+231" },
+  { country: "LY", dial: "+218" }, { country: "MO", dial: "+853" }, { country: "MG", dial: "+261" },
+  { country: "MW", dial: "+265" }, { country: "MY", dial: "+60" }, { country: "MV", dial: "+960" },
+  { country: "ML", dial: "+223" }, { country: "MH", dial: "+692" }, { country: "MR", dial: "+222" },
+  { country: "MU", dial: "+230" }, { country: "MX", dial: "+52" }, { country: "FM", dial: "+691" },
+  { country: "MN", dial: "+976" }, { country: "MA", dial: "+212" }, { country: "MZ", dial: "+258" },
+  { country: "MM", dial: "+95" }, { country: "NA", dial: "+264" }, { country: "NR", dial: "+674" },
+  { country: "NP", dial: "+977" }, { country: "NZ", dial: "+64" }, { country: "NI", dial: "+505" },
+  { country: "NE", dial: "+227" }, { country: "NG", dial: "+234" }, { country: "OM", dial: "+968" },
+  { country: "PK", dial: "+92" }, { country: "PW", dial: "+680" }, { country: "PA", dial: "+507" },
+  { country: "PG", dial: "+675" }, { country: "PY", dial: "+595" }, { country: "PE", dial: "+51" },
+  { country: "PH", dial: "+63" }, { country: "QA", dial: "+974" }, { country: "RW", dial: "+250" },
+  { country: "KN", dial: "+1-869" }, { country: "LC", dial: "+1-758" }, { country: "VC", dial: "+1-784" },
+  { country: "WS", dial: "+685" }, { country: "ST", dial: "+239" }, { country: "SA", dial: "+966" },
+  { country: "SN", dial: "+221" }, { country: "SC", dial: "+248" }, { country: "SL", dial: "+232" },
+  { country: "SG", dial: "+65" }, { country: "SB", dial: "+677" }, { country: "SO", dial: "+252" },
+  { country: "ZA", dial: "+27" }, { country: "SS", dial: "+211" }, { country: "LK", dial: "+94" },
+  { country: "SD", dial: "+249" }, { country: "SR", dial: "+597" }, { country: "SY", dial: "+963" },
+  { country: "TW", dial: "+886" }, { country: "TJ", dial: "+992" }, { country: "TZ", dial: "+255" },
+  { country: "TH", dial: "+66" }, { country: "TL", dial: "+670" }, { country: "TG", dial: "+228" },
+  { country: "TO", dial: "+676" }, { country: "TT", dial: "+1-868" }, { country: "TN", dial: "+216" },
+  { country: "TM", dial: "+993" }, { country: "TV", dial: "+688" }, { country: "UG", dial: "+256" },
+  { country: "AE", dial: "+971" }, { country: "US", dial: "+1" }, { country: "UY", dial: "+598" },
+  { country: "UZ", dial: "+998" }, { country: "VU", dial: "+678" }, { country: "VE", dial: "+58" },
+  { country: "VN", dial: "+84" }, { country: "YE", dial: "+967" }, { country: "ZM", dial: "+260" },
+  { country: "ZW", dial: "+263" },
+];
+
+function countryFlag(countryCode: string): string {
+  const code = countryCode.trim().toUpperCase();
+  if (!/^[A-Z]{2}$/.test(code)) return countryCode;
+  const a = code.codePointAt(0);
+  const b = code.codePointAt(1);
+  if (!a || !b) return countryCode;
+  return String.fromCodePoint(127397 + a, 127397 + b);
+}
+
 function formatReceiptDate(ymd: string, lang: SiteLang): string {
   const [y, m, d] = ymd.split("-").map(Number);
   return new Date(y, m - 1, d).toLocaleDateString(RECEIPT_LOCALE[lang], {
@@ -88,8 +172,10 @@ export default function PrenotaRoomPage({ params }: Props) {
   const [guests, setGuests] = useState("2");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [whatsappPhone, setWhatsappPhone] = useState("");
+  const [phonePrefix, setPhonePrefix] = useState("+39");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [whatsappPrefix, setWhatsappPrefix] = useState("+39");
+  const [whatsappNumber, setWhatsappNumber] = useState("");
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -165,6 +251,11 @@ export default function PrenotaRoomPage({ params }: Props) {
       ),
     [checkIn, checkOut, nights]
   );
+
+  const selectedRoomsTitle = useMemo(() => {
+    if (!selectedRooms.length) return room.name;
+    return selectedRooms.map((id) => ROOMS[id].name).join(" + ");
+  }, [selectedRooms, room.name]);
 
   useEffect(() => {
     setAppliedDiscount(null);
@@ -271,7 +362,7 @@ export default function PrenotaRoomPage({ params }: Props) {
     e.preventDefault();
     setError(null);
 
-    if (!checkIn || !checkOut || !name || !email || !phone.trim()) {
+    if (!checkIn || !checkOut || !name || !email || !phoneNumber.trim()) {
       setError(p.errorFillFields);
       return;
     }
@@ -290,6 +381,10 @@ export default function PrenotaRoomPage({ params }: Props) {
 
     try {
       setIsSubmitting(true);
+      const phone = `${phonePrefix} ${phoneNumber.trim()}`.trim();
+      const whatsappPhone = whatsappNumber.trim()
+        ? `${whatsappPrefix} ${whatsappNumber.trim()}`.trim()
+        : "";
       const payload =
         selectedRooms.length > 1
           ? {
@@ -410,16 +505,8 @@ export default function PrenotaRoomPage({ params }: Props) {
                 <span>{p.eyebrow}</span>
               </div>
               <h1 className="booking-header-title">
-                {selectedRooms.length > 1
-                  ? p.titleMulti.replace("{n}", String(selectedRooms.length))
-                  : `${p.titleSinglePrefix} ${room.name}`}
+                {`${p.titleSinglePrefix} ${selectedRoomsTitle}`}
               </h1>
-              <p className="hero-subtitle">
-                {selectedRooms.length > 1
-                  ? p.subtitleMulti
-                  : p.roomShort[roomKey]}
-              </p>
-
               <div className="booking-room-selector">
                 <span className="booking-room-selector-label">{p.roomSelectorLabel}</span>
                 <div className="booking-room-cards" role="group" aria-label={p.roomCardsAria}>
@@ -489,26 +576,6 @@ export default function PrenotaRoomPage({ params }: Props) {
                   )}
                 </div>
               )}
-
-              <div style={{ marginTop: 14, fontSize: 13, color: "#7d7166" }}>
-                <span className="booking-room-pill">
-                  <span>
-                    {minGuests === maxGuests ? maxGuests : `${minGuests}-${maxGuests}`} {p.pillGuests}
-                    {selectedRooms.length > 1
-                      ? ` · ${selectedRooms.length} ${p.pillRooms}`
-                      : ` · ${room.sizeM2} ${p.pillSingleSuffix}`}
-                  </span>
-                </span>{" "}
-                <span style={{ marginLeft: 6 }}>
-                  {selectedRooms.length > 1
-                    ? `${selectedRooms.map((id) => ROOMS[id].name).join(" + ")}: ${p.totalLineMulti
-                        .replace("{total}", String(total))
-                        .replace("{nights}", String(nights))}`
-                    : p.singleRoomPriceLine
-                        .replace("{name}", `${p.summaryCamera} ${room.name}`)
-                        .replace("{price}", String(room.pricePerNight))}
-                </span>
-              </div>
 
               <form onSubmit={handleSubmit} className="booking-form">
                 <div className="field">
@@ -615,27 +682,75 @@ export default function PrenotaRoomPage({ params }: Props) {
                   <label className="field-label" htmlFor="phone">
                     {p.phoneLabel}
                   </label>
-                  <input
-                    id="phone"
-                    className="field-input"
-                    placeholder={p.phonePlaceholder}
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                  />
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <select
+                      aria-label="Prefisso telefono"
+                      className="field-select"
+                      value={phonePrefix}
+                      onChange={(e) => setPhonePrefix(e.target.value)}
+                      style={{ maxWidth: 185, flexShrink: 0 }}
+                    >
+                      <optgroup label="Europa">
+                        {EUROPE_PREFIX_OPTIONS.map((opt) => (
+                          <option key={`eu-${opt.country}-${opt.dial}`} value={opt.dial}>
+                            {countryFlag(opt.country)} {opt.country} ({opt.dial})
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Non Europa">
+                        {NON_EUROPE_PREFIX_OPTIONS.map((opt) => (
+                          <option key={`non-eu-${opt.country}-${opt.dial}`} value={opt.dial}>
+                            {countryFlag(opt.country)} {opt.country} ({opt.dial})
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                    <input
+                      id="phone"
+                      className="field-input"
+                      placeholder={p.phonePlaceholder}
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
+                    />
+                  </div>
                 </div>
 
                 <div className="field">
                   <label className="field-label" htmlFor="whatsappPhone">
                     {p.whatsappLabel}
                   </label>
-                  <input
-                    id="whatsappPhone"
-                    className="field-input"
-                    placeholder={p.whatsappPlaceholder}
-                    value={whatsappPhone}
-                    onChange={(e) => setWhatsappPhone(e.target.value)}
-                  />
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <select
+                      aria-label="Prefisso WhatsApp"
+                      className="field-select"
+                      value={whatsappPrefix}
+                      onChange={(e) => setWhatsappPrefix(e.target.value)}
+                      style={{ maxWidth: 185, flexShrink: 0 }}
+                    >
+                      <optgroup label="Europa">
+                        {EUROPE_PREFIX_OPTIONS.map((opt) => (
+                          <option key={`wa-eu-${opt.country}-${opt.dial}`} value={opt.dial}>
+                            {countryFlag(opt.country)} {opt.country} ({opt.dial})
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Non Europa">
+                        {NON_EUROPE_PREFIX_OPTIONS.map((opt) => (
+                          <option key={`wa-non-eu-${opt.country}-${opt.dial}`} value={opt.dial}>
+                            {countryFlag(opt.country)} {opt.country} ({opt.dial})
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                    <input
+                      id="whatsappPhone"
+                      className="field-input"
+                      placeholder={p.whatsappPlaceholder}
+                      value={whatsappNumber}
+                      onChange={(e) => setWhatsappNumber(e.target.value)}
+                    />
+                  </div>
                   <p className="field-note">{p.whatsappHint}</p>
                 </div>
 
@@ -699,7 +814,6 @@ export default function PrenotaRoomPage({ params }: Props) {
                           ? p.submitUnavailable
                           : p.submitPay}
                   </button>
-                  <span className="text-muted">{p.submitNote}</span>
                 </div>
               </form>
             </div>
