@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { addBlocked, type RoomId } from "@/lib/blocked";
 import { incrementDiscountUsage } from "@/lib/discount";
+import {
+  buildGuestConfirmationEmail,
+  guestEmailLangFromPhone,
+} from "@/lib/guest-confirmation-email";
 
 export const runtime = "nodejs";
 
@@ -65,6 +71,7 @@ export async function POST(request: Request) {
   const guests = session.metadata?.guests ?? "1";
   const name = session.metadata?.name ?? "";
   const phone = session.metadata?.phone ?? "";
+  const phonePrefixMeta = session.metadata?.phonePrefix ?? "";
   const whatsappPhone = session.metadata?.whatsappPhone ?? "";
   const nights = session.metadata?.nights ?? "0";
   const discountCode = session.metadata?.discountCode as string | undefined;
@@ -103,6 +110,17 @@ export async function POST(request: Request) {
   try {
     const resend = new Resend(resendKey);
     const roomsLabel = roomIds.length > 0 ? roomIds.map((id) => id.toUpperCase()).join(", ") : "—";
+    const siteBaseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL?.trim() || "https://www.ohana-bnb.it";
+    const siteUrlClean = siteBaseUrl.replace(/\/$/, "");
+    const pdfMapUrl = `${siteUrlClean}/mappa-napoli-ohana.pdf`;
+    const logoUrl = `${siteUrlClean}/ohana-logo.png`;
+    let mapPdfBuffer: Buffer | null = null;
+    try {
+      mapPdfBuffer = await readFile(join(process.cwd(), "public", "mappa-napoli-ohana.pdf"));
+    } catch (e) {
+      console.warn("Mappa PDF non trovata: invio solo link nella mail ospite.", e);
+    }
     const subject = `Nuova prenotazione online – ${name} – ${roomsLabel}`;
     const html = `
       <h2>Nuova prenotazione ricevuta dal sito</h2>
@@ -141,35 +159,39 @@ export async function POST(request: Request) {
         process.env.NEXT_PUBLIC_CONTACT_EMAIL?.trim() || "ohanab.and.b@gmail.com";
       const contactPhone =
         process.env.NEXT_PUBLIC_CONTACT_PHONE?.trim() || "+39 376 297 9866";
-      const guestSubject = `Conferma prenotazione – Ohana B&B`;
-      const guestHtml = `
-        <h2>Grazie per la tua prenotazione!</h2>
-        <p>Ciao ${escapeHtml(name)},</p>
-        <p>La tua prenotazione è stata confermata. Ecco il riepilogo:</p>
-        <ul>
-          <li><strong>Camera/e:</strong> ${escapeHtml(roomsLabel)}</li>
-          <li><strong>Check-in:</strong> ${escapeHtml(checkIn)}</li>
-          <li><strong>Check-out:</strong> ${escapeHtml(checkOut)}</li>
-          <li><strong>Notti:</strong> ${escapeHtml(nights)}</li>
-          <li><strong>Ospiti:</strong> ${escapeHtml(guests)}</li>
-          <li><strong>Importo pagato online:</strong> € ${amountTotal.toFixed(2)}</li>
-          <li><strong>Tassa di soggiorno (€4,50/persona/notte):</strong> € ${touristTaxEur.toFixed(2)} — ${
-            payTouristTaxOnSite
-              ? "da pagare in contanti in struttura all'arrivo."
-              : "già inclusa nel pagamento con carta."
-          }</li>
-        </ul>
-        <p>Per modifiche o informazioni puoi contattarci:</p>
-        <p>Email: <a href="mailto:${escapeHtml(contactEmail)}">${escapeHtml(contactEmail)}</a><br>
-        Telefono: ${escapeHtml(contactPhone)}</p>
-        <p>A presto,<br><strong>Ohana B&B</strong></p>
-      `;
+      const guestLang = guestEmailLangFromPhone(phonePrefixMeta, phone);
+      const { subject: guestSubject, html: guestHtml } = buildGuestConfirmationEmail({
+        lang: guestLang,
+        name,
+        roomsLabel,
+        checkIn,
+        checkOut,
+        nights,
+        guests,
+        amountTotal,
+        touristTaxEur,
+        payTouristTaxOnSite,
+        pdfMapUrl,
+        logoUrl,
+        contactEmail,
+        contactPhone,
+      });
       const fromAddr = fromEmail.includes("<") ? fromEmail : `Ohana B&B Prenotazioni <${fromEmail}>`;
       const { error: guestError } = await resend.emails.send({
         from: fromAddr,
         to: customerEmail.trim(),
         subject: guestSubject,
         html: guestHtml,
+        ...(mapPdfBuffer
+          ? {
+              attachments: [
+                {
+                  filename: "mappa-napoli-ohana.pdf",
+                  content: mapPdfBuffer,
+                },
+              ],
+            }
+          : {}),
       });
       if (guestError) {
         console.error("Resend error (conferma ospite):", guestError);

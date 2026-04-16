@@ -58,6 +58,8 @@ export async function POST(request: Request) {
       name?: string;
       email?: string;
       phone?: string;
+      /** Es. "+39" — usato per lingua email conferma ospite */
+      phonePrefix?: string;
       whatsappPhone?: string;
       nights?: number;
       total?: number;
@@ -74,6 +76,7 @@ export async function POST(request: Request) {
       name,
       email,
       phone,
+      phonePrefix,
       whatsappPhone,
       nights,
       total,
@@ -252,6 +255,7 @@ export async function POST(request: Request) {
         guests: String(guests ?? 1),
         name,
         phone: phone.trim(),
+        phonePrefix: phonePrefix?.trim() ?? "",
         whatsappPhone: whatsappPhone?.trim() ?? "",
         nights: String(nightsNum),
         touristTaxEur: touristTaxEur.toFixed(2),
