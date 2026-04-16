@@ -647,9 +647,36 @@ section.promo-banner .promo-banner-cta:hover {
   background-position: center;
 }
 
+.hero-side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hero-whatsapp-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: radial-gradient(circle at 0% 0%, #fffaf4 0%, #f0e1c3 40%, #d3b37c 100%);
+  box-shadow:
+    0 18px 30px rgba(118, 96, 60, 0.18),
+    0 0 0 1px rgba(255, 255, 255, 0.78);
+  color: #3b3127;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 @media (max-width: 900px) {
   .hero-grid {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero-whatsapp-cta {
+    width: 100%;
   }
 }
 
@@ -704,8 +731,8 @@ section.promo-banner .promo-banner-cta:hover {
   font-size: 11px;
   padding: 6px 11px;
   border-radius: 999px;
-  border: 1px solid rgba(200, 169, 106, 0.3);
-  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(200, 169, 106, 0.4);
+  background: rgba(248, 240, 224, 0.82);
   color: var(--color-muted);
 }
 

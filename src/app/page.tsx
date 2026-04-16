@@ -43,7 +43,7 @@ const copy = {
     heroEyebrow: "Bed & Breakfast",
     heroTitle: "Ohana, il tuo rifugio elegante nel cuore della città.",
     heroSubtitle:
-      "Camere curate nei dettagli e un'accoglienza genuina, fatta di attenzione e disponibilità. Ohana è un boutique B&B che unisce comfort, luce naturale, colori e un'atmosfera serena, per farti sentire subito a casa.",
+      "Camere curate nei dettagli e un'accoglienza genuina, fatta di attenzione e disponibilità. Ohana Tre ambienti unici Sun, Moon e Earth, pensati per offrirti energia, tranquillità e armonia durante il tuo soggiorno a Napoli, che unisce comfort, luce naturale, colori e un'atmosfera serena, per farti sentire subito a casa.",
     ctaPrimary: "Prenota il tuo soggiorno",
     ctaSecondary: "Scopri le camere",
     roomsTitle: "Le nostre camere",
@@ -481,6 +481,15 @@ export default function Home() {
   const { lang, setLang } = useSiteLang();
   const t = copy[lang as Lang];
   const x = homeExtra[lang];
+  const whatsappHref = `https://wa.me/${CONTACT_PHONE.replace(/\D/g, "")}`;
+  const heroWhatsappPrompt =
+    lang === "en"
+      ? "If you have any questions, contact us on WhatsApp."
+      : lang === "fr"
+        ? "Si vous avez des questions, contactez-nous sur WhatsApp."
+        : lang === "es"
+          ? "Si tienes dudas, contáctanos por WhatsApp."
+          : "Se hai domande, contattaci su WhatsApp.";
   const [reviews, setReviews] = useState<ReviewItem[]>([]);
   const [reviewName, setReviewName] = useState("");
   const [reviewText, setReviewText] = useState("");
@@ -722,47 +731,65 @@ export default function Home() {
               </div>
             </div>
 
-            <aside className="hero-card" aria-label={x.heroCardAria}>
-              <div className="hero-card-top">
-                <div>
-                  <div className="hero-card-title">Ohana Boutique B&amp;B</div>
-                  <div style={{ fontSize: 12, opacity: 0.8 }}>{x.heroCardGuestsNote}</div>
-                </div>
-              </div>
-
-              <div className="hero-card-grid">
-                <div className="hero-card-pill">
-                  <span className="hero-card-pill-label">{x.heroCardRoomsLabel}</span>
-                  <span className="hero-card-pill-main">Sun · Moon · Earth</span>
-                </div>
-                <div className="hero-card-pill">
-                  <span className="hero-card-pill-label">{x.heroCardBreakfastLabel}</span>
-                  <span className="hero-card-pill-main">{x.heroCardBreakfastValue}</span>
-                </div>
-                <div className="hero-card-pill">
-                  <span className="hero-card-pill-label">{x.heroCardDistanceLabel}</span>
-                  <span className="hero-card-pill-main">{x.heroCardDistanceValue}</span>
-                </div>
-                <div className="hero-card-pill">
-                  <span className="hero-card-pill-label">{x.heroCardStyleLabel}</span>
-                  <span className="hero-card-pill-main">{x.heroCardStyleValue}</span>
-                </div>
-              </div>
-
-              <div className="hero-card-footer">
-                <div>
-                  <div style={{ fontSize: 11, opacity: 0.8 }}>{x.roomsFrom}</div>
-                  <div style={{ fontSize: 16, fontWeight: 600 }}>
-                    €70{" "}
-                    <span style={{ fontSize: 11, fontWeight: 400 }}>{t.perNight}</span>
+            <div className="hero-side-column">
+              <aside className="hero-card" aria-label={x.heroCardAria}>
+                <div className="hero-card-top">
+                  <div>
+                    <div
+                      className="hero-card-title"
+                      style={{ textTransform: "none", letterSpacing: "0.01em", lineHeight: 1.35 }}
+                    >
+                      Benvenuto da Ohana B&amp;B, dove sentirsi a casa, lontano da casa
+                    </div>
+                    <div style={{ fontSize: 12, opacity: 0.8 }}>{x.heroCardGuestsNote}</div>
                   </div>
                 </div>
-                <div style={{ textAlign: "right" }}>
-                  <div style={{ fontSize: 11, opacity: 0.8 }}>{x.secureBooking}</div>
-                  <div style={{ fontSize: 11 }}>{x.secureBookingSub}</div>
+  
+                <div className="hero-card-grid">
+                  <div className="hero-card-pill">
+                    <span className="hero-card-pill-label">{x.heroCardRoomsLabel}</span>
+                    <span className="hero-card-pill-main">Sun · Moon · Earth</span>
+                  </div>
+                  <div className="hero-card-pill">
+                    <span className="hero-card-pill-label">{x.heroCardBreakfastLabel}</span>
+                    <span className="hero-card-pill-main">{x.heroCardBreakfastValue}</span>
+                  </div>
+                  <div className="hero-card-pill">
+                    <span className="hero-card-pill-label">{x.heroCardDistanceLabel}</span>
+                    <span className="hero-card-pill-main">{x.heroCardDistanceValue}</span>
+                  </div>
+                  <div className="hero-card-pill">
+                    <span className="hero-card-pill-label">{x.heroCardStyleLabel}</span>
+                    <span className="hero-card-pill-main">{x.heroCardStyleValue}</span>
+                  </div>
                 </div>
+
+                <div className="hero-card-footer">
+                  <div>
+                    <div style={{ fontSize: 11, opacity: 0.8 }}>{x.roomsFrom}</div>
+                    <div style={{ fontSize: 16, fontWeight: 600 }}>
+                      €70{" "}
+                      <span style={{ fontSize: 11, fontWeight: 400 }}>{t.perNight}</span>
+                    </div>
+                  </div>
+                  <div style={{ textAlign: "right" }}>
+                    <div style={{ fontSize: 11, opacity: 0.8 }}>{x.secureBooking}</div>
+                    <div style={{ fontSize: 11 }}>{x.secureBookingSub}</div>
+                  </div>
+                </div>
+              </aside>
+              <div className="hero-whatsapp-cta">
+                <span>{heroWhatsappPrompt}</span>
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary"
+                >
+                  {t.contactActionWhatsapp}
+                </a>
               </div>
-            </aside>
+            </div>
           </section>
 
           <section id="camere" className="section section--gold-frame" aria-labelledby="rooms-title">
